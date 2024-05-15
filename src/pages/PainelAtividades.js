@@ -210,7 +210,6 @@ function PainelAtividades() {
               alignSelf: 'center',
               margin: 0,
               padding: 0,
-              width: '90vw',
               boxShadow: 'none',
               overflowX: 'auto',
               minHeight: 70,
