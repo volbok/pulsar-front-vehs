@@ -17,6 +17,7 @@ import Agendamento from "./pages/Agendamento";
 import Farmacia from "./pages/Farmacia";
 import Almoxarifado from "./pages/Almoxarifado";
 import Resultados from "./pages/Resultados";
+import PainelAtividades from "./pages/PainelAtividades";
 // componentes.
 import Toast from "./components/Toast";
 import Modal from "./components/Modal";
@@ -32,13 +33,7 @@ import {
 
 function App() {
   // api.
-  // var html = 'http://localhost:3333/'
-  // const html = 'http://10.0.6.3:3333/'
-  // const html = 'https://pulsarapi.herokuapp.com/'
-
-  // var html = 'https://pulsar-api-hsf.up.railway.app/'
-  // var html = "http://localhost:3333/";
-  var html = "https://lepton-server.up.railway.app/";
+  var html = "https://pulsar-back-vehs.up.railway.app/";
 
   // estados do context.
   const [toast, settoast] = useState({
@@ -55,7 +50,7 @@ function App() {
   // DEVE SER CONFIGURADO PARA CADA CLIENTE.
   const [cliente, setcliente] = useState({
     id_cliente: 1,
-    razao_social: "HOSPITAL SÃO FRANCISCO",
+    razao_social: "VIVER ESSENCIAL HOTEL SÊNIOR",
     cnes: "1234287",
     cnpj: "CNPJ: 1001/001",
     texto1: 'ENDEREÇO: RUA ITAPAGIPE, 226, CONCÓRDIA - BH/MG',
@@ -143,6 +138,10 @@ function App() {
     'RADIOLOGIA',
     'MEDICINA INTENSIVA',
   ]);
+
+  const [arrayatividades, setarrayatividades] = useState(
+    ['CONSULTA MÉDICA', 'FISIOTERAPIA', 'TERAPIA OCUPACIONAL', 'AULA DE MÚSICA', 'CONTAÇÃO DE HISTÓRIA']
+  )
 
   // largura do dispositivo (global).
   const [mobilewidth, setmobilewidth] = useState(600);
@@ -306,6 +305,7 @@ function App() {
         selecteddocumentoestruturado, setselecteddocumentoestruturado,
         laboratorio, setlaboratorio,
         arrayespecialidades, setarrayespecialidades,
+        arrayatividades, setarrayatividades,
         mobilewidth, setmobilewidth,
         idprescricao, setidprescricao,
         almoxarifado, setalmoxarifado,
@@ -349,6 +349,9 @@ function App() {
             </Route>
             <Route path="/resultados">
               <Resultados></Resultados>
+            </Route>
+            <Route path="/painel_atividades">
+              <PainelAtividades></PainelAtividades>
             </Route>
             <Route path="/agendamento">
               <Agendamento></Agendamento>

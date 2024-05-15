@@ -9,9 +9,9 @@ import checkinput from "../functions/checkinput";
 import salvar from "../images/salvar.svg";
 import back from "../images/back.svg";
 import power from "../images/power.svg";
-import doctor from "../images/doctor.png";
 // componentes.
 import Logo from "../components/Logo";
+import logo_vehs from "../images/logo_vehs.png";
 // router.
 import { useHistory } from "react-router-dom";
 
@@ -431,6 +431,7 @@ function Login() {
           flexDirection: "column",
           justifyContent: "center",
           alignSelf: "center",
+          marginTop: 20,
         }}
       >
         <input
@@ -702,7 +703,27 @@ function Login() {
               history.push("/consultas");
             }}
           >
-            CONSULTAS
+            CONSULTAS E ATIVIDADES
+          </div>
+          <div
+            className="button"
+            style={{
+              display: "flex",
+              padding: 10,
+              margin: 5,
+              minWidth: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+              maxWidth: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+              height: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+              minHeight: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+              maxHeight: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+              color: 'white',
+            }}
+            onClick={() => {
+              setpagina('painel_atividades');
+              history.push("/painel_atividades");
+            }}
+          >
+            PAINEL DE ATIVIDADES
           </div>
           {acessos.map((item) => (
             <div
@@ -805,36 +826,6 @@ function Login() {
             usuario.usuarios,
             "/usuarios",
             5
-          )}
-          {montaModuloDeApoio(
-            "CADASTRO DE USUÁRIOS",
-            usuario.usuarios,
-            "/usuarios",
-            5
-          )}
-          {montaModuloDeApoio(
-            "LABORATÓRIO",
-            usuario.laboratorio,
-            "/laboratorio",
-            7
-          )}
-          {montaModuloDeApoio(
-            "FARMÁCIA",
-            usuario.farmacia,
-            "/farmacia",
-            'FARMÁCIA'
-          )}
-          {montaModuloDeApoio(
-            "ALMOXARIFADO",
-            usuario.almoxarifado,
-            "/almoxarifado",
-            "ALMOXARIFADO"
-          )}
-          {montaModuloDeApoio(
-            "FATURAMENTO",
-            usuario.faturamento,
-            "/financeiro",
-            9
           )}
         </div>
       </div>
@@ -1013,96 +1004,6 @@ function Login() {
     );
   }
 
-  function LandPage() {
-    return (
-      <div
-        style={{
-          display: window.innerWidth < mobilewidth || viewlistaunidades == 1 ? "none" : "flex",
-          position: 'absolute', bottom: 5, right: 10
-        }}>
-        <img
-          alt=""
-          src={doctor}
-          style={{
-            margin: 0,
-            height: 200,
-            width: 200,
-            position: 'absolute', bottom: 5, right: 10, borderRadius: 5,
-          }}
-        ></img>
-        <a id="landpage"
-          className="text2"
-          href="/site/index.html"
-          style={{
-            display: 'flex',
-            position: 'absolute', bottom: 5, right: 50, fontSize: 20,
-            backgroundColor: 'transparent',
-            borderRadius: 5,
-            cursor: 'pointer', textDecoration: 'none',
-            width: 150, height: 100,
-            textShadow: '0px 0px 10px #000000'
-          }}
-          target="_blank" rel="noreferrer">
-          CONHEÇA A SOLUÇÃO
-        </a>
-      </div>
-    )
-  }
-
-  function BtnPainel() {
-    return (
-      <div
-        style={{
-          display: window.innerWidth < mobilewidth || viewlistaunidades == 0 ? 'none' : 'flex',
-          flexDirection: 'column', justifyContent: 'center',
-          marginTop: 20
-        }}
-      >
-        <div className="text2" style={{ fontSize: 16, display: usuario.prontuario == 1 ? 'flex' : 'none' }}>
-          PAINEIS DE CHAMADA PARA ATENDIMENTO
-        </div>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'row', justifyContent: 'center'
-        }}>
-          <div
-            className="button"
-            style={{ padding: 10, width: 150, height: 150, alignSelf: 'center' }}
-            onClick={() => {
-              setunidade(4);
-              setpagina(40);
-              history.push("/painel");
-            }}
-          >
-            PAINEL TRIAGEM
-          </div>
-          <div
-            className="button"
-            style={{ padding: 10, width: 150, height: 150, alignSelf: 'center' }}
-            onClick={() => {
-              setunidade(3);
-              setpagina(40);
-              history.push("/painel");
-            }}
-          >
-            PAINEL PA
-          </div>
-          <div
-            className="button"
-            style={{ padding: 10, width: 150, height: 150, alignSelf: 'center' }}
-            onClick={() => {
-              setunidade(5);
-              setpagina(40);
-              history.push("/painel");
-            }}
-          >
-            PAINEL CONSULTAS
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div
       className="main"
@@ -1115,7 +1016,7 @@ function Login() {
         <div
           className="button-red"
           style={{
-            display: "flex",
+            display: viewlistaunidades == 0 ? "none" : "flex",
             position: "sticky",
             top: 10,
             right: 10,
@@ -1148,22 +1049,16 @@ function Login() {
                 : "flex",
           }}
         >
-          <Logo href="/site/index.html" target="_blank" rel="noreferrer" height={200} width={200}></Logo>
+          <img
+            alt=""
+            src={logo_vehs}
+            style={{
+              margin: 0,
+              height: window.innerWidth < mobilewidth ? '40vw' : '30vh',
+            }}
+          ></img>
         </div>
-        <div
-          className="text2"
-          style={{
-            display:
-              window.innerWidth < mobilewidth && viewalterarsenha == 1
-                ? "none"
-                : "flex",
-            margin: 20, marginTop: 10,
-            fontSize: 28,
 
-          }}
-        >
-          PULSAR
-        </div>
         <div
           style={{
             display: "none",
@@ -1207,23 +1102,26 @@ function Login() {
         <ListaDeUnidadesDeApoio></ListaDeUnidadesDeApoio>
         <CriarSenha></CriarSenha>
         <AlterarSenha></AlterarSenha>
-        <BtnPainel></BtnPainel>
-        <LandPage></LandPage>
-        <div
-          className="text1"
-          style={{
-            display: "flex",
-            textDecoration: "underline",
-            color: "white",
-            marginTop:
-              window.innerWidth < mobilewidth && viewalterarsenha == 1 ? 20 : 0,
-          }}
-          onClick={() => {
-            setpagina('RESULTADOS');
-            history.push("/resultados");
-          }}
-        >
-          RESULTADOS DE EXAMES
+        <div style={{
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          width: '100%', alignContent: 'center', alignItems: 'center',
+          marginTop: 20,
+        }}>
+          <Logo href="/site/index.html" target="_blank" rel="noreferrer" height={50} width={50}></Logo>
+          <div
+            className="text2"
+            style={{
+              display:
+                window.innerWidth < mobilewidth && viewalterarsenha == 1
+                  ? "none"
+                  : "flex",
+              margin: 20, marginTop: 10,
+              fontSize: 10,
+
+            }}
+          >
+            POWERED BY PULSAR
+          </div>
         </div>
       </div>
     </div >
