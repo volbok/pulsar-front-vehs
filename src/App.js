@@ -18,6 +18,8 @@ import Farmacia from "./pages/Farmacia";
 import Almoxarifado from "./pages/Almoxarifado";
 import Resultados from "./pages/Resultados";
 import PainelAtividades from "./pages/PainelAtividades";
+import Cliente from "./pages/Cliente";
+import Feedback from "./pages/Feedback";
 // componentes.
 import Toast from "./components/Toast";
 import Modal from "./components/Modal";
@@ -129,14 +131,16 @@ function App() {
 
   const [laboratorio, setlaboratorio] = useState([]);
   const [arrayespecialidades, setarrayespecialidades] = useState([
-    'ANESTESIOLOGIA',
-    'CARDIOLOGIA',
-    'CLÍNICA MÉDICA',
-    'CIRURGIA GERAL',
-    'CIRURGIA TORÁCICA',
-    'UROLOGIA',
-    'RADIOLOGIA',
-    'MEDICINA INTENSIVA',
+    'MÉDICO',
+    'ENFERMEIRO',
+    'FISIOTERAPEUTA',
+    'PSICÓLOGO',
+    'TERAPEUTA OCUPACIONAL',
+    'TÉCNICO DE ENFERMAGEM',
+    'CUIDADOR',
+    'ADMINISTRATIVO',
+    'RECREADOR',
+    'CLIENTE',
   ]);
 
   const [arrayatividades, setarrayatividades] = useState(
@@ -352,6 +356,12 @@ function App() {
             </Route>
             <Route path="/painel_atividades">
               <PainelAtividades></PainelAtividades>
+            </Route>
+            <Route path="/cliente">
+              <Cliente></Cliente>
+            </Route>
+            <Route path="/feedback">
+              <Feedback></Feedback>
             </Route>
             <Route path="/agendamento">
               <Agendamento></Agendamento>

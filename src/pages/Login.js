@@ -337,6 +337,7 @@ function Login() {
 
               // eslint-disable-next-line
               setviewlistaunidades(1);
+              setviewcliente(1);
               loadAcessos(x.id.usuario);
               loadSettings(x.id.usuario);
             } else {
@@ -420,6 +421,7 @@ function Login() {
 
   // inputs para login e senha.
   const [viewlistaunidades, setviewlistaunidades] = useState(0);
+  const [viewcliente, setviewcliente] = useState(0);
   const [viewalterarsenha, setviewalterarsenha] = useState(0);
   const Inputs = useCallback(() => {
     var timeout = null;
@@ -451,6 +453,7 @@ function Login() {
           onKeyUp={() => {
             clearTimeout(timeout);
             timeout = setTimeout(() => {
+              localStorage.setItem('documento', document.getElementById("inputUsuario").value);
               checkUsuario(document.getElementById("inputUsuario").value);
             }, 2000);
           }}
@@ -652,16 +655,12 @@ function Login() {
           alignSelf: "center",
         }}
       >
-        <div className="text2" style={{ fontSize: 16, display: usuario.prontuario == 1 ? 'flex' : 'none' }}>
-          UNIDADES ASSISTENCIAIS
-        </div>
         <div
           style={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "center",
             flexWrap: "wrap",
-            width: window.innerWidth < mobilewidth ? "80vw" : "45vw",
           }}
         >
           <div
@@ -683,7 +682,7 @@ function Login() {
               console.log(usuario);
             }}
           >
-            TODOS OS PACIENTES
+            PRONTUÁRIO
           </div>
           <div
             className="button"
@@ -725,41 +724,43 @@ function Login() {
           >
             PAINEL DE ATIVIDADES
           </div>
-          {acessos.map((item) => (
-            <div
-              key={"ACESSO: " + item.id_acesso}
-              className="button"
-              style={{
-                display: "flex",
-                padding: 10,
-                margin: 5,
-                minWidth: window.innerWidth < mobilewidth ? "30vw" : "15vw",
-                maxWidth: window.innerWidth < mobilewidth ? "30vw" : "15vw",
-                height: window.innerWidth < mobilewidth ? "30vw" : "15vw",
-                minHeight: window.innerWidth < mobilewidth ? "30vw" : "15vw",
-                maxHeight: window.innerWidth < mobilewidth ? "30vw" : "15vw",
-                color: 'white',
-              }}
-              onClick={() => {
-                setunidade(item.id_unidade);
-                if (item.id_unidade == 4) { // card para acesso à tela de triagem.
-                  setpagina(30);
-                  history.push("/triagem");
-                } else {
-                  setpagina(1);
-                  history.push("/prontuario");
-                  localStorage.setItem("viewlistaunidades", 1);
-                  localStorage.setItem("viewlistamodulos", 1);
-                }
-              }}
-            >
-              {unidades
-                .filter((valor) => valor.id_unidade == item.id_unidade)
-                .map(
-                  (valor) => valor.nome_cliente + " - " + valor.nome_unidade
-                )}
-            </div>
-          ))}
+          <div style={{ display: 'none' }}>
+            {acessos.map((item) => (
+              <div
+                key={"ACESSO: " + item.id_acesso}
+                className="button"
+                style={{
+                  display: "flex",
+                  padding: 10,
+                  margin: 5,
+                  minWidth: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+                  maxWidth: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+                  height: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+                  minHeight: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+                  maxHeight: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+                  color: 'white',
+                }}
+                onClick={() => {
+                  setunidade(item.id_unidade);
+                  if (item.id_unidade == 4) { // card para acesso à tela de triagem.
+                    setpagina(30);
+                    history.push("/triagem");
+                  } else {
+                    setpagina(1);
+                    history.push("/prontuario");
+                    localStorage.setItem("viewlistaunidades", 1);
+                    localStorage.setItem("viewlistamodulos", 1);
+                  }
+                }}
+              >
+                {unidades
+                  .filter((valor) => valor.id_unidade == item.id_unidade)
+                  .map(
+                    (valor) => valor.nome_cliente + " - " + valor.nome_unidade
+                  )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -775,7 +776,6 @@ function Login() {
           height: window.innerWidth < mobilewidth ? "30vw" : "15vw",
           minHeight: window.innerWidth < mobilewidth ? "30vw" : "15vw",
           maxHeight: window.innerWidth < mobilewidth ? "30vw" : "15vw",
-          margin: 5,
           padding: 10,
         }}
         onClick={() => {
@@ -797,16 +797,8 @@ function Login() {
           flexDirection: "column",
           justifyContent: "center",
           alignSelf: "center",
-          marginTop: 20,
         }}
       >
-        <div className="text2"
-          style={{
-            fontSize: 16,
-            display: usuario.paciente == 1 || usuario.laboratorio == 1 || usuario.farmacia == 1 || usuario.faturamento == 1 || usuario.usuarios == 1 ? 'flex' : 'none',
-          }}>
-          UNIDADES DE APOIO
-        </div>
         <div
           style={{
             display: "flex",
@@ -1098,8 +1090,41 @@ function Login() {
           ALTERAR SENHA
         </div>
         <Inputs></Inputs>
-        <ListaDeUnidadesAssistenciais></ListaDeUnidadesAssistenciais>
-        <ListaDeUnidadesDeApoio></ListaDeUnidadesDeApoio>
+        <div
+          style={{
+            display: usuario.tipo_usuario != 'CLIENTE' ? 'flex' : 'none',
+            flexDirection: 'column', justifyContent: 'center',
+          }}>
+          <ListaDeUnidadesAssistenciais></ListaDeUnidadesAssistenciais>
+          <ListaDeUnidadesDeApoio></ListaDeUnidadesDeApoio>
+        </div>
+        <div
+          style={{
+            display: usuario.tipo_usuario == 'CLIENTE' && viewcliente == 1 ? 'flex' : 'none',
+            flexDirection: 'column', justifyContent: 'center',
+          }}>
+          <div
+            className="button"
+            style={{
+              display: "flex",
+              padding: 10,
+              margin: 5,
+              minWidth: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+              maxWidth: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+              height: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+              minHeight: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+              maxHeight: window.innerWidth < mobilewidth ? "30vw" : "15vw",
+              color: 'white',
+              alignSelf: 'center',
+            }}
+            onClick={() => {
+              setpagina('cliente');
+              history.push("/cliente");
+            }}
+          >
+            ACESSAR MEU PRONTUÁRIO
+          </div>
+        </div>
         <CriarSenha></CriarSenha>
         <AlterarSenha></AlterarSenha>
         <div style={{

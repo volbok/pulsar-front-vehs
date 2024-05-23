@@ -526,7 +526,7 @@ function Cadastro() {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'flex-start',
+                  justifyContent: 'space-between',
                   alignItems: 'flex-start',
                 }}
                 onClick={() => {
@@ -541,23 +541,25 @@ function Cadastro() {
                   setvieweditpaciente(1)
                 }}
               >
-                <div className="texto_claro">
-                  {'NOME DO PACIENTE:'}
-                </div>
-                <div style={{ margin: 5, marginTop: 0, textAlign: 'left' }}>
-                  {item.nome_paciente.length > 25 ? item.nome_paciente.slice(0, 25) + '...' : item.nome_paciente}
-                </div>
-                <div className="texto_claro">
-                  {'DATA DE NASCIMENTO:'}
-                </div>
-                <div style={{ margin: 5, marginTop: 0, textAlign: 'left' }}>
-                  {moment(item.dn_paciente).format("DD/MM/YY")}
-                </div>
-                <div className="texto_claro">
-                  {'NOME DA MÃE DO PACIENTE:'}
-                </div>
-                <div style={{ margin: 5, marginTop: 0, textAlign: 'left' }}>
-                  {item.nome_mae_paciente.length > 25 ? item.nome_mae_paciente.slice(0, 25) + '...' : item.nome_mae_paciente}
+                <div>
+                  <div className="texto_claro">
+                    {'NOME DO CLIENTE:'}
+                  </div>
+                  <div style={{ margin: 5, marginTop: 0, textAlign: 'left' }}>
+                    {item.nome_paciente.length > 25 ? item.nome_paciente.slice(0, 25) + '...' : item.nome_paciente}
+                  </div>
+                  <div className="texto_claro">
+                    {'DATA DE NASCIMENTO:'}
+                  </div>
+                  <div style={{ margin: 5, marginTop: 0, textAlign: 'left' }}>
+                    {moment(item.dn_paciente).format("DD/MM/YY")}
+                  </div>
+                  <div className="texto_claro">
+                    {'NOME DA MÃE DO PACIENTE:'}
+                  </div>
+                  <div style={{ margin: 5, marginTop: 0, textAlign: 'left' }}>
+                    {item.nome_mae_paciente.length > 25 ? item.nome_mae_paciente.slice(0, 25) + '...' : item.nome_mae_paciente}
+                  </div>
                 </div>
                 <div
                   className="button"
@@ -642,13 +644,14 @@ function Cadastro() {
         onClick={() => setvieweditpaciente(0)}
       >
         <div
-          className="janela"
+          className="janela scroll"
           onClick={(e) => e.stopPropagation()}
           style={{
-            position: 'relative',
-            flexDirection: "row",
-            justifyContent: "center",
-            alignSelf: "center",
+            display: 'flex',
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            width: '90vw',
+            height: '90vh',
           }}
         >
           <div id="botão para fechar tela de edição do paciente e movimentação de leito"
@@ -656,7 +659,7 @@ function Cadastro() {
             onClick={() => setvieweditpaciente(0)}
             style={{
               display: vieweditpaciente == 1 ? "flex" : "none",
-              position: 'absolute', top: 10, right: 10
+              alignSelf: 'flex-end',
             }}
           >
             <img
@@ -669,878 +672,868 @@ function Cadastro() {
               }}
             ></img>
           </div>
-          <div id="dados do paciente"
-            className="scroll"
-            style={{
-              flexDirection: "column",
-              justifyContent: 'flex-start',
-              alignItems: "center",
-              height: '85vh',
-              marginRight: vieweditpaciente == 1 ? 20 : '',
-            }}
-          >
-            <div id="nome do paciente"
+          <div style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            flexDirection: window.innerWidth < 769 ? 'column' : 'row',
+          }}>
+            <div id="dados do paciente"
               style={{
-                display: "flex",
                 flexDirection: "column",
-                justifyContent: "center",
+                justifyContent: 'flex-start',
+                alignItems: "center",
+                marginRight: 0,
               }}
             >
-              <div className="text1">NOME DO PACIENTE</div>
-              <textarea
-                autoComplete="off"
-                placeholder="NOME DO PACIENTE"
-                className="textarea"
-                type="text"
-                id="inputEditNomePaciente"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "NOME DO PACIENTE")}
-                defaultValue={vieweditpaciente == 1 ? paciente.nome_paciente : ''}
+              <div id="nome do paciente"
                 style={{
-                  flexDirection: "center",
+                  display: "flex",
+                  flexDirection: "column",
                   justifyContent: "center",
-                  alignSelf: "center",
-                  width: 400,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
                 }}
-              ></textarea>
-            </div>
-            <div id="nome do responsavel"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">NOME DO RESPONSÁVEL</div>
-              <textarea
-                autoComplete="off"
-                placeholder="NOME DO RESPONSÁVEL"
-                className="textarea"
-                type="text"
-                id="inputEditNomeResponsavel"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "NOME DO RESPONSÁVEL")}
-                defaultValue={vieweditpaciente == 1 ? paciente.nome_responsavel : ''}
+              >
+                <div className="text1">NOME DO PACIENTE</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="NOME DO PACIENTE"
+                  className="textarea"
+                  type="text"
+                  id="inputEditNomePaciente"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "NOME DO PACIENTE")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.nome_paciente : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 400,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="nome do responsavel"
                 style={{
-                  flexDirection: "center",
+                  display: "flex",
+                  flexDirection: "column",
                   justifyContent: "center",
-                  alignSelf: "center",
-                  width: 400,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
                 }}
-              ></textarea>
-            </div>
-            <div id="dn paciente"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">DATA DE NASCIMENTO</div>
-              <textarea
-                autoComplete="off"
-                placeholder="DN"
-                className="textarea"
-                type="text"
-                inputMode="numeric"
-                maxLength={10}
-                id="inputEditDn"
-                title="FORMATO: DD/MM/YYYY"
-                onClick={() => document.getElementById("inputEditDn").value = ""}
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "DN")}
-                onKeyUp={() => maskdate(timeout, "inputEditDn")}
-                defaultValue={vieweditpaciente == 1 ? moment(paciente.dn_paciente).format("DD/MM/YYYY") : moment().format('DD/MM/YYYY')}
+              >
+                <div className="text1">NOME DO RESPONSÁVEL</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="NOME DO RESPONSÁVEL"
+                  className="textarea"
+                  type="text"
+                  id="inputEditNomeResponsavel"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "NOME DO RESPONSÁVEL")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.nome_responsavel : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 400,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="dn paciente"
                 style={{
-                  flexDirection: "center",
+                  display: "flex",
+                  flexDirection: "column",
                   justifyContent: "center",
-                  alignSelf: "center",
-                  width: 100,
-                  textAlign: "center",
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
                 }}
-              ></textarea>
-            </div>
-            <div id="sexo"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">SEXO</div>
-              <textarea
-                autoComplete="off"
-                placeholder="SEXO"
-                className="textarea"
-                type="text"
-                id="inputEditSexo"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "SEXO")}
-                defaultValue={vieweditpaciente == 1 ? paciente.sexo : ''}
+              >
+                <div className="text1">DATA DE NASCIMENTO</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="DN"
+                  className="textarea"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={10}
+                  id="inputEditDn"
+                  title="FORMATO: DD/MM/YYYY"
+                  onClick={() => document.getElementById("inputEditDn").value = ""}
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "DN")}
+                  onKeyUp={() => maskdate(timeout, "inputEditDn")}
+                  defaultValue={vieweditpaciente == 1 ? moment(paciente.dn_paciente).format("DD/MM/YYYY") : moment().format('DD/MM/YYYY')}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 100,
+                    textAlign: "center",
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="sexo"
                 style={{
-                  flexDirection: "center",
+                  display: "flex",
+                  flexDirection: "column",
                   justifyContent: "center",
-                  alignSelf: "center",
-                  textAlign: "center",
-                  width: 100,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
                 }}
-              ></textarea>
-            </div>
-            <div id="nacionalidade"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">NACIONALIDADE</div>
-              <textarea
-                autoComplete="off"
-                placeholder="NACIONALIDADE"
-                className="textarea"
-                type="text"
-                id="inputEditNacionalidade"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "NACIONALIDADE")}
-                defaultValue={vieweditpaciente == 1 ? paciente.nacionalidade : ''}
+              >
+                <div className="text1">SEXO</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="SEXO"
+                  className="textarea"
+                  type="text"
+                  id="inputEditSexo"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "SEXO")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.sexo : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    textAlign: "center",
+                    width: 100,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="nacionalidade"
                 style={{
-                  flexDirection: "center",
+                  display: "flex",
+                  flexDirection: "column",
                   justifyContent: "center",
-                  alignSelf: "center",
-                  width: 400,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
                 }}
-              ></textarea>
-            </div>
-            <div id="cor"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">COR</div>
-              <textarea
-                autoComplete="off"
-                placeholder="COR"
-                className="textarea"
-                type="text"
-                id="inputEditCor"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "COR")}
-                defaultValue={vieweditpaciente == 1 ? paciente.cor : ''}
+              >
+                <div className="text1">NACIONALIDADE</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="NACIONALIDADE"
+                  className="textarea"
+                  type="text"
+                  id="inputEditNacionalidade"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "NACIONALIDADE")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.nacionalidade : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 400,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="cor"
                 style={{
-                  flexDirection: "center",
+                  display: "flex",
+                  flexDirection: "column",
                   justifyContent: "center",
-                  alignSelf: "center",
-                  width: 400,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
                 }}
-              ></textarea>
-            </div>
-            <div id="etnia"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">ETNIA</div>
-              <textarea
-                autoComplete="off"
-                placeholder="ETNIA"
-                className="textarea"
-                type="text"
-                id="inputEditEtnia"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "ETNIA")}
-                defaultValue={vieweditpaciente == 1 ? paciente.etnia : ''}
+              >
+                <div className="text1">COR</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="COR"
+                  className="textarea"
+                  type="text"
+                  id="inputEditCor"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "COR")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.cor : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 400,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="etnia"
                 style={{
-                  flexDirection: "center",
+                  display: "flex",
+                  flexDirection: "column",
                   justifyContent: "center",
-                  alignSelf: "center",
-                  width: 400,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
                 }}
-              ></textarea>
-            </div>
+              >
+                <div className="text1">ETNIA</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="ETNIA"
+                  className="textarea"
+                  type="text"
+                  id="inputEditEtnia"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "ETNIA")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.etnia : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 400,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
 
-            <div id="documento"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">DOCUMENTO</div>
-              <div
+              <div id="documento"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="text1">DOCUMENTO</div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <input id="inputEditTipoDocumento"
+                    autoComplete="off"
+                    placeholder="TIPO DE DOC."
+                    className="input destacaborda"
+                    type="text"
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    onBlur={(e) => (e.target.placeholder = "TIPO DE DOC.")}
+                    defaultValue={vieweditpaciente == 1 ? paciente.tipo_documento : ''}
+                    onClick={() => setviewtipodocumento(1)}
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      width: 130,
+                      alignContent: "center",
+                      textAlign: "center",
+                    }}
+                  ></input>
+                  <textarea id="inputEditNumeroDocumento"
+                    autoComplete="off"
+                    placeholder="NÚMERO DO DOCUMENTO"
+                    className="textarea"
+                    type="text"
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    onBlur={(e) => (e.target.placeholder = "NÚMERO DO DOCUMENTO")}
+                    defaultValue={vieweditpaciente == 1 ? paciente.numero_documento : ''}
+                    style={{
+                      flexDirection: "center",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      textAlign: "center",
+                      width: 100,
+                      padding: 15,
+                      height: 20,
+                      minHeight: 20,
+                      maxHeight: 20,
+                    }}
+                  ></textarea>
+                </div>
+              </div>
+              <div id="orgao emissor"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="text1">ÓRGÃO EMISSOR</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="ÓRGÃO EMISSOR"
+                  className="textarea"
+                  type="text"
+                  id="inputEditOrgaoEmissor"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "ÓRGÃO EMISSOR")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.orgao_emissor : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 200,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="cns"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="text1">CNS</div>
+                <textarea
+                  title="CNS = CARTÃO NACIONAL DE SAÚDE."
+                  autoComplete="off"
+                  placeholder="CNS"
+                  className="textarea"
+                  type="text"
+                  id="inputEditCns"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "CNS")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.cns : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 200,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="nome da mae"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="text1">NOME DA MÃE</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="NOME DA MÃE"
+                  className="textarea"
+                  type="text"
+                  id="inputEditNomeMae"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "NOME DA MÃE")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.nome_mae_paciente : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 400,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="endereco completo"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="text1">ENDEREÇO</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="BUSCAR CEP..."
+                  className="textarea"
+                  type="text"
+                  id="inputEditCep"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "BUSCAR CEP...")}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    textAlign: 'center',
+                    width: 100,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                  onKeyUp={() => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                      pegaEndereco(document.getElementById("inputEditCep").value);
+                    }, 2000);
+                  }}
+                ></textarea>
+                <textarea id="inputEditEndereco"
+                  className="textarea"
+                  type="text"
+                  defaultValue={vieweditpaciente == 1 ? paciente.endereco : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 400,
+                    padding: 15,
+                    height: 75,
+                    minHeight: 75,
+                    maxHeight: 75,
+                  }}
+                ></textarea>
+
+                <div id="endereco - logradouro"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div className="text1">LOGRADOURO</div>
+                  <textarea
+                    className="textarea"
+                    type="text"
+                    id="inputEditLogradouro"
+                    placeholder="LOGRADOURO"
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    onBlur={(e) => (e.target.placeholder = "LOGRADOURO (RUA, PRAÇA)...")}
+                    defaultValue={vieweditpaciente == 1 ? paciente.logradouro : ''}
+                    style={{
+                      flexDirection: "center",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      width: 400,
+                      padding: 15,
+                      height: 20,
+                      minHeight: 20,
+                      maxHeight: 20,
+                    }}
+                  ></textarea>
+                </div>
+                <div id="endereco - numero"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div className="text1">NÚMERO</div>
+                  <textarea
+                    className="textarea"
+                    type="text"
+                    id="inputEditEnderecoNumero"
+                    placeholder="NÚMERO"
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    onBlur={(e) => (e.target.placeholder = "NUMERO...")}
+                    defaultValue={vieweditpaciente == 1 ? paciente.endereco_numero : ''}
+                    style={{
+                      flexDirection: "center",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      width: 100,
+                      padding: 15,
+                      height: 20,
+                      minHeight: 20,
+                      maxHeight: 20,
+                    }}
+                  ></textarea>
+                </div>
+                <div id="endereco - complemento"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div className="text1">COMPLEMENTO</div>
+                  <textarea
+                    className="textarea"
+                    type="text"
+                    id="inputEditEnderecoComplemento"
+                    placeholder="COMPLEMENTO"
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    onBlur={(e) => (e.target.placeholder = "COMPLEMENTO...")}
+                    defaultValue={vieweditpaciente == 1 ? paciente.endereco_complemento : ''}
+                    style={{
+                      flexDirection: "center",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      width: 400,
+                      padding: 15,
+                      height: 20,
+                      minHeight: 20,
+                      maxHeight: 20,
+                    }}
+                  ></textarea>
+                </div>
+                <div id="endereco - bairro"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div className="text1">BAIRRO</div>
+                  <textarea
+                    className="textarea"
+                    type="text"
+                    id="inputEditBairro"
+                    placeholder="BAIRRO"
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    onBlur={(e) => (e.target.placeholder = "BAIRRO...")}
+                    defaultValue={vieweditpaciente == 1 ? paciente.bairro : ''}
+                    style={{
+                      flexDirection: "center",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      width: 400,
+                      padding: 15,
+                      height: 20,
+                      minHeight: 20,
+                      maxHeight: 20,
+                    }}
+                  ></textarea>
+                </div>
+                <div id="endereco - localidade"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div className="text1">CIDADE/LOCALIDADE</div>
+                  <textarea
+                    className="textarea"
+                    type="text"
+                    id="inputEditLocalidade"
+                    placeholder="LOCALIDADE"
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    onBlur={(e) => (e.target.placeholder = "LOCALIDADE (CIDADE)...")}
+                    defaultValue={vieweditpaciente == 1 ? paciente.localidade : ''}
+                    style={{
+                      flexDirection: "center",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      width: 400,
+                      padding: 15,
+                      height: 20,
+                      minHeight: 20,
+                      maxHeight: 20,
+                    }}
+                  ></textarea>
+                </div>
+                <div id="endereco - uf"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div className="text1">UF</div>
+                  <textarea
+                    className="textarea"
+                    type="text"
+                    id="inputEditUf"
+                    placeholder="UF"
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    onBlur={(e) => (e.target.placeholder = "UF")}
+                    defaultValue={vieweditpaciente == 1 ? paciente.uf : ''}
+                    style={{
+                      flexDirection: "center",
+                      justifyContent: "center",
+                      alignSelf: "center",
+                      textAlign: "center",
+                      width: 100,
+                      padding: 15,
+                      height: 20,
+                      minHeight: 20,
+                      maxHeight: 20,
+                    }}
+                  ></textarea>
+                </div>
+              </div>
+
+              <div id="telefone"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="text1">TELEFONE</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="TELEFONE"
+                  className="textarea"
+                  type="text"
+                  id="inputEditTelefone"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "TELEFONE")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.telefone : ''}
+                  onKeyUp={() =>
+                    maskphone(timeout, "inputEditTelefone")
+                  }
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 100,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="email"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="text1">EMAIL</div>
+                <textarea
+                  autoComplete="off"
+                  placeholder="EMAIL"
+                  className="textarea nocaps"
+                  type="text"
+                  id="inputEditEmail"
+                  onFocus={(e) => (e.target.placeholder = "")}
+                  onBlur={(e) => (e.target.placeholder = "EMAIL")}
+                  defaultValue={vieweditpaciente == 1 ? paciente.email : ''}
+                  style={{
+                    flexDirection: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    width: 400,
+                    padding: 15,
+                    height: 20,
+                    minHeight: 20,
+                    maxHeight: 20,
+                  }}
+                ></textarea>
+              </div>
+              <div id="botões da tela editar paciente"
                 style={{
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "center",
-                  flexWrap: "wrap",
+                  marginTop: 10,
                 }}
               >
-                <input id="inputEditTipoDocumento"
-                  autoComplete="off"
-                  placeholder="TIPO DE DOC."
-                  className="input destacaborda"
-                  type="text"
-                  onFocus={(e) => (e.target.placeholder = "")}
-                  onBlur={(e) => (e.target.placeholder = "TIPO DE DOC.")}
-                  defaultValue={vieweditpaciente == 1 ? paciente.tipo_documento : ''}
-                  onClick={() => setviewtipodocumento(1)}
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    width: 130,
-                    alignContent: "center",
-                    textAlign: "center",
+                <div id="botão para fechar tela de edição do paciente e movimentação de leito"
+                  className="button-yellow"
+                  onClick={() => setvieweditpaciente(0)}
+                  style={{ display: vieweditpaciente == 2 ? "flex" : "none" }}
+                >
+                  <img
+                    alt=""
+                    src={back}
+                    style={{
+                      margin: 10,
+                      height: 30,
+                      width: 30,
+                    }}
+                  ></img>
+                </div>
+                <div id="btnUpdatePaciente"
+                  title={vieweditpaciente == 1 ? "ATUALIZAR DADOS DO PACIENTE" : "SALVAR REGISTRO DE PACIENTE"}
+                  className="button-green"
+                  onClick={() => {
+                    if (vieweditpaciente == 1) {
+                      checkinput('textarea', settoast, ["inputEditNomePaciente", "inputEditDn", "inputEditNumeroDocumento", "inputEditNomeMae", "inputEditEndereco", "inputEditTelefone", "inputEditEmail"], "btnUpdatePaciente", updatePaciente, [])
+                    } else {
+                      checkinput('textarea', settoast, ["inputEditNomePaciente", "inputEditDn", "inputEditNumeroDocumento", "inputEditNomeMae", "inputEditEndereco", "inputEditTelefone", "inputEditEmail"], "btnUpdatePaciente", insertPaciente, [])
+                    }
                   }}
-                ></input>
-                <textarea id="inputEditNumeroDocumento"
-                  autoComplete="off"
-                  placeholder="NÚMERO DO DOCUMENTO"
-                  className="textarea"
-                  type="text"
-                  onFocus={(e) => (e.target.placeholder = "")}
-                  onBlur={(e) => (e.target.placeholder = "NÚMERO DO DOCUMENTO")}
-                  defaultValue={vieweditpaciente == 1 ? paciente.numero_documento : ''}
-                  style={{
-                    flexDirection: "center",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    textAlign: "center",
-                    width: 100,
-                    padding: 15,
-                    height: 20,
-                    minHeight: 20,
-                    maxHeight: 20,
+                  style={{ width: 50, height: 50, alignSelf: "center" }}
+                >
+                  <img
+                    alt=""
+                    src={salvar}
+                    style={{
+                      margin: 10,
+                      height: 30,
+                      width: 30,
+                    }}
+                  ></img>
+                </div>
+                <div id="btnDeletePaciente"
+                  title="EXCLUIR PACIENTE"
+                  className="button-yellow"
+                  onClick={() => {
+                    modal(
+                      setdialogo,
+                      "TEM CERTEZA QUE DESEJA EXCLUIR O REGISTRO DESTE PACIENTE? ESTA AÇÃO É IRREVERSÍVEL.",
+                      deletePaciente,
+                      paciente.id_paciente
+                    );
                   }}
-                ></textarea>
+                  style={{ width: 50, height: 50, alignSelf: "center" }}
+                >
+                  <img
+                    alt=""
+                    src={deletar}
+                    style={{
+                      margin: 10,
+                      height: 30,
+                      width: 30,
+                    }}
+                  ></img>
+                </div>
               </div>
             </div>
-            <div id="orgao emissor"
+            <div id="card status de atendimento"
+              className="card cor7"
               style={{
-                display: "flex",
+                display: vieweditpaciente == 1 ? "flex" : "none",
                 flexDirection: "column",
-                justifyContent: "center",
+                justifyContent: 'center',
+                margin: window.innerWidth < 769 ? 5 : 20,
+                marginRight: 5,
+                width: '40vw',
+                alignSelf: 'center',
               }}
             >
-              <div className="text1">ÓRGÃO EMISSOR</div>
-              <textarea
-                autoComplete="off"
-                placeholder="ÓRGÃO EMISSOR"
-                className="textarea"
-                type="text"
-                id="inputEditOrgaoEmissor"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "ÓRGÃO EMISSOR")}
-                defaultValue={vieweditpaciente == 1 ? paciente.orgao_emissor : ''}
+              <div id="paciente sem atendimento ativo"
                 style={{
-                  flexDirection: "center",
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  width: 200,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
-                }}
-              ></textarea>
-            </div>
-            <div id="cns"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">CNS</div>
-              <textarea
-                title="CNS = CARTÃO NACIONAL DE SAÚDE."
-                autoComplete="off"
-                placeholder="CNS"
-                className="textarea"
-                type="text"
-                id="inputEditCns"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "CNS")}
-                defaultValue={vieweditpaciente == 1 ? paciente.cns : ''}
-                style={{
-                  flexDirection: "center",
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  width: 200,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
-                }}
-              ></textarea>
-            </div>
-            <div id="nome da mae"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">NOME DA MÃE</div>
-              <textarea
-                autoComplete="off"
-                placeholder="NOME DA MÃE"
-                className="textarea"
-                type="text"
-                id="inputEditNomeMae"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "NOME DA MÃE")}
-                defaultValue={vieweditpaciente == 1 ? paciente.nome_mae_paciente : ''}
-                style={{
-                  flexDirection: "center",
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  width: 400,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
-                }}
-              ></textarea>
-            </div>
-            <div id="endereco completo"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">ENDEREÇO</div>
-              <textarea
-                autoComplete="off"
-                placeholder="BUSCAR CEP..."
-                className="textarea"
-                type="text"
-                id="inputEditCep"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "BUSCAR CEP...")}
-                style={{
-                  flexDirection: "center",
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  textAlign: 'center',
-                  width: 100,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
-                }}
-                onKeyUp={() => {
-                  clearTimeout(timeout);
-                  timeout = setTimeout(() => {
-                    pegaEndereco(document.getElementById("inputEditCep").value);
-                  }, 2000);
-                }}
-              ></textarea>
-              <textarea id="inputEditEndereco"
-                className="textarea"
-                type="text"
-                defaultValue={vieweditpaciente == 1 ? paciente.endereco : ''}
-                style={{
-                  flexDirection: "center",
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  width: 400,
-                  padding: 15,
-                  height: 75,
-                  minHeight: 75,
-                  maxHeight: 75,
-                }}
-              ></textarea>
-
-              <div id="endereco - logradouro"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <div className="text1">LOGRADOURO</div>
-                <textarea
-                  className="textarea"
-                  type="text"
-                  id="inputEditLogradouro"
-                  placeholder="LOGRADOURO"
-                  onFocus={(e) => (e.target.placeholder = "")}
-                  onBlur={(e) => (e.target.placeholder = "LOGRADOURO (RUA, PRAÇA)...")}
-                  defaultValue={vieweditpaciente == 1 ? paciente.logradouro : ''}
-                  style={{
-                    flexDirection: "center",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    width: 400,
-                    padding: 15,
-                    height: 20,
-                    minHeight: 20,
-                    maxHeight: 20,
-                  }}
-                ></textarea>
-              </div>
-              <div id="endereco - numero"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <div className="text1">NÚMERO</div>
-                <textarea
-                  className="textarea"
-                  type="text"
-                  id="inputEditEnderecoNumero"
-                  placeholder="NÚMERO"
-                  onFocus={(e) => (e.target.placeholder = "")}
-                  onBlur={(e) => (e.target.placeholder = "NUMERO...")}
-                  defaultValue={vieweditpaciente == 1 ? paciente.endereco_numero : ''}
-                  style={{
-                    flexDirection: "center",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    width: 100,
-                    padding: 15,
-                    height: 20,
-                    minHeight: 20,
-                    maxHeight: 20,
-                  }}
-                ></textarea>
-              </div>
-              <div id="endereco - complemento"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <div className="text1">COMPLEMENTO</div>
-                <textarea
-                  className="textarea"
-                  type="text"
-                  id="inputEditEnderecoComplemento"
-                  placeholder="COMPLEMENTO"
-                  onFocus={(e) => (e.target.placeholder = "")}
-                  onBlur={(e) => (e.target.placeholder = "COMPLEMENTO...")}
-                  defaultValue={vieweditpaciente == 1 ? paciente.endereco_complemento : ''}
-                  style={{
-                    flexDirection: "center",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    width: 400,
-                    padding: 15,
-                    height: 20,
-                    minHeight: 20,
-                    maxHeight: 20,
-                  }}
-                ></textarea>
-              </div>
-              <div id="endereco - bairro"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <div className="text1">BAIRRO</div>
-                <textarea
-                  className="textarea"
-                  type="text"
-                  id="inputEditBairro"
-                  placeholder="BAIRRO"
-                  onFocus={(e) => (e.target.placeholder = "")}
-                  onBlur={(e) => (e.target.placeholder = "BAIRRO...")}
-                  defaultValue={vieweditpaciente == 1 ? paciente.bairro : ''}
-                  style={{
-                    flexDirection: "center",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    width: 400,
-                    padding: 15,
-                    height: 20,
-                    minHeight: 20,
-                    maxHeight: 20,
-                  }}
-                ></textarea>
-              </div>
-              <div id="endereco - localidade"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <div className="text1">CIDADE/LOCALIDADE</div>
-                <textarea
-                  className="textarea"
-                  type="text"
-                  id="inputEditLocalidade"
-                  placeholder="LOCALIDADE"
-                  onFocus={(e) => (e.target.placeholder = "")}
-                  onBlur={(e) => (e.target.placeholder = "LOCALIDADE (CIDADE)...")}
-                  defaultValue={vieweditpaciente == 1 ? paciente.localidade : ''}
-                  style={{
-                    flexDirection: "center",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    width: 400,
-                    padding: 15,
-                    height: 20,
-                    minHeight: 20,
-                    maxHeight: 20,
-                  }}
-                ></textarea>
-              </div>
-              <div id="endereco - uf"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <div className="text1">UF</div>
-                <textarea
-                  className="textarea"
-                  type="text"
-                  id="inputEditUf"
-                  placeholder="UF"
-                  onFocus={(e) => (e.target.placeholder = "")}
-                  onBlur={(e) => (e.target.placeholder = "UF")}
-                  defaultValue={vieweditpaciente == 1 ? paciente.uf : ''}
-                  style={{
-                    flexDirection: "center",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    textAlign: "center",
-                    width: 100,
-                    padding: 15,
-                    height: 20,
-                    minHeight: 20,
-                    maxHeight: 20,
-                  }}
-                ></textarea>
-              </div>
-            </div>
-
-            <div id="telefone"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">TELEFONE</div>
-              <textarea
-                autoComplete="off"
-                placeholder="TELEFONE"
-                className="textarea"
-                type="text"
-                id="inputEditTelefone"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "TELEFONE")}
-                defaultValue={vieweditpaciente == 1 ? paciente.telefone : ''}
-                onKeyUp={() =>
-                  maskphone(timeout, "inputEditTelefone")
-                }
-                style={{
-                  flexDirection: "center",
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  width: 100,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
-                }}
-              ></textarea>
-            </div>
-            <div id="email"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="text1">EMAIL</div>
-              <textarea
-                autoComplete="off"
-                placeholder="EMAIL"
-                className="textarea nocaps"
-                type="text"
-                id="inputEditEmail"
-                onFocus={(e) => (e.target.placeholder = "")}
-                onBlur={(e) => (e.target.placeholder = "EMAIL")}
-                defaultValue={vieweditpaciente == 1 ? paciente.email : ''}
-                style={{
-                  flexDirection: "center",
-                  justifyContent: "center",
-                  alignSelf: "center",
-                  width: 400,
-                  padding: 15,
-                  height: 20,
-                  minHeight: 20,
-                  maxHeight: 20,
-                }}
-              ></textarea>
-            </div>
-            <div id="botões da tela editar paciente"
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                marginTop: 10,
-              }}
-            >
-              <div id="botão para fechar tela de edição do paciente e movimentação de leito"
-                className="button-yellow"
-                onClick={() => setvieweditpaciente(0)}
-                style={{ display: vieweditpaciente == 2 ? "flex" : "none" }}
-              >
-                <img
-                  alt=""
-                  src={back}
-                  style={{
-                    margin: 10,
-                    height: 30,
-                    width: 30,
-                  }}
-                ></img>
-              </div>
-              <div id="btnUpdatePaciente"
-                title={vieweditpaciente == 1 ? "ATUALIZAR DADOS DO PACIENTE" : "SALVAR REGISTRO DE PACIENTE"}
-                className="button-green"
-                onClick={() => {
-                  if (vieweditpaciente == 1) {
-                    checkinput('textarea', settoast, ["inputEditNomePaciente", "inputEditDn", "inputEditNumeroDocumento", "inputEditNomeMae", "inputEditEndereco", "inputEditTelefone", "inputEditEmail"], "btnUpdatePaciente", updatePaciente, [])
-                  } else {
-                    checkinput('textarea', settoast, ["inputEditNomePaciente", "inputEditDn", "inputEditNumeroDocumento", "inputEditNomeMae", "inputEditEndereco", "inputEditTelefone", "inputEditEmail"], "btnUpdatePaciente", insertPaciente, [])
-                  }
-                }}
-                style={{ width: 50, height: 50, alignSelf: "center" }}
-              >
-                <img
-                  alt=""
-                  src={salvar}
-                  style={{
-                    margin: 10,
-                    height: 30,
-                    width: 30,
-                  }}
-                ></img>
-              </div>
-              <div id="btnDeletePaciente"
-                title="EXCLUIR PACIENTE"
-                className="button-yellow"
-                onClick={() => {
-                  modal(
-                    setdialogo,
-                    "TEM CERTEZA QUE DESEJA EXCLUIR O REGISTRO DESTE PACIENTE? ESTA AÇÃO É IRREVERSÍVEL.",
-                    deletePaciente,
-                    paciente.id_paciente
-                  );
-                }}
-                style={{ width: 50, height: 50, alignSelf: "center" }}
-              >
-                <img
-                  alt=""
-                  src={deletar}
-                  style={{
-                    margin: 10,
-                    height: 30,
-                    width: 30,
-                  }}
-                ></img>
-              </div>
-            </div>
-          </div>
-          <div id="card status de atendimento"
-            className="card cor7"
-            style={{
-              position: "sticky",
-              top: 10,
-              display: vieweditpaciente == 1 ? "flex" : "none",
-              flexDirection: "column",
-              justifyContent: "center",
-              marginTop: 0,
-              marginBottom: 20,
-              width: '40vw',
-            }}
-          >
-            <div id="paciente sem atendimento ativo"
-              style={{
-                display:
-                  atendimentos.filter(
-                    (item) =>
-                      item.id_paciente == paciente.id_paciente &&
-                      item.data_termino == null
-                  ).length == 0
-                    ? "flex"
-                    : "none",
-                flexDirection: "column",
-                justifyContent: "center",
-                width: window.innerWidth < 426 ? "70vw" : "30vw",
-                alignSelf: "center",
-              }}
-            >
-              <div className="text1" style={{ margin: 15, width: '100%' }}>
-                {
-                  "PACIENTE NÃO ESTÁ EM ATENDIMENTO NOS HOSPITAIS CADASTRADOS EM NOSSA BASE."
-                }
-              </div>
-              <div className="button" onClick={() => { setviewseletorunidades(1) }}>
-                INICIAR ATENDIMENTO
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              ></div>
-            </div>
-            <div id="em atendimento na unidade logada"
-              className="card cor5hover"
-              style={{
-                display:
-                  atendimentos.filter(
-                    (item) =>
-                      item.id_paciente == paciente.id_paciente &&
-                      item.data_termino == null
-                  ).length > 0
-                    ? "flex"
-                    : "none",
-                flexDirection: "column",
-                justifyContent: "center",
-                width: window.innerWidth < 426 ? "70vw" : "30vw",
-                alignSelf: "center",
-              }}
-            >
-              <div className="text1"
-                style={{
-                  width: '100%',
                   display:
                     atendimentos.filter(
                       (item) =>
                         item.id_paciente == paciente.id_paciente &&
-                        item.data_termino == null && item.id_unidade != 4
+                        item.data_termino == null
+                    ).length == 0
+                      ? "flex"
+                      : "none",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignSelf: "center",
+                }}
+              >
+                <div className="text1" style={{ margin: 15, width: '100%' }}>
+                  {
+                    "PACIENTE NÃO ESTÁ EM ATENDIMENTO NOS HOSPITAIS CADASTRADOS EM NOSSA BASE."
+                  }
+                </div>
+                <div className="button" onClick={() => { setviewseletorunidades(1) }}>
+                  INICIAR ATENDIMENTO
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                ></div>
+              </div>
+              <div id="em atendimento na unidade logada"
+                className="card cor5hover"
+                style={{
+                  display:
+                    atendimentos.filter(
+                      (item) =>
+                        item.id_paciente == paciente.id_paciente &&
+                        item.data_termino == null
                     ).length > 0
                       ? "flex"
                       : "none",
-                }}>
-                {"PACIENTE ATUALMENTE EM ATENDIMENTO: UNIDADE " +
-                  unidades
-                    .filter(
-                      (value) =>
-                        value.id_unidade ==
-                        atendimento.map((item) => item.id_unidade)
-                    )
-                    .map((item) => item.nome_unidade) +
-                  " - LEITO " +
-                  atendimento.map((item) => item.leito)}
-              </div>
-              <div className="text1"
-                style={{
-                  width: '100%',
-                  display: atendimento.map(item => item.id_unidade) == 4 ? 'flex' : 'none',
-                }}>
-                {atendimento.id_unidade}
-                {"PACIENTE AGUARDANDO TRIAGEM PARA ATENDIMENTO"}
-              </div>
-              <div className="button" onClick={() => setviewseletorunidades(1)}>
-                ALTERAR LEITO
-              </div>
-              <div
-                className="button-yellow"
-                title="ENCERRAR ATENDIMENTO"
-                onClick={() => {
-                  modal(
-                    setdialogo,
-                    "TEM CERTEZA DE QUE DESEJA ENCERRAR ESTE ATENDIMENTO? ESTA OPERAÇÃO É IRREVERSÍVEL.",
-                    closeAtendimento,
-                    atendimento
-                  );
-                }}
-              >
-                ENCERRAR ATENDIMENTO
-              </div>
-            </div>
-            <div id="em atendimento em outro serviço"
-              className="card cor6hover"
-              style={{
-                display:
-                  atendimentos.filter(
-                    (item) =>
-                      item.id_paciente == paciente.id_paciente &&
-                      item.id_unidade != unidade &&
-                      item.id_cliente != hospital &&
-                      item.data_termino == null
-                  ).length > 0
-                    ? "flex"
-                    : "none",
-                flexDirection: "column",
-                justifyContent: "center",
-                width: window.innerWidth < 426 ? "70vw" : "30vw",
-                alignSelf: "center",
-              }}
-            >
-              <div className="text1" style={{
-                width: '100%',
-              }}>
-                {"PACIENTE COM ATENDIMENTO ATIVO EM OUTRO SERVIÇO"}
-              </div>
-              <div className="button" onClick={() => setviewseletorunidades(1)}>
-                ALTERAR LEITO
-              </div>
-              <div
-                style={{
-                  display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
+                  alignSelf: "center",
                 }}
-              ></div>
-            </div>
-            <div id="botão para agendar consulta"
-              className="button"
-              style={{ width: 100, height: 100, alignSelf: 'center' }}
-              onClick={() => {
-                setpagina(20);
-                history.push("/agendamento");
-              }}
-            >
-              AGENDAR CONSULTA
+              >
+                <div className="text1"
+                  style={{
+                    width: '100%',
+                    display:
+                      atendimentos.filter(
+                        (item) =>
+                          item.id_paciente == paciente.id_paciente &&
+                          item.data_termino == null && item.id_unidade != 4
+                      ).length > 0
+                        ? "flex"
+                        : "none",
+                  }}>
+                  {"PACIENTE ATUALMENTE EM ATENDIMENTO: UNIDADE " +
+                    unidades
+                      .filter(
+                        (value) =>
+                          value.id_unidade ==
+                          atendimento.map((item) => item.id_unidade)
+                      )
+                      .map((item) => item.nome_unidade) +
+                    " - LEITO " +
+                    atendimento.map((item) => item.leito)}
+                </div>
+                <div className="text1"
+                  style={{
+                    display: atendimento.map(item => item.id_unidade) == 4 ? 'flex' : 'none',
+                  }}>
+                  {atendimento.id_unidade}
+                  {"PACIENTE AGUARDANDO TRIAGEM PARA ATENDIMENTO"}
+                </div>
+                <div className="button" onClick={() => setviewseletorunidades(1)}>
+                  ALTERAR LEITO
+                </div>
+                <div
+                  className="button-yellow"
+                  title="ENCERRAR ATENDIMENTO"
+                  onClick={() => {
+                    modal(
+                      setdialogo,
+                      "TEM CERTEZA DE QUE DESEJA ENCERRAR ESTE ATENDIMENTO? ESTA OPERAÇÃO É IRREVERSÍVEL.",
+                      closeAtendimento,
+                      atendimento
+                    );
+                  }}
+                >
+                  ENCERRAR ATENDIMENTO
+                </div>
+              </div>
+              <div id="em atendimento em outro serviço"
+                className="card cor6hover"
+                style={{
+                  display:
+                    atendimentos.filter(
+                      (item) =>
+                        item.id_paciente == paciente.id_paciente &&
+                        item.id_unidade != unidade &&
+                        item.id_cliente != hospital &&
+                        item.data_termino == null
+                    ).length > 0
+                      ? "flex"
+                      : "none",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  // width: window.innerWidth < 426 ? "70vw" : "30vw",
+                  alignSelf: "center",
+                }}
+              >
+                <div className="text1" style={{
+                  width: '100%',
+                }}>
+                  {"PACIENTE COM ATENDIMENTO ATIVO EM OUTRO SERVIÇO"}
+                </div>
+                <div className="button" onClick={() => setviewseletorunidades(1)}>
+                  ALTERAR LEITO
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                ></div>
+              </div>
             </div>
           </div>
         </div>
@@ -1835,7 +1828,7 @@ function Cadastro() {
         }}
       >
         <div className="text1">LEITOS</div>
-        <div className="grid10">
+        <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center' }}>
           {arrayleitos.map((item) => (
             <div
               className="button"
@@ -1845,6 +1838,7 @@ function Cadastro() {
                 justifyContent: 'flex-start',
                 alignItems: 'flex-start',
                 height: 100,
+                minWidth: 100,
                 display: "flex",
                 opacity:
                   atendimentos.filter(

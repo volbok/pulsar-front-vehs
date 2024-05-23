@@ -4,12 +4,14 @@ import axios from "axios";
 import Context from "./Context";
 import moment from "moment";
 import back from "../images/back.svg";
+import emojihappy from "../images/emojihappy.svg";
+import emojineutral from "../images/emojineutral.svg";
+import emojisad from "../images/emojisad.svg";
 
 // router.
 import { useHistory } from "react-router-dom";
-import selector from "../functions/selector";
 
-function PainelAtividades() {
+function Cliente() {
   // context.
   const {
     html,
@@ -17,10 +19,10 @@ function PainelAtividades() {
     setpagina,
     setatendimentos, atendimentos,
     toast, settoast,
-    arrayatividades,
     mobilewidth,
     setpacientes,
     pacientes,
+    usuario,
   } = useContext(Context);
 
   // history (router).
@@ -28,39 +30,36 @@ function PainelAtividades() {
 
   const [selectdate, setselectdate] = useState(null);
   useEffect(() => {
-    if (pagina == 'painel_atividades') {
+    if (pagina == 'cliente') {
       currentMonth();
       loadPacientes();
-      loadAtendimentos();
+      // loadAtendimentos();
     }
 
     // eslint-disable-next-line
   }, [pagina]);
 
-
   const loadPacientes = () => {
-    axios
-      .get(html + "list_pacientes")
-      .then((response) => {
-        setpacientes(response.data.rows);
-      });
+    console.log(localStorage.getItem('documento'));
+    axios.get(html + "list_pacientes").then((response) => {
+      var x = response.data.rows;
+      setpacientes(x.filter(item => item.numero_documento == localStorage.getItem('documento')));
+      console.log(x.filter(item => item.numero_documento == localStorage.getItem('documento')));
+      loadAtendimentos(x.filter(item => item.numero_documento == localStorage.getItem('documento')).map(item => item.id_paciente).pop());
+    });
   }
 
-  const loadAtendimentos = () => {
+  const loadAtendimentos = (id_paciente) => {
     axios
       .get(html + "all_atendimentos")
       .then((response) => {
         let x = response.data.rows;
-        setatendimentos(x);
+        setatendimentos(x.filter(item => item.id_paciente == id_paciente));
+        console.log(x.filter(item => item.id_paciente == id_paciente));
       })
       .catch(function (error) {
         if (error.response == undefined) {
-          toast(
-            settoast,
-            "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-            "black",
-            3000
-          );
+          console.log(error.response);
           setTimeout(() => {
             setpagina(0);
             history.push("/");
@@ -79,6 +78,140 @@ function PainelAtividades() {
         }
       });
   };
+
+  // card de boas vindas.
+  const [faceselected, setfaceselected] = useState(null);
+  const [viewmessage, setviewmessage] = useState(0);
+  function BoasVindas() {
+    return (
+      <div style={{
+        display: viewmessage == 0 && viewmenucliente == 0 ? 'flex' : 'none',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}>
+        <div className="text2" style={{ fontSize: 20 }}>{'OLÁ, ' + usuario.nome_usuario + '!'}</div>
+        <div className="text2">COMO VOCÊ ESTÁ SE SENTINDO HOJE?</div>
+        <div id='emoji selector'
+          style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}
+        >
+          <div
+            id="sad"
+            style={{
+              display: "flex",
+              opacity: 1,
+              alignSelf: "center",
+              backgroundColor: '#EC7063',
+              borderRadius: 5,
+              margin: 2.5
+            }}
+            onClick={() => { setfaceselected('sad'); setviewmessage(1) }}
+          >
+            <img alt="" src={emojisad} style={{ width: 70, height: 70 }}></img>
+          </div>
+          <div
+            id="neutral"
+            style={{
+              display: "flex",
+              opacity: 1,
+              alignSelf: "center",
+              backgroundColor: '#F7DC6F',
+              borderRadius: 5,
+              margin: 2.5
+            }}
+            onClick={() => { setfaceselected('neutral'); setviewmessage(2) }}
+          >
+            <img alt="" src={emojineutral} style={{ width: 70, height: 70 }}></img>
+          </div>
+          <div
+            id="happy"
+            style={{
+              display: "flex",
+              opacity: 1,
+              alignSelf: "center",
+              backgroundColor: 'rgb(82, 190, 128, 1)',
+              borderRadius: 5,
+              margin: 2.5
+            }}
+            onClick={() => { setfaceselected('happy'); setviewmessage(3) }}
+          >
+            <img alt="" src={emojihappy} style={{ width: 70, height: 70 }}></img>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  function Message() {
+    return (
+      <div style={{
+        display: viewmessage != 0 && viewmenucliente == 0 ? 'flex' : 'none',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}>
+        <div
+          id="emoji selected"
+          style={{
+            display: "flex",
+            opacity: 1,
+            alignSelf: "center",
+            backgroundColor: faceselected == 'sad' ? '#EC7063' : faceselected == 'neutral' ? '#F7DC6F' : 'rgb(82, 190, 128, 1)',
+            borderRadius: 5,
+          }}
+          onClick={() => { setfaceselected(null); setviewmessage(0) }}
+        >
+          <img alt="" src={faceselected == 'sad' ? emojisad : faceselected == 'neutral' ? emojineutral : emojihappy}
+            style={{ width: 60, height: 60 }}></img>
+        </div>
+        <div className="text2">
+          {faceselected == 'sad' ? 'QUE PENA... DIGA-ME O QUE HÁ DE ERRADO E VAMOS TENTAR TE AJUDAR!' : faceselected == 'neutral' ? 'TUDO BEM! CONTE-NOS O QUE SENTE E PODEMOS TENTAR MELHORAR O SEU DIA!' : 'QUE MARAVILHA! COMPARTILHE CONOSCO O QUE ESTÁ BOM PARA CONTINUARMOS NO CAMINHO CERTO!'}
+        </div>
+        <textarea
+          autoComplete="off"
+          placeholder="MENSAGEM PARA A EQUIPE ASSISTENCIAL"
+          className="textarea"
+          type="text"
+          id="inputFeedbackMessage"
+          onFocus={(e) => (e.target.placeholder = "")}
+          onBlur={(e) => (e.target.placeholder = "MENSAGEM PARA A EQUIPE ASSISTENCIAL")}
+          defaultValue={''}
+          style={{
+            flexDirection: "center",
+            justifyContent: "center",
+            alignSelf: "center",
+            width: '80vw',
+            padding: 15,
+            height: 150,
+            minHeight: 150,
+            maxHeight: 150,
+          }}
+        ></textarea>
+        <div
+          className="button"
+          onClick={() => {
+            setviewmenucliente(1);
+            insertFeedback();
+          }}
+        >
+          ACESSAR MENU DO CLIENTE
+        </div>
+      </div>
+    )
+  }
+
+  const insertFeedback = () => {
+    let obj = {
+      nome_paciente: pacientes.map(item => item.nome_paciente).pop(),
+      dn_paciente: pacientes.map(item => item.dn_paciente).pop(),
+      face: faceselected,
+      comentario: document.getElementById("inputFeedbackMessage").value.toUpperCase(),
+      id_pcte: pacientes.map(item => item.id_paciente).pop(),
+    }
+    console.log(obj);
+    
+    axios.post(html + 'insert_feedback', obj).then(() => {
+      console.log('foi');
+    })
+    
+  }
 
   // DATEPICKER (CALENDÁRIO);
   // preparando a array com as datas.
@@ -139,12 +272,11 @@ function PainelAtividades() {
     console.log(arraydate);
   }
 
-  // usecallback...
-  const DatePicker = useCallback(() => {
+  function DatePicker() {
     return (
       <div
         onClick={(e) => e.stopPropagation()}
-        className={"janela"}
+        className="janela"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -153,7 +285,6 @@ function PainelAtividades() {
           padding: 7.5, marginRight: 5,
           borderRadius: 5,
           backgroundColor: 'white',
-          marginTop: 5,
         }}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{
@@ -224,13 +355,10 @@ function PainelAtividades() {
             {arraylist.map((item) => (
               <button
                 key={'dia ' + item}
-                id={'dia ' + item}
                 className={selectdate == item ? "button-selected" : "button"}
                 onClick={(e) => {
                   setselectdate(item);
-                  localStorage.setItem('selectdate', item);
                   e.stopPropagation();
-                  selector("LISTA DE DATAS", 'dia ' + item, 300);
                 }}
                 style={{
                   height: 50,
@@ -250,95 +378,34 @@ function PainelAtividades() {
         </div>
       </div>
     )
-    // eslint-disable-next-line
-  }, [arraylist, startdate]);
-
-  const [selectedatividade, setselectedatividade] = useState(null)
-  function CardsAtividades() {
-    return (
-      <div className="grid"
-        style={{
-          display: selectedatividade == null ? 'flex' : 'none',
-          marginRight: 5,
-          alignSelf: 'center',
-        }}>
-        <div
-          id="botão de retorno"
-          className="button-yellow"
-          style={{
-            display: "flex",
-            opacity: 1,
-            alignSelf: "center",
-          }}
-          onClick={() => {
-            setpagina(0);
-            history.push("/");
-          }}
-        >
-          <img alt="" src={back} style={{ width: 30, height: 30 }}></img>
-        </div>
-        {arrayatividades.map(item =>
-          <div className="button" style={{
-            minHeight: 100, minWidth: 100,
-            width: 100
-          }}
-            onClick={() => setselectedatividade(item)}
-          >
-            {item}
-          </div>
-        )}
-      </div>
-    )
   }
 
-  const ListaDeConsultas = useCallback(() => {
+  const AtividadesDoDia = useCallback(() => {
     return (
       <div
+        className="fadein"
         style={{
-          display: selectedatividade != null ? 'flex' : 'none',
+          display: 'flex',
           flexDirection: "column",
           alignSelf: "center",
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-          <div
-            id="botão de retorno"
-            className="button-yellow"
-            style={{
-              display: "flex",
-              opacity: 1,
-              alignSelf: "center",
-            }}
-            onClick={() => {
-              setpagina(0);
-              history.push("/");
-            }}
-          >
-            <img alt="" src={back} style={{ width: 30, height: 30 }}></img>
-          </div>
-          <div className="button"
-            style={{ paddingLeft: 15, paddingRight: 15, marginLeft: 0 }}
-            onClick={() => setselectedatividade(null)}
-          >
-            {selectedatividade}
-          </div>
-        </div>
-
         <div id="scroll atendimentos com pacientes"
-
+          className="scroll"
           style={{
             display: "flex",
             justifyContent: "flex-start",
+            height: "calc(100vh - 200px)",
             width: window.innerWidth < mobilewidth ? '85vw' : '95vw',
             marginTop: 5, marginRight: 5,
           }}
         >
           {atendimentos
             // uma lista para cada tipo de atividade...
-            .filter(item => item.situacao == selectedatividade && moment(item.data_inicio).format('DD/MM/YYYY') == localStorage.getItem('selectdate'))
+            .filter(item => isNaN(item.situacao) && moment(item.data_inicio).format('DD/MM/YYYY') == selectdate)
             .sort((a, b) => (moment(a.data_inicio) > moment(b.data_inicio) ? 1 : -1))
             .map((item) => (
-              <div key={"pacientes" + item.id_atendimento} style={{ width: '100%' }}>
+              <div key={"pacientes" + item.id_atendimento}>
                 <div
                   className="row"
                   style={{
@@ -354,71 +421,77 @@ function PainelAtividades() {
                       marginRight: 0,
                       borderTopRightRadius: 0,
                       borderBottomRightRadius: 0,
+                      fontSize: 10
                     }}>
                     {moment(item.data_inicio).format('HH:mm') + ' ÀS ' + moment(item.data_termino).format('HH:mm')}
                   </div>
-                  <div
-                    id={"atendimento " + item.id_atendimento}
-                    className="button"
+                  <div className="button green"
                     style={{
-                      flex: 3,
-                      marginLeft: 0,
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
-                    }}                    >
-                    <div style={{
-                      display: 'flex', flexDirection: 'row',
-                      justifyContent: window.innerWidth < mobilewidth ? 'center' : 'space-between',
-                      width: '100%', flexWrap: 'wrap'
-                    }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "flex-start",
-                          padding: 5,
-                          alignSelf: 'center',
-                          marginLeft: window.innerWidth < mobilewidth ? '' : 10,
-                        }}
-                      >
-                        <div style={{ marginRight: 5 }}>
-                          {pacientes.filter(
-                            (valor) => valor.id_paciente == item.id_paciente
-                          )
-                            .map((valor) => valor.nome_paciente)}
-                        </div>
-                      </div>
-                    </div>
+                      borderRadius: 0, marginLeft: 0, borderTopRightRadius: 5, borderBottomRightRadius: 5,
+                      fontSize: 10, flex: 3
+                    }}
+                  >
+                    {item.situacao}
                   </div>
                 </div>
               </div>
             ))
           }
         </div>
-        <div id="scroll atendimento vazio"
-          className="scroll"
-          style={{
-            display: atendimentos.length > 0 ? "none" : "flex",
-            justifyContent: "flex-start",
-            height: "calc(100vh - 200px)",
-            width: '60vw',
-            margin: 5,
-          }}
-        >
-          <div className="text3" style={{ opacity: 0.5 }}>
-            SELECIONE UMA DATA
-          </div>
-        </div>
-      </div >
+      </div>
     );
     // eslint-disable-next-line
-  }, [selectdate, selectedatividade]);
+  }, [selectdate]);
+
+  const [viewmenucliente, setviewmenucliente] = useState(0);
+  function MenuCliente() {
+    return (
+      <div
+        style={{
+          display: viewmenucliente == 0 ? 'none' : 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        <div className="text2">O QUE DESEJA ACESSAR?</div>
+        <div className="button"
+          onClick={() => { setviewmessage(4); setviewmenucliente(0) }}
+        >
+          PAINEL DE ATIVIDADES
+        </div>
+        <div className="button"
+          onClick={() => { setviewmessage(5); setviewmenucliente(0) }}
+        >
+          DADOS VITAIS
+        </div>
+      </div>
+    )
+  }
+
+  function Back() {
+    return (
+      <div className="button green"
+        onClick={() => { setviewmessage(0); setviewmenucliente(1) }}
+        style={{
+          display: viewmessage > 3 ? 'flex' : 'none',
+          marginRight: 10,
+          maxWidth: 50, maxHeight: 50,
+          alignSelf: 'center',
+        }}>
+        <img
+          alt=""
+          src={back}
+          style={{ width: 30, height: 30 }}
+        ></img>
+      </div>
+    )
+  }
 
   return (
     <div
       className="main"
       style={{
-        display: pagina == "painel_atividades" ? "flex" : "none",
+        display: pagina == "cliente" ? "flex" : "none",
         flexDirection: "column",
         justifyContent: "center",
         width: "100vw",
@@ -428,14 +501,30 @@ function PainelAtividades() {
       <div
         className="chassi"
         id="conteúdo do prontuário"
-        style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}
+        style={{
+          display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly',
+          alignContent: 'center',
+          alignSelf: 'center',
+        }}
       >
-        <DatePicker></DatePicker>
-        <CardsAtividades></CardsAtividades>
-        <ListaDeConsultas></ListaDeConsultas>
+        <MenuCliente></MenuCliente>
+
+        <div style={{
+          display: viewmessage == 4 ? 'flex' : 'none',
+          flexDirection: 'column', justifyContent: 'space-evenly'
+        }}>
+          <DatePicker></DatePicker>
+          <AtividadesDoDia></AtividadesDoDia>
+        </div>
+
+        <div style={{ display: viewmessage < 4 ? 'flex' : 'none', justifyContent: 'center' }}>
+          <BoasVindas></BoasVindas>
+          <Message></Message>
+        </div>
+        <Back></Back>
       </div>
     </div>
   );
 }
 
-export default PainelAtividades;
+export default Cliente;

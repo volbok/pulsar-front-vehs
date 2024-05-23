@@ -463,6 +463,7 @@ function Consultas() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          height: '100%',
         }}
       >
         <div id="scroll atendimentos com pacientes"
@@ -470,8 +471,8 @@ function Consultas() {
           style={{
             display: arrayatendimentos.length > 0 ? "flex" : "none",
             justifyContent: "flex-start",
-            height: window.innerWidth < mobilewidth ? '72vh' : 'calc(75vh + 25px)',
-            width: 'calc(100% - 20px)', marginTop: 5,
+            height: window.innerWidth < mobilewidth ? '72vh' : '70vh',
+            width: 'calc(100% - 20px)',
           }}
         >
           <div className="button" style={{ margin: 10, marginTop: 5, width: '60%', alignSelf: 'center' }}
@@ -490,6 +491,7 @@ function Consultas() {
                     style={{
                       position: "relative",
                       margin: 2.5, padding: 0,
+                      marginBottom: 20,
                     }}
                   >
                     <div
@@ -551,13 +553,12 @@ function Consultas() {
                           flexDirection: "column",
                           justifyContent: "flex-start",
                           padding: 5,
-                          marginBottom: window.innerWidth < mobilewidth ? 30 : 30,
                         }}
                       >
                         {pacientes.filter(
                           (valor) => valor.id_paciente == item.id_paciente
                         )
-                          .map((valor) => valor.nome_paciente)}
+                          .map((valor) => valor.nome_paciente.length > 20 ? valor.nome_paciente.slice(0, 20) + '...' : valor.nome_paciente)}
                         <div>
                           {moment().diff(
                             moment(
@@ -577,7 +578,7 @@ function Consultas() {
                       style={{
                         position: "absolute",
                         right: -5,
-                        bottom: window.innerWidth < mobilewidth ? -10 : -5,
+                        bottom: -25,
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "center",
@@ -602,7 +603,7 @@ function Consultas() {
                           className="button"
                           title="ENCERRAR CONSULTA"
                           onClick={() => {
-                            modal(setdialogo, 'TEM CERTEZA QUE DESEJA FINALIZAR A CONSULTA?', updateConsulta, [item, 4]);
+                            modal(setdialogo, 'TEM CERTEZA QUE DESEJA FINALIZAR A CONSULTA?', updateConsulta, [item, selectedatividade + ' - CONCLUÍDO']);
                           }}
                           style={{
                             display: "flex",
@@ -682,7 +683,7 @@ function Consultas() {
           style={{
             display: arrayatendimentos.length < 1 ? "flex" : "none",
             justifyContent: "flex-start",
-            height: window.innerWidth < mobilewidth ? '72vh' : '75vh',
+            height: window.innerWidth < mobilewidth ? '72vh' : '70vh',
             width: 'calc(100% - 20px)',
           }}
         >
@@ -1006,7 +1007,7 @@ function Consultas() {
             margin: 5,
             height: window.innerWidth < mobilewidth ? '35vw' : '15vw',
             minHeight: window.innerWidth < mobilewidth ? '32vw' : '15vw',
-            minWidth: window.innerWidth < mobilewidth ? '32vw' : cartoes.length == arraycartoes.length ? '' : '15vw',
+            minWidth: window.innerWidth < mobilewidth ? '32vw' : '15vw',
             maxWidth: window.innerWidth < mobilewidth ? '' : '15vw',
             alignSelf: 'center',
           }}
@@ -2102,7 +2103,7 @@ function Consultas() {
             arrayatividades.map((item) => (
               <div className="button"
                 style={{ width: 200 }}
-                onClick={() => setselectedatividade(item)}
+                onClick={() => { setselectedatividade(item); setatendimento(null) }}
               >
                 {item}
               </div>
@@ -2111,7 +2112,7 @@ function Consultas() {
       </div>
     )
   }
-  
+
   // janela para que o médico possa agendar suas consultas.
   function MinhasConsultas() {
     return (
@@ -2273,7 +2274,8 @@ function Consultas() {
             flexDirection: 'column', justifyContent: 'space-between',
             position: 'sticky', top: 5,
             width: window.innerWidth < mobilewidth ? '90vw' : '30vw',
-            height: '90vh',
+            height: '95vh',
+            alignSelf: 'center',
           }}
         >
           <div id='botão de interconsultas'
@@ -2309,10 +2311,10 @@ function Consultas() {
           <CabecalhoPacienteMobile></CabecalhoPacienteMobile>
           <FilterCartoes></FilterCartoes>
           <div id="cards (cartões) visão desktop"
-            className={arraycartoes.length == cartoes.length ? "grid" : "grid1"}
             style={{
-              display: window.innerWidth < mobilewidth ? 'none' : '',
-              width: '100%', alignSelf: 'center',
+              display: window.innerWidth < mobilewidth ? 'none' : 'flex',
+              width: '100%', alignSelf: 'center', justifyContent: 'center',
+              flexDirection: 'row', flexWrap: 'wrap',
             }}>
             {cartao(null, "DIAS DE INTERNAÇÃO: " +
               atendimentos

@@ -4,7 +4,6 @@ import axios from "axios";
 import Context from "./Context";
 import moment from "moment";
 // imagens.
-import power from "../images/power.svg";
 import back from "../images/back.svg";
 import body from "../images/body.svg";
 import refresh from "../images/refresh.svg";
@@ -42,6 +41,7 @@ import Exames from "../cards/Exames";
 import Prescricao from "./Prescricao";
 import selector from "../functions/selector";
 import EvolucaoMobile from "../cards/EvolucaoMobile";
+import Feedback from "./Feedback";
 
 function Prontuario() {
   // context.
@@ -80,15 +80,12 @@ function Prontuario() {
     dietas,
     setevolucoes,
     setarrayevolucoes,
-    setinfusoes,
     infusoes,
     setpropostas,
     propostas,
     setsinaisvitais,
     sinaisvitais,
-    setvm,
     vm,
-    setinterconsultas,
     interconsultas,
     card, setcard,
     prescricao, setprescricao,
@@ -263,7 +260,7 @@ function Prontuario() {
           >
             <img
               alt=""
-              src={power}
+              src={back}
               style={{
                 height: 30,
                 width: 30,
@@ -382,7 +379,6 @@ function Prontuario() {
     )
   }
 
-  const [arrayclassificacao, setarrayclassificacao] = useState(['VERMELHO', 'LARANJA', 'AMARELO', 'VERDE', 'AZUL', null]);
   // lista de atendimentos.
   const ListaDeAtendimentos = useCallback(() => {
     return (
@@ -393,44 +389,12 @@ function Prontuario() {
           justifyContent: "space-between",
         }}
       >
-        <div id="filtro para classificações de risco (cor)"
-          style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-          <div
-            className="button"
-            title="FILTRAR PACIENTES CLASSIFICADOS COMO VERMELHO OU LARANJA."
-            style={{ width: 30, height: 10, minHeight: 10, backgroundColor: '#F1948A' }}
-            onClick={() => setarrayclassificacao(['VERMELHO', 'LARANJA'])}
-          >
-          </div>
-          <div
-            className="button"
-            title="FILTRAR PACIENTES CLASSIFICADOS COMO AMARELO."
-            style={{ width: 30, height: 10, minHeight: 10, backgroundColor: '#F9E79F' }}
-            onClick={() => setarrayclassificacao(['AMARELO'])}
-          >
-          </div>
-          <div
-            className="button"
-            title="FILTRAR PACIENTES CLASSIFICADOS COMO VERDE OU AZUL."
-            style={{ width: 30, height: 10, minHeight: 10, backgroundColor: '#76D7C4' }}
-            onClick={() => setarrayclassificacao(['VERDE', 'AZUL'])}
-          >
-          </div>
-          <div
-            className="button"
-            title="EXIBIR TODAS AS CLASSIFICAÇÕES."
-            style={{ width: 30, height: 10, minHeight: 10, backgroundColor: 'rgb(133, 146, 158)' }}
-            onClick={() => setarrayclassificacao(['VERMELHO', 'LARANJA', 'AMARELO', 'VERDE', 'AZUL', null])}
-          >
-          </div>
-
-        </div>
         <div id="scroll atendimentos com pacientes"
           className="scroll"
           style={{
             display: arrayatendimentos.length > 0 ? "flex" : "none",
             justifyContent: "flex-start",
-            height: window.innerWidth < mobilewidth ? '72vh' : '75vh',
+            height: window.innerWidth < mobilewidth ? '72vh' : '70vh',
             width: 'calc(100% - 20px)',
           }}
         >
@@ -447,6 +411,7 @@ function Prontuario() {
                         style={{
                           position: "relative",
                           margin: 2.5, padding: 0,
+                          marginBottom: 20,
                         }}
                       >
                         <div
@@ -506,13 +471,13 @@ function Prontuario() {
                               display: "flex",
                               flexDirection: "column",
                               justifyContent: "flex-start",
-                              padding: 5
+                              padding: 5,
                             }}
                           >
                             {pacientes.filter(
                               (valor) => valor.id_paciente == item.id_paciente
                             )
-                              .map((valor) => valor.nome_paciente)}
+                              .map((valor) => valor.nome_paciente.length > 20 ? valor.nome_paciente.slice(0, 20) + '...' : valor.nome_paciente)}
                             <div>
                               {moment().diff(
                                 moment(
@@ -532,7 +497,7 @@ function Prontuario() {
                           style={{
                             position: "absolute",
                             right: -5,
-                            bottom: -5,
+                            bottom: -25,
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "center",
@@ -613,7 +578,7 @@ function Prontuario() {
           style={{
             display: arrayatendimentos.length < 1 ? "flex" : "none",
             justifyContent: "flex-start",
-            height: window.innerWidth < mobilewidth ? '72vh' : '75vh',
+            height: window.innerWidth < mobilewidth ? '72vh' : '70vh',
             width: 'calc(100% - 20px)',
           }}
         >
@@ -624,7 +589,7 @@ function Prontuario() {
       </div >
     );
     // eslint-disable-next-line
-  }, [arrayclassificacao, arrayatendimentos, allinterconsultas, allprecaucoes, consultorio, setarrayitensprescricao, viewagendamento, objpaciente]);
+  }, [arrayatendimentos, allinterconsultas, allprecaucoes, consultorio, setarrayitensprescricao, viewagendamento, objpaciente]);
 
   // janela para que o médico possa agendar suas consultas.
   const [selectedatividade, setselectedatividade] = useState('CONSULTA MÉDICA');
@@ -659,64 +624,58 @@ function Prontuario() {
     }
 
     return (
-      <div className="fundo"
-        onClick={() => setviewagendamento(0)}
+      <div className="janela scroll"
         style={{
           display: objpaciente != null && viewagendamento == 1 ? 'flex' : 'none',
-          justifyContent: window.innerWidth < mobilewidth ? 'flex-start' : 'center',
+          flexDirection: 'column',
+          width: '100vw', height: '100vh',
+          position: 'absolute', top: 0, margin: 0, padding: 0,
+          borderWidth: 0,
+          backgroundColor: '#b2babb'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div style={{
+          display: 'flex',
           flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
-          width: window.innerWidth < mobilewidth ? '100vw' : '',
-          overflowY: window.innerWidth < mobilewidth ? 'scroll' : 'hidden',
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
         }}>
-        <div className="janela"
-          style={{
-            display: 'flex', flexDirection: 'column',
-
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div style={{
-            display: 'flex',
-            flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
-            justifyContent: 'center',
-            alignContent: 'center',
-            alignItems: 'center',
-          }}>
-            <div id="botão seletor da atividade"
-              className="button"
-              onClick={() => setviewopcoesatividades(1)}
-              style={{ width: 200 }}
-            >
-              {selectedatividade}
-            </div>
-            <div className="text1"
-              style={{
-                fontSize: window.innerWidth < mobilewidth ? '' : '16',
-              }}>
-              {objpaciente != null ? 'AGENDAR ' + selectedatividade + ' PARA ' + objpaciente.nome_paciente + '.' : ''}</div>
-            <div
-              id="botão de retorno"
-              className="button-yellow"
-              style={{
-                display: "flex",
-                opacity: 1,
-                alignSelf: "center",
-              }}
-              onClick={() => setviewagendamento(0)}
-            >
-              <img alt="" src={back} style={{ width: 30, height: 30 }}></img>
-            </div>
+          <div id="botão seletor da atividade"
+            className="button"
+            onClick={() => setviewopcoesatividades(1)}
+            style={{ width: 200 }}
+          >
+            {selectedatividade}
           </div>
-          <div style={{
-            display: 'flex',
-            flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
-            alignContent: 'center',
-          }}>
-            <DatePicker></DatePicker>
-            <ListaDeConsultas></ListaDeConsultas>
-            <ViewOpcoesHorarios></ViewOpcoesHorarios>
-            <AtividadesSelector></AtividadesSelector>
+          <div className="text1"
+            style={{
+              fontSize: window.innerWidth < mobilewidth ? '' : '16',
+            }}>
+            {objpaciente != null ? 'AGENDAR ' + selectedatividade + ' PARA ' + objpaciente.nome_paciente + '.' : ''}</div>
+          <div
+            id="botão de retorno"
+            className="button-yellow"
+            style={{
+              display: "flex",
+              opacity: 1,
+              alignSelf: "center",
+            }}
+            onClick={() => setviewagendamento(0)}
+          >
+            <img alt="" src={back} style={{ width: 30, height: 30 }}></img>
           </div>
+        </div>
+        <div style={{
+          display: 'flex',
+          flexDirection: window.innerWidth < 769 ? 'column' : 'row',
+          alignContent: 'center',
+        }}>
+          <DatePicker></DatePicker>
+          <ListaDeConsultas></ListaDeConsultas>
+          <ViewOpcoesHorarios></ViewOpcoesHorarios>
+          <AtividadesSelector></AtividadesSelector>
         </div>
       </div>
     )
@@ -731,7 +690,7 @@ function Prontuario() {
     });
   };
 
-  // inserir um agendamento de consulta.
+  // inserir um agendamento de consulta ou atividade.
   const insertAtendimento = (inicio) => {
     var obj = {
       data_inicio: moment(inicio, 'DD/MM/YYYY - HH:mm'),
@@ -771,13 +730,13 @@ function Prontuario() {
             display: "flex",
             justifyContent: "flex-start",
             height: "calc(100vh - 200px)",
-            width: window.innerWidth < mobilewidth ? '90vw' : '60vw',
+            width: '90vw',
             margin: 5,
           }}
         >
           {arrayatendimentos
             // uma lista para cada tipo de atividade...
-            .filter(item => item.situacao == selectedatividade && moment(item.data_inicio).format('DD/MM/YYYY') == selectdate && item.id_profissional == usuario.id)
+            .filter(item => item.situacao == selectedatividade && moment(item.data_inicio).format('DD/MM/YYYY') == localStorage.getItem('selectdate') && item.id_profissional == usuario.id)
             .sort((a, b) => (moment(a.data_inicio) > moment(b.data_inicio) ? 1 : -1))
             .map((item) => (
               <div key={"pacientes" + item.id_atendimento} style={{ width: '100%' }}>
@@ -902,27 +861,29 @@ function Prontuario() {
         <div className="janela scroll"
           style={{
             display: 'flex', flexDirection: 'column', justifyItems: 'flex-start',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             width: 730, height: '85vh',
             position: 'relative',
           }}
           onClick={(e) => e.stopPropagation()}>
-          <div id="botão para sair da tela de seleção dos horários"
-            className="button-yellow" style={{
-              maxHeight: 50, maxWidth: 50,
-              position: 'sticky', top: 10, right: 10, alignSelf: 'flex-end'
-            }}
-            onClick={() => {
-              setviewopcoeshorarios(0);
-            }}>
-            <img
-              alt=""
-              src={back}
-              style={{ width: 30, height: 30 }}
-            ></img>
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div id="botão para sair da tela de seleção dos horários"
+              className="button-yellow" style={{
+                maxHeight: 50, maxWidth: 50,
+                position: 'sticky', top: 10, right: 10, alignSelf: 'flex-end'
+              }}
+              onClick={() => {
+                setviewopcoeshorarios(0);
+              }}>
+              <img
+                alt=""
+                src={back}
+                style={{ width: 30, height: 30 }}
+              ></img>
+            </div>
+            <div className='text1' style={{ fontSize: 18, marginBottom: 0 }}>HORÁRIOS DISPONÍVEIS</div>
           </div>
-          <div className='text1' style={{ fontSize: 18, marginBottom: 0 }}>HORÁRIOS DISPONÍVEIS</div>
-          <div className='text1' style={{ marginTop: 0 }}>{'DATA: ' + selectdate}</div>
+          <div className='text1' style={{ marginTop: 0 }}>{'DATA: ' + localStorage.getItem('selectdate')}</div>
           <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
             {arrayhorarios.map(item => (
               <div className='button'
@@ -1002,7 +963,7 @@ function Prontuario() {
     console.log(arraydate);
   }
 
-  function DatePicker() {
+  const DatePicker = useCallback(() => {
     return (
       <div
         onClick={(e) => e.stopPropagation()}
@@ -1100,9 +1061,12 @@ function Prontuario() {
             {arraylist.map((item) => (
               <button
                 key={'dia ' + item}
+                id={'dia ' + item}
                 className={selectdate == item ? "button-selected" : "button"}
                 onClick={(e) => {
                   setselectdate(item);
+                  localStorage.setItem('selectdate', item);
+                  selector('LISTA DE DATAS', 'dia ' + item, 300);
                   mountHorarios(item);
                   e.stopPropagation()
                 }}
@@ -1143,7 +1107,8 @@ function Prontuario() {
         </div>
       </div>
     )
-  }
+    // eslint-disable-next-line
+  }, [arraylist, startdate, selectdate]);
 
   const tagsDosPacientes = (titulo, item, lista, imagem) => {
     return (
@@ -1412,17 +1377,6 @@ function Prontuario() {
       .catch(function (error) {
         console.log(error);
       });
-    // infusões.
-    setbusyinfusoes(1);
-    axios
-      .get(html + "list_infusoes/" + atendimento)
-      .then((response) => {
-        setinfusoes(response.data.rows);
-        setbusyinfusoes(0);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
     // invasões.
     axios
       .get(html + "list_invasoes/" + atendimento)
@@ -1472,24 +1426,6 @@ function Prontuario() {
       .catch(function (error) {
         console.log(error);
       });
-    // vm.
-    setbusyvm(1);
-    axios.get(html + "list_vm/" + atendimento).then((response) => {
-      setbusyvm(0);
-      setvm(response.data.rows);
-    })
-    // interconsultas.
-    setbusyinterconsultas(1);
-    axios.get(html + "list_interconsultas/" + atendimento).then((response) => {
-      setinterconsultas(response.data.rows);
-      setbusyinterconsultas(0);
-    })
-    // laboratorio.
-    /*
-    axios.get(html + 'atendimento_laboratorio/' + atendimento).then((response) => {
-      setlaboratorio(response.data.rows);
-    })
-    */
   };
 
   // estado para alternância entre lista de pacientes e conteúdo do passômetro para versão mobile.
@@ -1500,11 +1436,8 @@ function Prontuario() {
   const [busypropostas, setbusypropostas] = useState(0);
   const [busyriscos, setbusyriscos] = useState(0);
   const [busysinaisvitais, setbusysinaisvitais] = useState(0);
-  const [busyvm, setbusyvm] = useState(0);
-  const [busyinfusoes, setbusyinfusoes] = useState(0);
   const [busydieta, setbusydieta] = useState(0);
   const [busyculturas, setbusyculturas] = useState(0);
-  const [busyinterconsultas, setbusyinterconsultas] = useState(0);
 
   const loading = () => {
     return (
@@ -1537,7 +1470,7 @@ function Prontuario() {
             margin: 5,
             height: window.innerWidth < mobilewidth ? '35vw' : '15vw',
             minHeight: window.innerWidth < mobilewidth ? '32vw' : '15vw',
-            minWidth: window.innerWidth < mobilewidth ? '32vw' : cartoes.length == arraycartoes.length ? '' : '15vw',
+            minWidth: window.innerWidth < mobilewidth ? '32vw' : '15vw',
             maxWidth: window.innerWidth < mobilewidth ? '' : '15vw',
             alignSelf: 'center',
           }}
@@ -2323,7 +2256,8 @@ function Prontuario() {
             flexDirection: 'column', justifyContent: 'space-between',
             position: 'sticky', top: 5,
             width: window.innerWidth < mobilewidth ? '90vw' : '30vw',
-            height: '90vh',
+            height: '95vh',
+            alignSelf: 'center',
           }}
         >
           <div id='botão de interconsultas'
@@ -2359,10 +2293,10 @@ function Prontuario() {
           <CabecalhoPacienteMobile></CabecalhoPacienteMobile>
           <FilterCartoes></FilterCartoes>
           <div id="cards (cartões) visão desktop"
-            className={arraycartoes.length == cartoes.length ? "grid" : "grid1"}
             style={{
-              display: window.innerWidth < mobilewidth ? 'none' : '',
-              width: '100%', alignSelf: 'center',
+              display: window.innerWidth < mobilewidth ? 'none' : 'flex',
+              width: '100%', alignSelf: 'center', justifyContent: 'center',
+              flexDirection: 'row', flexWrap: 'wrap',
             }}>
             {cartao(null, "DIAS DE INTERNAÇÃO: " +
               atendimentos
@@ -2375,7 +2309,6 @@ function Prontuario() {
             {cartao(null, "ADMISSÃO", "card-documento-admissao", null, 1)}
             {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null, 1)}
             {cartao(null, "RECEITA MÉDICA", "card-documento-receita", null, 1)}
-            {cartao(null, "ATESTADO", "card-documento-atestado", null, 1)}
             {cartao(null, "SUMÁRIO DE ALTA", "card-documento-alta", null, 1)}
             {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas, 0)}
             {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null, 0)}
@@ -2383,8 +2316,6 @@ function Prontuario() {
             {cartao(null, "ALERTAS", "card-alertas", null, 0)}
             {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais, 0)}
             {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null, 0)}
-            {cartao(null, "VENTILAÇÃO MECÂNICA", "card-vm", busyvm, 0)}
-            {cartao(null, "INFUSÕES", "card-infusoes", busyinfusoes, 0)}
             {cartao(null, "DIETA", "card-dietas", busydieta, 0)}
             {cartao(
               culturas.filter((item) => item.data_resultado == null),
@@ -2392,11 +2323,7 @@ function Prontuario() {
               "card-culturas",
               busyculturas
             )}
-            {cartao(prescricao.filter(item => item.categoria == '1. ANTIMICROBIANOS'), "ANTIBIÓTICOS", null, null, 0)}
-            {cartao(interconsultas, "INTERCONSULTAS", "card-interconsultas", busyinterconsultas, 0)}
-            {cartao(null, 'PRESCRIÇÃO', "card-prescricao", null, 1)}
-            {cartao(null, 'EXAMES DE IMAGEM', 'card-exames', null, 1)}
-            {cartao(null, 'LABORATÓRIO E RX', 'card-laboratorio', null, 1)}
+            {cartao(null, 'MONITORAMENTO HOME OFFICE', "card-feedback", null, 1)}
           </div>
           <div id="cards (cartões) visão mobile"
             className={arraycartoes.length == cartoes.length ? "grid2" : "grid1"}
@@ -2416,7 +2343,6 @@ function Prontuario() {
             {cartao(null, "ADMISSÃO", "card-documento-admissao", null, 1)}
             {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null, 1)}
             {cartao(null, "RECEITA MÉDICA", "card-documento-receita", null, 1)}
-            {cartao(null, "ATESTADO", "card-documento-atestado", null, 1)}
             {cartao(null, "SUMÁRIO DE ALTA", "card-documento-alta", null, 1)}
             {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas, 0)}
             {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null, 0)}
@@ -2424,8 +2350,6 @@ function Prontuario() {
             {cartao(null, "ALERTAS", "card-alertas", null, 0)}
             {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais, 0)}
             {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null, 0)}
-            {cartao(null, "VENTILAÇÃO MECÂNICA", "card-vm", busyvm, 0)}
-            {cartao(null, "INFUSÕES", "card-infusoes", busyinfusoes, 0)}
             {cartao(null, "DIETA", "card-dietas", busydieta, 0)}
             {cartao(
               culturas.filter((item) => item.data_resultado == null),
@@ -2433,9 +2357,9 @@ function Prontuario() {
               "card-culturas",
               busyculturas
             )}
-            {cartao(interconsultas, "INTERCONSULTAS", "card-interconsultas", busyinterconsultas, 0)}
             {cartao(null, 'PRESCRIÇÃO', "card-prescricao", null, 1)}
             {cartao(null, 'EXAMES DE IMAGEM', 'card-exames', null, 1)}
+            {cartao(null, 'MONITORAMENTO HOME OFFICE', "card-feedback", null, 1)}
           </div>
         </div>
         <div id="conteúdo cheio (componentes)"
@@ -2464,6 +2388,7 @@ function Prontuario() {
           <Exames></Exames>
           <Prescricao></Prescricao>
           <EvolucaoMobile></EvolucaoMobile>
+          <Feedback></Feedback>
         </div>
         <div id="conteúdo vazio"
           style={{

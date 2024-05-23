@@ -32,8 +32,6 @@ function Usuarios() {
     setusuario,
     settoast,
     setdialogo,
-    hospital,
-    unidades,
     usuario,
     arrayespecialidades,
   } = useContext(Context);
@@ -225,40 +223,32 @@ function Usuarios() {
   // excluir um usuário.
   const deleteUsuario = (usuario) => {
     // excluir somente usuários sem cadastro em outras unidades.
-    if (todosacessos.filter((item) => item.id_usuario == usuario).length > 1) {
-      toast(
-        settoast,
-        "EXCLUSÃO NEGADA, PACIENTE VINCULADO A OUTRAS UNIDADES DE ATENDIMENTO",
-        "rgb(231, 76, 60, 1)",
-        3000
-      );
-    } else {
-      axios
-        .get(html + "delete_usuario/" + usuario)
-        .then(() => {
-          loadUsuarios();
-          toast(
-            settoast,
-            "USUÁRIO EXCLUÍDO COM SUCESSO DA BASE PULSAR",
-            "rgb(82, 190, 128, 1)",
-            1500
-          );
-          limpaCampos();
-          setselectedusuario(0);
-        })
-        .catch(function () {
-          toast(
-            settoast,
-            "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-            "black",
-            5000
-          );
-          setTimeout(() => {
-            setpagina(0);
-            history.push("/");
-          }, 3000);
-        });
-    }
+
+    axios
+      .get(html + "delete_usuario/" + usuario)
+      .then(() => {
+        loadUsuarios();
+        toast(
+          settoast,
+          "USUÁRIO EXCLUÍDO COM SUCESSO DA BASE PULSAR",
+          "rgb(82, 190, 128, 1)",
+          1500
+        );
+        limpaCampos();
+        setselectedusuario(0);
+      })
+      .catch(function () {
+        toast(
+          settoast,
+          "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
+          "black",
+          5000
+        );
+        setTimeout(() => {
+          setpagina(0);
+          history.push("/");
+        }, 3000);
+      });
   };
 
   // componente para inserir novo usuário.
@@ -462,7 +452,7 @@ function Usuarios() {
                   width: "30vw",
                 }}
               ></input>
-              <div className="text1">{'ESPECIALIDADE: ' + especialidade}</div>
+              <div className="text1">{'CATEGORIA: ' + especialidade}</div>
               <div id="scroll das especialidades"
                 className="scroll"
                 style={{
@@ -649,7 +639,6 @@ function Usuarios() {
                   localStorage.setItem('prontuario', item.prontuario);
                   localStorage.setItem('usuarios', item.usuarios);
 
-                  loadTodosAcessos(item.id_usuario);
                   selector("scroll usuários", "usuario " + item.id_usuario, 300);
                 }}
                 style={{
@@ -731,85 +720,6 @@ function Usuarios() {
     // eslint-disable-next-line
   }, [usuarios, arrayusuarios]);
 
-  // ## ACESSOS ##
-  // recuperando registros de acessos cadastrados na aplicação, para a unidade logada.
-  const [arrayacessos, setarrayacessos] = useState([]);
-
-  // recuperando todos os acessos da base (necessário para gerenciar a exclusão segura de usuários).
-  const [todosacessos, settodosacessos] = useState([]);
-  const loadTodosAcessos = (id_usuario) => {
-    axios
-      .get(html + "list_todos_acessos")
-      .then((response) => {
-        let x = [0, 1];
-        x = response.data.rows;
-        settodosacessos(x);
-        setarrayacessos(x.filter((valor) => valor.id_usuario == id_usuario));
-        document.getElementById("usuario " + id_usuario).className =
-          "button-selected";
-      })
-      .catch(function () {
-        toast(
-          settoast,
-          "ERRO AO CARREGAR TODOS OS ACESSOS, REINICIANDO APLICAÇÃO.",
-          "black",
-          5000
-        );
-        setTimeout(() => {
-          setpagina(0);
-          history.push("/");
-        }, 5000);
-      });
-  };
-
-  // registrando um acesso.
-  const insertAcesso = (unidade, id_usuario) => {
-    var obj = {
-      id_cliente: hospital,
-      id_unidade: unidade,
-      id_usuario: id_usuario,
-      boss: null,
-    };
-    axios
-      .post(html + "insert_acesso", obj)
-      .then(() => {
-        loadTodosAcessos(id_usuario);
-        setviewnewacesso(0);
-      })
-      .catch(function () {
-        toast(
-          settoast,
-          "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-          "black",
-          5000
-        );
-        setTimeout(() => {
-          setpagina(0);
-          history.push("/");
-        }, 5000);
-      });
-  };
-
-  // excluindo um acesso.
-  const deleteAcesso = (id, id_usuario) => {
-    axios
-      .get(html + "delete_acesso/" + id)
-      .then(() => {
-        loadTodosAcessos(id_usuario);
-      })
-      .catch(function () {
-        toast(
-          settoast,
-          "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-          "black",
-          5000
-        );
-        setTimeout(() => {
-          setpagina(0);
-          history.push("/");
-        }, 5000);
-      });
-  };
 
   function Acessos() {
     return (
@@ -819,10 +729,12 @@ function Usuarios() {
           style={{
             display: selectedusuario != 0 ? "flex" : "none",
             flexDirection: "column",
-            justifyContent: "flex-start",
+            alignSelf: 'center',
+            justifyContent: "center",
+            alignItems: 'center',
+            width: '100%',
           }}
         >
-          <ListaDeUnidades></ListaDeUnidades>
           <ListaDeModulos></ListaDeModulos>
         </div>
         <div
@@ -850,144 +762,6 @@ function Usuarios() {
     );
   }
 
-  const [viewunidades, setviewunidades] = useState(0);
-  function ListaDeUnidades() {
-    return (
-      <div
-        style={{
-          display: selectedusuario.prontuario == 1 || viewunidades == 1 ? "flex" : "none",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignContent: "center",
-          alignSelf: "center",
-          alignItems: "center",
-        }}
-      >
-        <div
-          id="usuário com acesso"
-          className="text3"
-          style={{
-            display: arrayacessos.length > 0 ? "flex" : "none",
-            justifyContent: "center",
-            margin: 5,
-            padding: 5,
-          }}
-        >
-          <div style={{ display: 'flex', marginBottom: 10 }}>UNIDADES DE ATENDIMENTO LIBERADAS:</div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            {arrayacessos.map((item) =>
-              unidades
-                .filter((valor) => valor.id_unidade == item.id_unidade)
-                .map((max) => (
-                  <div className="button" style={{ position: "relative" }}>
-                    <div className="text2" style={{ width: 150, height: 150 }}>
-                      {max.nome_unidade}
-                    </div>
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 10,
-                        right: 10,
-                        width: 30, minWidth: 30,
-                        height: 30, minHeight: 30,
-                      }}
-                      className="button-yellow"
-                      onClick={() =>
-                        deleteAcesso(
-                          item.id_acesso,
-                          JSON.parse(
-                            window.localStorage.getItem("selecteduser")
-                          ).id_usuario
-                        )
-                      }
-                    >
-                      <img
-                        alt=""
-                        src={deletar}
-                        style={{
-                          margin: 10,
-                          height: 25,
-                          width: 25,
-                        }}
-                      ></img>
-                    </div>
-                  </div>
-                ))
-            )}
-          </div>
-          <div
-            className="button-green"
-            style={{
-              display: todosacessos.filter(valor => valor.id_usuario == selectedusuario.id_usuario).length == unidades.length ? 'none' : 'flex',
-              marginTop: 10,
-            }}
-            onClick={() => {
-              setviewnewacesso(1);
-            }}
-          >
-            <img
-              alt=""
-              src={novo}
-              style={{
-                margin: 10,
-                height: 25,
-                width: 25,
-              }}
-            ></img>
-          </div>
-        </div>
-        <div
-          id="usuário sem acesso"
-          className="text3"
-          style={{
-            display: arrayacessos.length == 0 ? "flex" : "none",
-            justifyContent: "center",
-          }}
-        >
-          {"USUÁRIO SEM ACESSO ÀS UNIDADES DE ATENDIMENTO."}
-          <div
-            className="button-green"
-            style={{
-              marginTop: 10,
-            }}
-            onClick={() => {
-              setviewnewacesso(1);
-            }}
-          >
-            <img
-              alt=""
-              src={novo}
-              style={{
-                margin: 10,
-                height: 25,
-                width: 25,
-              }}
-            ></img>
-          </div>
-        </div>
-        <div
-          id="usuário não selecionado"
-          className="text3"
-          style={{
-            display: selectedusuario == 0 ? "flex" : "none",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignSelf: "center",
-          }}
-        >
-          {"SELECIONE UM USUÁRIO"}
-        </div>
-      </div>
-    );
-  }
-
   const mudaModulo = (acesso, setstate) => {
     if (localStorage.getItem(acesso) == 1) {
       localStorage.setItem(acesso, 0);
@@ -1000,9 +774,6 @@ function Usuarios() {
 
   function ListaDeModulos() {
     const [prontuario, setprontuario] = useState(localStorage.getItem("prontuario"));
-    const [farmacia, setfarmacia] = useState(localStorage.getItem("farmacia"));
-    const [laboratorio, setlaboratorio] = useState(localStorage.getItem("laboratorio"));
-    const [faturamento, setfaturamento] = useState(localStorage.getItem("faturamento"));
     const [pacientes, setpacientes] = useState(localStorage.getItem("paciente"));
     const [usuarios, setusuarios] = useState(localStorage.getItem("usuarios"));
 
@@ -1011,10 +782,10 @@ function Usuarios() {
         style={{
           display: selectedusuario == 0 ? "none" : "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          alignContent: "center",
-          alignSelf: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
+          alignContent: 'center',
+          alignSelf: 'center',
         }}
       >
         <div className="text3" style={{ margin: 5, padding: 5 }}>
@@ -1033,42 +804,16 @@ function Usuarios() {
             style={{ width: 150, height: 150 }}
             onClick={() => {
               mudaModulo('prontuario', setprontuario);
-              if (viewunidades == 1 && arrayacessos.length == 0) {
-                setviewunidades(0);
-              } else {
-                setviewunidades(1);
-              }
             }}
           >
             PRONTUÁRIO
-          </div>
-          <div id="btn-farmacia"
-            className={farmacia == 1 ? 'button-selected' : 'button'}
-            style={{ width: 150, height: 150 }}
-            onClick={() => mudaModulo('farmacia', setfarmacia)}
-          >
-            FARMÁCIA
-          </div>
-          <div id="btn-laboratorio"
-            className={laboratorio == 1 ? 'button-selected' : 'button'}
-            style={{ width: 150, height: 150 }}
-            onClick={() => mudaModulo('laboratorio', setlaboratorio)}
-          >
-            LABORATÓRIO
-          </div>
-          <div id="btn-faturamento"
-            className={faturamento == 1 ? 'button-selected' : 'button'}
-            style={{ width: 150, height: 150 }}
-            onClick={() => mudaModulo('faturamento', setfaturamento)}
-          >
-            FATURAMENTO
           </div>
           <div id="btn-paciente"
             className={pacientes == 1 ? 'button-selected' : 'button'}
             style={{ width: 150, height: 150 }}
             onClick={() => mudaModulo('paciente', setpacientes)}
           >
-            GESTÃO DE PACIENTES E LEITOS
+            GESTÃO DE CLIENTES E LEITOS
           </div>
           <div id="btn-usuarios"
             className={usuarios == 1 ? 'button-selected' : 'button'}
@@ -1081,7 +826,7 @@ function Usuarios() {
         <div
           className="button-green"
           style={{ margin: 5, marginTop: 10, pading: 5, width: 50, height: 50 }}
-          onClick={() => { updateAcessoModulos(); setselectedusuario(0); setviewunidades(0); }}
+          onClick={() => { updateAcessoModulos(); setselectedusuario(0); }}
         >
           <img
             alt=""
@@ -1094,58 +839,6 @@ function Usuarios() {
           ></img>
         </div>
       </div>
-    );
-  }
-
-  // componente para inserir novo acesso.
-  const [viewnewacesso, setviewnewacesso] = useState(0);
-  function InsertAcesso() {
-    return (
-      <div
-        className="fundo"
-        style={{ display: viewnewacesso == 1 ? "flex" : "none" }}
-        onClick={() => {
-          setviewnewacesso(0);
-          console.log(localStorage.getItem('id'));
-          setTimeout(() => {
-            document.getElementById("usuario " + localStorage.getItem('id')).className = "button-selected"
-          }, 200);
-        }}
-      >
-        <div className="janela" onClick={(e) => e.stopPropagation()}>
-          <div
-            id="cadastrar acesso"
-            style={{
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {unidades.map((item) => (
-              <div
-                className="button"
-                style={{
-                  display: todosacessos.filter(valor => valor.id_usuario == selectedusuario.id_usuario && valor.id_unidade == item.id_unidade).length > 0 ? 'none' : 'flex',
-                  width: 100, height: 100
-                }}
-                onClick={() => {
-                  console.log(
-                    JSON.parse(window.localStorage.getItem("selecteduser"))
-                      .id_usuario
-                  );
-                  insertAcesso(
-                    item.id_unidade,
-                    JSON.parse(window.localStorage.getItem("selecteduser"))
-                      .id_usuario
-                  );
-                }}
-              >
-                {item.nome_unidade}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div >
     );
   }
 
@@ -1226,9 +919,13 @@ function Usuarios() {
           </div>
           <ListaDeUsuarios></ListaDeUsuarios>
         </div>
-        <Acessos></Acessos>
-        <InsertUsuario></InsertUsuario>
-        <InsertAcesso></InsertAcesso>
+        <div style={{
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%',
+          alignContent: 'center',
+        }}>
+          <Acessos></Acessos>
+          <InsertUsuario></InsertUsuario>
+        </div>
       </div>
     </div>
   );
