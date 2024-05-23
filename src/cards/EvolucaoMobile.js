@@ -119,7 +119,7 @@ function EvolucaoMobile() {
                   toast(settoast, 'CAMPO DA EVOLUÇÃO EM BRANCO', '#EC7063', 2000);
                 } else {
                   insertDocumento(document.getElementById("inputEvolucao").value.toUpperCase(), 'EVOLUÇÃO HOME CARE');
-                  setcard('');
+                  setviewinsertevolucao(0);
                 }
               }}
             >

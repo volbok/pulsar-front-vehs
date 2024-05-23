@@ -624,58 +624,73 @@ function Prontuario() {
     }
 
     return (
-      <div className="janela scroll"
-        style={{
-          display: objpaciente != null && viewagendamento == 1 ? 'flex' : 'none',
-          flexDirection: 'column',
-          width: '100vw', height: '100vh',
-          position: 'absolute', top: 0, margin: 0, padding: 0,
-          borderWidth: 0,
-          backgroundColor: '#b2babb'
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div style={{
-          display: 'flex',
-          flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
-          justifyContent: 'center',
-          alignContent: 'center',
-          alignItems: 'center',
-        }}>
-          <div id="botão seletor da atividade"
-            className="button"
-            onClick={() => setviewopcoesatividades(1)}
-            style={{ width: 200 }}
-          >
-            {selectedatividade}
+      <div style={{
+        position: 'absolute',
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'white',
+        display: objpaciente != null && viewagendamento == 1 ? 'flex' : 'none',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}>
+        <div className="janela scroll"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: window.innerWidth < mobilewidth ? 'calc(100vw - 10px)' : '100vw',
+            height: '100vh',
+            borderWidth: 0,
+            justifyContent: window.innerWidth < mobilewidth ? 'flex-start' : 'center',
+            alignSelf: 'center',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div style={{
+            display: 'flex',
+            flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignItems: 'center',
+          }}>
+            <div id="botão seletor da atividade"
+              className="button"
+              onClick={() => setviewopcoesatividades(1)}
+              style={{
+                width: 200,
+                marginTop: window.innerWidth < mobilewidth ? 90 : ''
+              }}
+            >
+              {selectedatividade}
+            </div>
+            <div className="text1"
+              style={{
+                fontSize: window.innerWidth < mobilewidth ? '' : '16',
+              }}>
+              {objpaciente != null ? 'AGENDAR ' + selectedatividade + ' PARA ' + objpaciente.nome_paciente + '.' : ''}</div>
+            <div
+              id="botão de retorno"
+              className="button-yellow"
+              style={{
+                display: window.innerWidth < mobilewidth ? "none" : "flex",
+                opacity: 1,
+                alignSelf: "center",
+              }}
+              onClick={() => setviewagendamento(0)}
+            >
+              <img alt="" src={back} style={{ width: 30, height: 30 }}></img>
+            </div>
           </div>
-          <div className="text1"
-            style={{
-              fontSize: window.innerWidth < mobilewidth ? '' : '16',
-            }}>
-            {objpaciente != null ? 'AGENDAR ' + selectedatividade + ' PARA ' + objpaciente.nome_paciente + '.' : ''}</div>
-          <div
-            id="botão de retorno"
-            className="button-yellow"
-            style={{
-              display: "flex",
-              opacity: 1,
-              alignSelf: "center",
-            }}
-            onClick={() => setviewagendamento(0)}
-          >
-            <img alt="" src={back} style={{ width: 30, height: 30 }}></img>
+          <div style={{
+            display: 'flex',
+            flexDirection: window.innerWidth < 769 ? 'column' : 'row',
+            justifyContent: 'center',
+            alignContent: 'center',
+          }}>
+            <DatePicker></DatePicker>
+            <ListaDeConsultas></ListaDeConsultas>
+            <ViewOpcoesHorarios></ViewOpcoesHorarios>
+            <AtividadesSelector></AtividadesSelector>
           </div>
-        </div>
-        <div style={{
-          display: 'flex',
-          flexDirection: window.innerWidth < 769 ? 'column' : 'row',
-          alignContent: 'center',
-        }}>
-          <DatePicker></DatePicker>
-          <ListaDeConsultas></ListaDeConsultas>
-          <ViewOpcoesHorarios></ViewOpcoesHorarios>
-          <AtividadesSelector></AtividadesSelector>
         </div>
       </div>
     )
@@ -725,13 +740,12 @@ function Prontuario() {
         }}
       >
         <div id="scroll atendimentos com pacientes"
-          className="scroll"
           style={{
             display: "flex",
             justifyContent: "flex-start",
             height: "calc(100vh - 200px)",
-            width: '90vw',
-            margin: 5,
+            width: window.innerWidth < mobilewidth ? '90vw' : '50vw',
+            marginTop: 5,
           }}
         >
           {arrayatendimentos
@@ -967,16 +981,18 @@ function Prontuario() {
     return (
       <div
         onClick={(e) => e.stopPropagation()}
-        className={"janela scroll"}
+        className={"janela"}
         style={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-start',
           alignSelf: 'center',
           margin: 5,
-          padding: 0, paddingRight: 5,
-          width: window.innerWidth < 426 ? 'calc(100vw - 20px)' : 400,
+          padding: window.innerWidth < mobilewidth ? 0 : 5,
+          paddingBottom: window.innerWidth < mobilewidth ? 5 : 10,
+          width: window.innerWidth < mobilewidth ? '100vw' : 400,
           borderRadius: window.innerWidth < 426 ? 0 : 5,
+          backgroundColor: '#f2f2f2'
         }}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{
@@ -1203,13 +1219,11 @@ function Prontuario() {
           display: window.innerWidth < mobilewidth ? "flex" : "none",
           flexDirection: "row",
           justifyContent: "center",
-          flex: 1,
           backgroundColor: "#66b2b2",
           borderColor: "#66b2b2",
           borderRadius: 5,
           zIndex: 30,
-          minWidth: "calc(90vw - 10px)",
-          width: "calc(90vw - 10px)",
+          alignSelf: 'center',
         }}
       >
         <div
@@ -1221,7 +1235,7 @@ function Prontuario() {
             backgroundColor: "#ec7063",
             alignSelf: "center",
           }}
-          onClick={card == "" ? () => setviewlista(1) : () => setcard(0)}
+          onClick={card == "" ? () => { setviewlista(1); setviewagendamento(0) } : () => { setcard(0); setviewagendamento(0) }}
         >
           <img alt="" src={back} style={{ width: 30, height: 30 }}></img>
         </div>

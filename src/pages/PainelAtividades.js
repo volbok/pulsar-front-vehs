@@ -256,11 +256,18 @@ function PainelAtividades() {
   const [selectedatividade, setselectedatividade] = useState(null)
   function CardsAtividades() {
     return (
-      <div className="grid"
+      <div className="janela scroll"
         style={{
           display: selectedatividade == null ? 'flex' : 'none',
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
           marginRight: 5,
+          padding: 2.5,
           alignSelf: 'center',
+          marginTop: 5,
+          width: '85vw',
+          overflowX: 'visible',
+          overflowY: 'hidden',
         }}>
         <div
           id="botão de retorno"
