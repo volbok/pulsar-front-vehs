@@ -1035,6 +1035,7 @@ function Login() {
         <div
           className="text2 popin"
           style={{
+            margin: 20,
             display:
               window.innerWidth < mobilewidth && viewalterarsenha == 1
                 ? "none"
@@ -1046,7 +1047,7 @@ function Login() {
             src={logo_vehs}
             style={{
               margin: 0,
-              height: window.innerWidth < mobilewidth ? '40vw' : '30vh',
+              height: window.innerWidth < mobilewidth ? '30vw' : '20vh',
             }}
           ></img>
         </div>
@@ -1128,11 +1129,14 @@ function Login() {
         <CriarSenha></CriarSenha>
         <AlterarSenha></AlterarSenha>
         <div style={{
-          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          display: viewlistaunidades == 0 ? 'flex' : 'none',
+          flexDirection: 'column', justifyContent: 'center',
           width: '100%', alignContent: 'center', alignItems: 'center',
           marginTop: 20,
+          position: 'absolute',
+          bottom: 5
         }}>
-          <Logo href="/site/index.html" target="_blank" rel="noreferrer" height={50} width={50}></Logo>
+          <Logo href="/site/index.html" target="_blank" rel="noreferrer" height={40} width={40}></Logo>
           <div
             className="text2"
             style={{
@@ -1140,8 +1144,7 @@ function Login() {
                 window.innerWidth < mobilewidth && viewalterarsenha == 1
                   ? "none"
                   : "flex",
-              margin: 20, marginTop: 10,
-              fontSize: 10,
+              fontSize: 8,
 
             }}
           >

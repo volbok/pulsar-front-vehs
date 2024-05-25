@@ -23,6 +23,7 @@ function Cliente() {
     setpacientes,
     pacientes,
     usuario,
+    sinaisvitais, setsinaisvitais,
   } = useContext(Context);
 
   // history (router).
@@ -33,7 +34,6 @@ function Cliente() {
     if (pagina == 'cliente') {
       currentMonth();
       loadPacientes();
-      // loadAtendimentos();
     }
 
     // eslint-disable-next-line
@@ -56,6 +56,10 @@ function Cliente() {
         let x = response.data.rows;
         setatendimentos(x.filter(item => item.id_paciente == id_paciente));
         console.log(x.filter(item => item.id_paciente == id_paciente));
+        // id do último atendimento.
+        let lastidatendimento = x.filter(item => item.id_paciente == id_paciente && item.situacao == 1).sort((a, b) => moment(a.data_inicio) < moment(b.data_inicio) ? -1 : 1).slice(-1);
+        console.log(lastidatendimento.map(item => item.id_atendimento).pop());
+        loadSinaisVitais(lastidatendimento.map(item => item.id_atendimento).pop());
       })
       .catch(function (error) {
         if (error.response == undefined) {
@@ -206,11 +210,11 @@ function Cliente() {
       id_pcte: pacientes.map(item => item.id_paciente).pop(),
     }
     console.log(obj);
-    
+
     axios.post(html + 'insert_feedback', obj).then(() => {
       console.log('foi');
     })
-    
+
   }
 
   // DATEPICKER (CALENDÁRIO);
@@ -443,6 +447,116 @@ function Cliente() {
     // eslint-disable-next-line
   }, [selectdate]);
 
+
+  const loadSinaisVitais = (idatendimento) => {
+    console.log(idatendimento);
+    axios.get(html + 'list_sinais_vitais/' + idatendimento).then((response) => {
+      setsinaisvitais(response.data.rows);
+      console.log(response.data.rows);
+    })
+  }
+  function montaSinalVital(nome, item, unidade, min, max) {
+    return (
+      <div id={nome} style={{
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        alignSelf: window.innerWidth < 769 ? 'flex-start' : 'center', maxWidth: 100,
+      }}>
+        <div className='text2' style={{ marginBottom: 0 }}>
+          {nome}
+        </div>
+        <div className='text2'
+          style={{
+            marginTop: 0, paddingTop: 0,
+            color: isNaN(item) == false && (item < min || item > max) ? '#F1948A' : '#ffffff',
+          }}>
+          {item + ' ' + unidade}
+        </div>
+      </div>
+    )
+  }
+
+  function SinaisVitais() {
+    return (
+      <div
+        className={window.innerWidth < mobilewidth ? 'grid1' : 'grid2'}>
+        {sinaisvitais.sort((a, b) => moment(a.data_sinais_vitais) < moment(b.data_sinais_vitais) ? 1 : -1).slice(-4).map(item => (
+          <div className='row'
+            key={'sinais_vitais ' + item.id_sinais_vitais}
+            style={{
+              display: 'flex',
+              flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
+              justifyContent: 'center',
+              alignSelf: 'center',
+            }}
+          >
+            <div id="identificador"
+              className='button cor1opaque'
+              style={{
+                flex: 1,
+                flexDirection: window.innerWidth < mobilewidth ? 'row' : 'column',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                margin: 0,
+                padding: 5,
+                height: window.innerWidth < mobilewidth ? '200vh' : window.innerWidth > parseInt(mobilewidth) + 1 && window.innerWidth < 769 ? '60vh' : 250,
+                width: window.innerWidth < mobilewidth ? '90%' : 50,
+                borderTopLeftRadius: window.innerWidth < mobilewidth ? 5 : 5,
+                borderTopRightRadius: window.innerWidth < mobilewidth ? 5 : 0,
+                borderBottomLeftRadius: window.innerWidth < mobilewidth ? 0 : 5,
+                borderBottomRightRadius: window.innerWidth < mobilewidth ? 0 : 0,
+              }}>
+              <div style={{
+                display: window.innerWidth < mobilewidth ? 'none' : 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center'
+              }}>
+                <div className='text2' style={{ color: '#ffffff' }}>{moment(item.data_sinais_vitais).format('DD/MM/YY')}</div>
+                <div className='text2' style={{ color: '#ffffff', marginTop: 0 }}>{moment(item.data_sinais_vitais).format('HH:mm')}</div>
+              </div>
+              <div style={{
+                display: window.innerWidth < mobilewidth ? 'flex' : 'none',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}>
+                <div className='text2' style={{ color: '#ffffff' }}>{moment(item.data_sinais_vitais).format('DD/MM/YY - HH:mm')}</div>
+              </div>
+            </div>
+            <div id="sinais vitais"
+              className='button cor1'
+              style={{
+                flex: window.innerWidth < mobilewidth ? 11 : 4,
+                display: 'flex', flexDirection: 'row',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                flexWrap: 'wrap',
+                width: window.innerWidth < mobilewidth ? '90%' : '27vw',
+                height: window.innerWidth < mobilewidth ? '200vh' : window.innerWidth > parseInt(mobilewidth) + 1 && window.innerWidth < 769 ? '60vh' : 250,
+                borderTopLeftRadius: window.innerWidth < mobilewidth ? 0 : 0,
+                borderTopRightRadius: window.innerWidth < mobilewidth ? 0 : 5,
+                borderBottomLeftRadius: window.innerWidth < mobilewidth ? 5 : 0,
+                borderBottomRightRadius: window.innerWidth < mobilewidth ? 5 : 5,
+                margin: 0,
+              }}
+            >
+              {montaSinalVital('PAS', item.pas, 'mmHg', 70, 180)}
+              {montaSinalVital('PAD', item.pad, 'mmHg', 50, 120)}
+              {montaSinalVital('FC', item.fc, 'bpm', 45, 120)}
+              {montaSinalVital('FR', item.fr, 'irpm', 10, 22)}
+              {montaSinalVital('SAO2', item.sao2, '%', 85, 100)}
+              {montaSinalVital('TAX', item.tax, '°C', 35, 37.3)}
+              {montaSinalVital('GLICEMIA', item.glicemia, 'mg/dl', 70, 180)}
+              {montaSinalVital('DIURESE', item.diurese, 'ml', 500, 2000)}
+              {montaSinalVital('BALANÇO', item.balanco, 'ml', -2000, 2000)}
+              {montaSinalVital('EVACUAÇÃO', item.evacuacao, '', '', '')}
+              {montaSinalVital('ESTASE', item.estase, 'ml', 0, 200)}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   const [viewmenucliente, setviewmenucliente] = useState(0);
   function MenuCliente() {
     return (
@@ -508,15 +622,19 @@ function Cliente() {
         }}
       >
         <MenuCliente></MenuCliente>
-
         <div style={{
           display: viewmessage == 4 ? 'flex' : 'none',
-          flexDirection: 'column', justifyContent: 'space-evenly'
+          flexDirection: 'column', justifyContent: 'flex-start'
         }}>
           <DatePicker></DatePicker>
           <AtividadesDoDia></AtividadesDoDia>
         </div>
-
+        <div style={{
+          display: viewmessage == 5 ? 'flex' : 'none',
+          flexDirection: 'column', justifyContent: 'flex-start',
+        }}>
+          <SinaisVitais></SinaisVitais>
+        </div>
         <div style={{ display: viewmessage < 4 ? 'flex' : 'none', justifyContent: 'center' }}>
           <BoasVindas></BoasVindas>
           <Message></Message>

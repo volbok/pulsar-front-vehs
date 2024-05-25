@@ -652,33 +652,24 @@ function Prontuario() {
             alignContent: 'center',
             alignItems: 'center',
           }}>
-            <div id="botão seletor da atividade"
-              className="button"
-              onClick={() => setviewopcoesatividades(1)}
-              style={{
-                width: 200,
-                marginTop: window.innerWidth < mobilewidth ? 90 : ''
-              }}
-            >
-              {selectedatividade}
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+              <div id="botão seletor da atividade"
+                className="button"
+                onClick={() => setviewopcoesatividades(1)}
+                style={{
+                  width: 200,
+                  marginTop: window.innerWidth < mobilewidth ? 90 : ''
+                }}
+              >
+                {selectedatividade}
+              </div>
             </div>
             <div className="text1"
               style={{
                 fontSize: window.innerWidth < mobilewidth ? '' : '16',
               }}>
               {objpaciente != null ? 'AGENDAR ' + selectedatividade + ' PARA ' + objpaciente.nome_paciente + '.' : ''}</div>
-            <div
-              id="botão de retorno"
-              className="button-yellow"
-              style={{
-                display: window.innerWidth < mobilewidth ? "none" : "flex",
-                opacity: 1,
-                alignSelf: "center",
-              }}
-              onClick={() => setviewagendamento(0)}
-            >
-              <img alt="" src={back} style={{ width: 30, height: 30 }}></img>
-            </div>
+          
           </div>
           <div style={{
             display: 'flex',
