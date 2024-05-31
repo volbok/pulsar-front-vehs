@@ -42,6 +42,8 @@ import Prescricao from "./Prescricao";
 import selector from "../functions/selector";
 import EvolucaoMobile from "../cards/EvolucaoMobile";
 import Feedback from "./Feedback";
+import EscalasAssistenciais from "../cards/EscalasAssistenciais";
+import Medicacoes from "../cards/Medicacoes";
 
 function Prontuario() {
   // context.
@@ -74,7 +76,6 @@ function Prontuario() {
     precaucoes,
     setriscos,
     riscos,
-    setculturas,
     culturas,
     setdietas,
     dietas,
@@ -669,7 +670,7 @@ function Prontuario() {
                 fontSize: window.innerWidth < mobilewidth ? '' : '16',
               }}>
               {objpaciente != null ? 'AGENDAR ' + selectedatividade + ' PARA ' + objpaciente.nome_paciente + '.' : ''}</div>
-          
+
           </div>
           <div style={{
             display: 'flex',
@@ -1350,17 +1351,6 @@ function Prontuario() {
     // Dados relacionados ao atendimento.
     // antibióticos.
     loadItensPrescricao(atendimento);
-    // culturas.
-    setbusyculturas(1);
-    axios
-      .get(html + "list_culturas/" + atendimento)
-      .then((response) => {
-        setculturas(response.data.rows);
-        setbusyculturas(0);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
     // dietas.
     setbusydieta(1);
     axios
@@ -1442,8 +1432,7 @@ function Prontuario() {
   const [busyriscos, setbusyriscos] = useState(0);
   const [busysinaisvitais, setbusysinaisvitais] = useState(0);
   const [busydieta, setbusydieta] = useState(0);
-  const [busyculturas, setbusyculturas] = useState(0);
-
+  
   const loading = () => {
     return (
       <div
@@ -2322,13 +2311,9 @@ function Prontuario() {
             {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais, 0)}
             {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null, 0)}
             {cartao(null, "DIETA", "card-dietas", busydieta, 0)}
-            {cartao(
-              culturas.filter((item) => item.data_resultado == null),
-              "CULTURAS",
-              "card-culturas",
-              busyculturas
-            )}
             {cartao(null, 'MONITORAMENTO HOME OFFICE', "card-feedback", null, 1)}
+            {cartao(null, 'ESCALAS ASSISTENCIAIS', 'card-escalas_assistenciais', null)}
+            {cartao(null, 'MEDICAÇÕES', 'card-receita', null)}
           </div>
           <div id="cards (cartões) visão mobile"
             className={arraycartoes.length == cartoes.length ? "grid2" : "grid1"}
@@ -2356,15 +2341,11 @@ function Prontuario() {
             {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais, 0)}
             {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null, 0)}
             {cartao(null, "DIETA", "card-dietas", busydieta, 0)}
-            {cartao(
-              culturas.filter((item) => item.data_resultado == null),
-              "CULTURAS",
-              "card-culturas",
-              busyculturas
-            )}
             {cartao(null, 'PRESCRIÇÃO', "card-prescricao", null, 1)}
             {cartao(null, 'EXAMES DE IMAGEM', 'card-exames', null, 1)}
             {cartao(null, 'MONITORAMENTO HOME OFFICE', "card-feedback", null, 1)}
+            {cartao(null, 'ESCALAS ASSISTENCIAIS', 'card-escalas_assistenciais', null)}
+            {cartao(null, 'MEDICAÇÕES', 'card-receita', null)}
           </div>
         </div>
         <div id="conteúdo cheio (componentes)"
@@ -2394,6 +2375,8 @@ function Prontuario() {
           <Prescricao></Prescricao>
           <EvolucaoMobile></EvolucaoMobile>
           <Feedback></Feedback>
+          <EscalasAssistenciais></EscalasAssistenciais>
+          <Medicacoes></Medicacoes>
         </div>
         <div id="conteúdo vazio"
           style={{
