@@ -101,7 +101,14 @@ function Feedback() {
               <div className="text1" style={{ marginBottom: 0 }}>{moment(item.dn_paciente).format('DD/MM/YY')}</div>
               <div className="text1" style={{ marginTop: 0, paddingTop: 0 }}>{moment(item.dn_paciente).format('HH:mm')}</div>
             </div>
-            <div className="text1" style={{ width: '100%' }}>{item.comentario}</div>
+            <div className="text1" style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              textAlign: 'left',
+              alignSelf: 'flex-start',
+              width: '100%',
+            }}>{item.comentario}</div>
           </div>
         ))}
       </div>
@@ -110,7 +117,7 @@ function Feedback() {
 
   function Back() {
     return (
-      <div className="button green"
+      <div className="button-yellow"
         onClick={() => {
           setcard('');
         }}

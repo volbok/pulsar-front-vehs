@@ -122,7 +122,7 @@ function Riscos() {
             {tiporisco}
           </div>
           <div id="botão de retorno"
-            className="button-red"
+            className="button-yellow"
             style={{
               display: 'flex',
               alignSelf: 'center',
@@ -150,7 +150,7 @@ function Riscos() {
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
         <div id="botão de retorno"
-          className="button-red"
+          className="button-yellow"
           style={{
             display: 'flex',
             alignSelf: 'center',

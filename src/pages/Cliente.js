@@ -191,8 +191,10 @@ function Cliente() {
         <div
           className="button"
           onClick={() => {
+            if (document.getElementById("inputFeedbackMessage").value != '') {
+              insertFeedback();
+            }
             setviewmenucliente(1);
-            insertFeedback();
           }}
         >
           ACESSAR MENU DO CLIENTE
@@ -209,12 +211,7 @@ function Cliente() {
       comentario: document.getElementById("inputFeedbackMessage").value.toUpperCase(),
       id_pcte: pacientes.map(item => item.id_paciente).pop(),
     }
-    console.log(obj);
-
-    axios.post(html + 'insert_feedback', obj).then(() => {
-      console.log('foi');
-    })
-
+    axios.post(html + 'insert_feedback', obj);
   }
 
   // DATEPICKER (CALENDÁRIO);
@@ -286,11 +283,12 @@ function Cliente() {
           flexDirection: 'column',
           justifyContent: 'flex-start',
           alignSelf: 'center',
-          padding: 7.5, marginRight: 5,
+          padding: 7.5,
           borderRadius: 5,
           backgroundColor: 'white',
+          width: '70vw',
         }}>
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
           <div style={{
             display: 'flex',
             flex: 1,
@@ -337,10 +335,8 @@ function Cliente() {
               {'►'}
             </button>
           </div>
-
-          <div
+          <div id="LISTA DE DATAS"
             className="textarea"
-            id="LISTA DE DATAS"
             style={{
               display: 'flex',
               flexDirection: 'row',
@@ -353,7 +349,7 @@ function Cliente() {
               minHeight: 70,
               height: 70,
               maxHeight: 70,
-              width: window.innerWidth < mobilewidth ? '85vw' : '95vw',
+              width: window.innerWidth < mobilewidth ? '85vw' : '100%',
             }}
           >
             {arraylist.map((item) => (
@@ -387,61 +383,50 @@ function Cliente() {
   const AtividadesDoDia = useCallback(() => {
     return (
       <div
-        className="fadein"
         style={{
           display: 'flex',
           flexDirection: "column",
           alignSelf: "center",
         }}
       >
-        <div id="scroll atendimentos com pacientes"
-          className="scroll"
-          style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            height: "calc(100vh - 200px)",
-            width: window.innerWidth < mobilewidth ? '85vw' : '95vw',
-            marginTop: 5, marginRight: 5,
-          }}
-        >
-          {atendimentos
-            // uma lista para cada tipo de atividade...
-            .filter(item => isNaN(item.situacao) && moment(item.data_inicio).format('DD/MM/YYYY') == selectdate)
-            .sort((a, b) => (moment(a.data_inicio) > moment(b.data_inicio) ? 1 : -1))
-            .map((item) => (
-              <div key={"pacientes" + item.id_atendimento}>
+
+        {atendimentos
+          // uma lista para cada tipo de atividade...
+          .filter(item => isNaN(item.situacao) && moment(item.data_inicio).format('DD/MM/YYYY') == selectdate)
+          .sort((a, b) => (moment(a.data_inicio) > moment(b.data_inicio) ? 1 : -1))
+          .map((item) => (
+            <div key={"pacientes" + item.id_atendimento}>
+              <div
+                className="row"
+                style={{
+                  position: "relative",
+                  margin: 2.5, padding: 0,
+                }}
+              >
                 <div
-                  className="row"
+                  id={"atendimento " + item.id_atendimento}
+                  className="button-grey"
                   style={{
-                    position: "relative",
-                    margin: 2.5, padding: 0,
+                    flex: 1,
+                    marginRight: 0,
+                    borderTopRightRadius: 0,
+                    borderBottomRightRadius: 0,
+                    fontSize: 10
+                  }}>
+                  {moment(item.data_inicio).format('HH:mm') + ' ÀS ' + moment(item.data_termino).format('HH:mm')}
+                </div>
+                <div className="button green"
+                  style={{
+                    borderRadius: 0, marginLeft: 0, borderTopRightRadius: 5, borderBottomRightRadius: 5,
+                    fontSize: 10, flex: 3
                   }}
                 >
-                  <div
-                    id={"atendimento " + item.id_atendimento}
-                    className="button-grey"
-                    style={{
-                      flex: 1,
-                      marginRight: 0,
-                      borderTopRightRadius: 0,
-                      borderBottomRightRadius: 0,
-                      fontSize: 10
-                    }}>
-                    {moment(item.data_inicio).format('HH:mm') + ' ÀS ' + moment(item.data_termino).format('HH:mm')}
-                  </div>
-                  <div className="button green"
-                    style={{
-                      borderRadius: 0, marginLeft: 0, borderTopRightRadius: 5, borderBottomRightRadius: 5,
-                      fontSize: 10, flex: 3
-                    }}
-                  >
-                    {item.situacao}
-                  </div>
+                  {item.situacao}
                 </div>
               </div>
-            ))
-          }
-        </div>
+            </div>
+          ))
+        }
       </div>
     );
     // eslint-disable-next-line
@@ -568,12 +553,12 @@ function Cliente() {
         }}
       >
         <div className="text2">O QUE DESEJA ACESSAR?</div>
-        <div className="button"
+        <div className="button" style={{ maxWidth: 200, width: 200, alignSelf: 'center' }}
           onClick={() => { setviewmessage(4); setviewmenucliente(0) }}
         >
           PAINEL DE ATIVIDADES
         </div>
-        <div className="button"
+        <div className="button" style={{ maxWidth: 200, width: 200, alignSelf: 'center' }}
           onClick={() => { setviewmessage(5); setviewmenucliente(0) }}
         >
           DADOS VITAIS
@@ -584,10 +569,16 @@ function Cliente() {
 
   function Back() {
     return (
-      <div className="button green"
-        onClick={() => { setviewmessage(0); setviewmenucliente(1) }}
+      <div className="button-yellow"
+        onClick={() => {
+          if (viewmenucliente != 1) {
+            setviewmessage(0); setviewmenucliente(1)
+          } else {
+            setviewmenucliente(0);
+          }
+        }}
         style={{
-          display: viewmessage > 3 ? 'flex' : 'none',
+          display: viewmenucliente == 0 && viewmessage == 0 ? 'none' : 'flex',
           marginRight: 10,
           maxWidth: 50, maxHeight: 50,
           alignSelf: 'center',
@@ -614,9 +605,9 @@ function Cliente() {
     >
       <div
         className="chassi"
-        id="conteúdo do prontuário"
+        id="conteúdo do portal dos clientes"
         style={{
-          display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly',
+          display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
           alignContent: 'center',
           alignSelf: 'center',
         }}
@@ -624,7 +615,10 @@ function Cliente() {
         <MenuCliente></MenuCliente>
         <div style={{
           display: viewmessage == 4 ? 'flex' : 'none',
-          flexDirection: 'column', justifyContent: 'flex-start'
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
+          alignSelf: 'center',
+          width: '80vw',
         }}>
           <DatePicker></DatePicker>
           <AtividadesDoDia></AtividadesDoDia>

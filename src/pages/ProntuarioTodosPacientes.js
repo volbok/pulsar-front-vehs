@@ -388,6 +388,7 @@ function Prontuario() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          height: window.innerHeight < 450 ? '70%' : '80%',
         }}
       >
         <div id="scroll atendimentos com pacientes"
@@ -395,7 +396,6 @@ function Prontuario() {
           style={{
             display: arrayatendimentos.length > 0 ? "flex" : "none",
             justifyContent: "flex-start",
-            height: window.innerWidth < mobilewidth ? '72vh' : '70vh',
             width: 'calc(100% - 20px)',
           }}
         >
@@ -575,11 +575,10 @@ function Prontuario() {
           </div>
         </div>
         <div id="scroll atendimento vazio"
-          className="scroll"
+          // className="scroll"
           style={{
             display: arrayatendimentos.length < 1 ? "flex" : "none",
             justifyContent: "flex-start",
-            height: window.innerWidth < mobilewidth ? '72vh' : '70vh',
             width: 'calc(100% - 20px)',
           }}
         >
@@ -627,22 +626,22 @@ function Prontuario() {
     return (
       <div style={{
         position: 'absolute',
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: 'white',
         display: objpaciente != null && viewagendamento == 1 ? 'flex' : 'none',
         flexDirection: 'column',
-        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        width: '100vw',
+        height: '100vh',
       }}>
         <div className="janela scroll"
           style={{
             display: 'flex',
             flexDirection: 'column',
-            width: window.innerWidth < mobilewidth ? 'calc(100vw - 10px)' : '100vw',
-            height: '100vh',
-            borderWidth: 0,
-            justifyContent: window.innerWidth < mobilewidth ? 'flex-start' : 'center',
-            alignSelf: 'center',
+            width: 'calc(100vw - 10px)',
+            height: 'calc(100vh - 10px)',
+            justifyContent: 'flex-start',
+            backgroundColor: 'white',
+            borderColor: 'white',
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -674,14 +673,27 @@ function Prontuario() {
           </div>
           <div style={{
             display: 'flex',
-            flexDirection: window.innerWidth < 769 ? 'column' : 'row',
-            justifyContent: 'center',
-            alignContent: 'center',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
           }}>
             <DatePicker></DatePicker>
             <ListaDeConsultas></ListaDeConsultas>
             <ViewOpcoesHorarios></ViewOpcoesHorarios>
             <AtividadesSelector></AtividadesSelector>
+            <div id="botão para sair da tela de agendamento de atividades e consultas"
+              className="button-yellow"
+              style={{
+                maxHeight: 50, maxWidth: 50, alignSelf: 'center',
+              }}
+              onClick={() => {
+                setviewagendamento(0);
+              }}>
+              <img
+                alt=""
+                src={back}
+                style={{ width: 30, height: 30 }}
+              ></img>
+            </div>
           </div>
         </div>
       </div>
@@ -732,12 +744,11 @@ function Prontuario() {
         }}
       >
         <div id="scroll atendimentos com pacientes"
+          className={window.innerWidth < mobilewidth ? "" : "grid2"}
           style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            height: "calc(100vh - 200px)",
-            width: window.innerWidth < mobilewidth ? '90vw' : '50vw',
             marginTop: 5,
+            alignSelf: 'center',
+            width: '90vw'
           }}
         >
           {arrayatendimentos
@@ -745,10 +756,10 @@ function Prontuario() {
             .filter(item => item.situacao == selectedatividade && moment(item.data_inicio).format('DD/MM/YYYY') == localStorage.getItem('selectdate') && item.id_profissional == usuario.id)
             .sort((a, b) => (moment(a.data_inicio) > moment(b.data_inicio) ? 1 : -1))
             .map((item) => (
-              <div key={"pacientes" + item.id_atendimento} style={{ width: '100%' }}>
+              <div key={"pacientes" + item.id_atendimento}>
                 <div
-                  className="row"
                   style={{
+                    display: 'flex',
                     position: "relative",
                     margin: 2.5, padding: 0,
                   }}
@@ -758,10 +769,15 @@ function Prontuario() {
                     className="button-grey"
                     style={{
                       flex: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
                       marginRight: 0,
                       borderTopRightRadius: 0,
                       borderBottomRightRadius: 0,
                     }}>
+                    <div style={{ marginBottom: 5 }}>
+                      {moment(item.data_inicio).format('DD/HH/MM')}
+                    </div>
                     {moment(item.data_inicio).format('HH:mm') + ' ÀS ' + moment(item.data_termino).format('HH:mm')}
                   </div>
                   <div
@@ -839,7 +855,7 @@ function Prontuario() {
             SELECIONE UMA DATA
           </div>
         </div>
-      </div >
+      </div>
     );
     // eslint-disable-next-line
   }, [arrayatendimentos, selectdate, selectedatividade]);
@@ -868,7 +884,8 @@ function Prontuario() {
           style={{
             display: 'flex', flexDirection: 'column', justifyItems: 'flex-start',
             justifyContent: 'flex-start',
-            width: 730, height: '85vh',
+            width: '90vw',
+            height: '85vh',
             position: 'relative',
           }}
           onClick={(e) => e.stopPropagation()}>
@@ -890,13 +907,16 @@ function Prontuario() {
             <div className='text1' style={{ fontSize: 18, marginBottom: 0 }}>HORÁRIOS DISPONÍVEIS</div>
           </div>
           <div className='text1' style={{ marginTop: 0 }}>{'DATA: ' + localStorage.getItem('selectdate')}</div>
-          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+          <div
+            className={window.innerWidth < mobilewidth ? "grid2" : "grid3"}
+            style={{ width: '100%' }}
+          >
             {arrayhorarios.map(item => (
               <div className='button'
                 style={{
                   opacity: arrayatendimentos.filter(valor => moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.situacao == selectedatividade && valor.id_paciente == paciente).length > 0 ? 0.3 : 1,
                   pointerEvents: arrayatendimentos.filter(valor => moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.situacao == selectedatividade && valor.id_paciente == paciente).length > 0 ? 'none' : 'auto',
-                  width: 100, height: 100,
+                  height: 100, flexGrow: 'inherit',
                 }}
                 onClick={() => { insertAtendimento(item); setviewopcoeshorarios(0) }}
               >
@@ -984,7 +1004,7 @@ function Prontuario() {
           paddingBottom: window.innerWidth < mobilewidth ? 5 : 10,
           width: window.innerWidth < mobilewidth ? '100vw' : 400,
           borderRadius: window.innerWidth < 426 ? 0 : 5,
-          backgroundColor: '#f2f2f2'
+          backgroundColor: 'white'
         }}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{
@@ -1432,7 +1452,7 @@ function Prontuario() {
   const [busyriscos, setbusyriscos] = useState(0);
   const [busysinaisvitais, setbusysinaisvitais] = useState(0);
   const [busydieta, setbusydieta] = useState(0);
-  
+
   const loading = () => {
     return (
       <div
@@ -1905,7 +1925,7 @@ function Prontuario() {
                 </div>
                 <div
                   style={{
-                    display: window.innerWidth < mobilewidth ? "none" : "flex",
+                    display: window.innerWidth < 800 ? "none" : "flex",
                     flexDirection: "column",
                     justifyContent: "center",
                     margin: 5,
@@ -1923,7 +1943,7 @@ function Prontuario() {
                 </div>
                 <div
                   style={{
-                    display: window.innerWidth < mobilewidth ? "none" : "flex",
+                    display: window.innerWidth < 800 ? "none" : "flex",
                     flexDirection: "column",
                     justifyContent: "center",
                     margin: 5,
@@ -2247,7 +2267,7 @@ function Prontuario() {
         <div id="usuário, botões, busca de paciente e lista de pacientes"
           style={{
             display: window.innerWidth < mobilewidth && viewlista == 0 ? "none" : "flex",
-            flexDirection: 'column', justifyContent: 'space-between',
+            flexDirection: 'column', justifyContent: 'center',
             position: 'sticky', top: 5,
             width: window.innerWidth < mobilewidth ? '90vw' : '30vw',
             height: '95vh',

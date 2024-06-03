@@ -133,7 +133,7 @@ function EscalasAssistenciaisComponent() {
             <div className="text2" style={{ fontSize: 20, margin: 10 }}>{item}</div>
             <div className="scroll" style={{
               display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap',
-              minHeight: 220, width: '100%',
+              minHeight: 220, height: 220, width: '100%',
             }}>
               {listaescalas.filter(valor => valor.escala == item).map(valor => (
                 <div className="button"

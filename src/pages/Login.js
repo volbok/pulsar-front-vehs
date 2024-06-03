@@ -1148,7 +1148,7 @@ function Login() {
 
             }}
           >
-            POWERED BY PULSAR
+            PULSAR
           </div>
         </div>
       </div>

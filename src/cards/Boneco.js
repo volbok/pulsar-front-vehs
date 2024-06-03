@@ -671,7 +671,6 @@ function Boneco() {
         <div id="dispositivos"
           style={{
             position: 'absolute',
-            top: 0, bottom: 0, left: 0, right: 0,
             display: randombody == 1 ? 'flex' : 'none',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -707,7 +706,7 @@ function Boneco() {
         <div id="lesões"
           style={{
             position: 'absolute',
-            top: 0, bottom: 0, left: 0, right: 0,
+            // top: 0, bottom: 0, left: 0, right: 0,
             display: randombody == 2 ? 'flex' : 'none',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -803,7 +802,7 @@ function Boneco() {
   function DetalhesInvasoes() {
     return (
       <div style={{
-        display: 'flex',
+        display: invasoes.length > 0 ? 'flex' : 'none',
         flexDirection: 'column',
         justifyContent: 'center',
       }}>
@@ -811,12 +810,13 @@ function Boneco() {
         <div className='scroll'
           style={{
             display: randombody == 1 ? 'flex' : 'none',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
+            width: window.innerWidth < mobilewidth ? '80vw' : 300,
             height: 400,
             textAlign: 'left',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
             alignItems: 'flex-start',
-            marginTop: 5
+            marginTop: 5,
           }}>
           {invasoes.map(item => (
             <div className="palette2" style={{
@@ -843,7 +843,8 @@ function Boneco() {
           style={{
             display: randombody == 2 ? 'flex' : 'none',
             width: window.innerWidth < mobilewidth ? '80vw' : 300,
-            height: 400, marginRight: 20, textAlign: 'left',
+            height: 400,
+            textAlign: 'left',
             flexDirection: 'column',
             justifyContent: 'flex-start',
             alignItems: 'flex-start'
@@ -879,21 +880,19 @@ function Boneco() {
       style={{
         display: card == 'card-boneco' ? 'flex' : 'none',
         flexDirection: 'column',
-        justifyContent: window.innerWidth < mobilewidth ? 'flex-start' : 'center',
+        justifyContent: 'flex-start',
         marginTop: window.innerWidth < mobilewidth ? 20 : 0,
       }}
     >
       <div style={{
         display: 'flex',
-        flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
-        justifyContent: window.innerWidth < mobilewidth ? 'center' : 'space-evenly',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
       }}>
         <div
           style={{
             display: 'flex', flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignSelf: 'center',
+            justifyContent: 'flex-start',
           }}
         >
           <Body></Body>
