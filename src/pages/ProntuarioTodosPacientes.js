@@ -589,7 +589,7 @@ function Prontuario() {
       </div >
     );
     // eslint-disable-next-line
-  }, [arrayatendimentos, allinterconsultas, allprecaucoes, consultorio, setarrayitensprescricao, viewagendamento, objpaciente]);
+  }, [arrayatendimentos, allinterconsultas, allprecaucoes, setarrayitensprescricao]);
 
   // janela para que o médico possa agendar suas consultas.
   const [selectedatividade, setselectedatividade] = useState('CONSULTA MÉDICA');

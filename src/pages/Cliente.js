@@ -286,7 +286,7 @@ function Cliente() {
           padding: 7.5,
           borderRadius: 5,
           backgroundColor: 'white',
-          width: '70vw',
+          width: 'calc(100vw - 45px)',
         }}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
           <div style={{
@@ -349,7 +349,7 @@ function Cliente() {
               minHeight: 70,
               height: 70,
               maxHeight: 70,
-              width: window.innerWidth < mobilewidth ? '85vw' : '100%',
+              width: '100%',
             }}
           >
             {arraylist.map((item) => (

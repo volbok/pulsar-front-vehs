@@ -9,6 +9,7 @@ import back from '../images/back.svg';
 import novo from '../images/novo.svg';
 import salvar from '../images/salvar.svg';
 import deletar from "../images/deletar.svg";
+import selector from '../functions/selector';
 
 function Medicacoes() {
 
@@ -18,6 +19,7 @@ function Medicacoes() {
     paciente,
     html,
     setdialogo,
+    mobilewidth,
   } = useContext(Context);
 
   useEffect(() => {
@@ -43,11 +45,14 @@ function Medicacoes() {
         flexDirection: 'column', backgroundColor: 'white', borderRadius: 5, padding: 10
       }}>
         <div className='text1' style={{ fontSize: 20 }}>{'HORÁRIO: ' + hora}</div>
-        <div className='grid3'>
+        <div className={window.innerWidth < mobilewidth ? 'grid1' : 'grid3'}
+          style={{ alignSelf: 'center', width: '100%' }}>
           {medicacoes.filter(item => item.hora == hora).map((item) => (
             <div className='button' style={{
               display: 'flex', flexDirection: 'column', justifyContent: 'center',
-              position: 'relative', flexGrow: 'inherit', height: 150
+              position: 'relative',
+              flexGrow: 'inherit', width: 'calc(100% - 25px)',
+              height: 150, alignSelf: 'center',
             }}>
               <div>{item.medicamento}</div>
               <div>{item.quantidade + ' ' + item.tipo}</div>
@@ -96,7 +101,7 @@ function Medicacoes() {
     let obj = {
       id_paciente: paciente,
       medicamento: document.getElementById("inputNomeMedicacao").value.toUpperCase(),
-      hora: document.getElementById("inputHoraMedicacao").value.toUpperCase(),
+      hora: localStorage.getItem('hora'),
       observacoes: document.getElementById("inputObservacoesMedicacao").value.toUpperCase(),
       quantidade: document.getElementById("inputQtdeMedicacao").value.toUpperCase(),
       tipo: document.getElementById("inputTipoMedicacao").value.toUpperCase(),
@@ -104,6 +109,7 @@ function Medicacoes() {
     axios.post(html + 'insert_medicamento', obj).then(() => {
       console.log('MEDICAÇÃO REGISTRADA COM SUCESSO.');
       loadMedicacoes();
+      setviewinsertmedicacao(0);
     })
   }
 
@@ -121,7 +127,8 @@ function Medicacoes() {
         style={{ display: viewinsertmedicacao == 1 ? 'flex' : 'none', flexDirection: 'column', justifyContent: 'center' }}
         onClick={() => setviewinsertmedicacao(0)}
       >
-        <div className="janela" onClick={(e) => e.stopPropagation()}>
+        <div className="janela scroll" style={{ height: '90vh', width: '90vw' }}
+          onClick={(e) => e.stopPropagation()}>
           <div id="NOME DA MEDICAÇÃO"
             style={{
               display: "flex",
@@ -129,15 +136,15 @@ function Medicacoes() {
               justifyContent: "center",
             }}
           >
-            <div className="text1">NOME DA MEDICAÇÃO</div>
+            <div className="text1">NOME E DOSE DA MEDICAÇÃO</div>
             <textarea
               autoComplete="off"
-              placeholder="NOME DO PACIENTE"
+              placeholder="NOME E DOSE DA NEDICAÇÃO"
               className="textarea"
               type="text"
               id="inputNomeMedicacao"
               onFocus={(e) => (e.target.placeholder = "")}
-              onBlur={(e) => (e.target.placeholder = "NOME DA MEDICAÇÃO")}
+              onBlur={(e) => (e.target.placeholder = "NOME E DOSE DA MEDICAÇÃO")}
               style={{
                 flexDirection: "center",
                 justifyContent: "center",
@@ -158,25 +165,19 @@ function Medicacoes() {
             }}
           >
             <div className="text1">HORA DE ADMINISTRAÇÃO</div>
-            <textarea
-              autoComplete="off"
-              placeholder="HORA"
-              className="textarea"
-              type="text"
-              id="inputHoraMedicacao"
-              onFocus={(e) => (e.target.placeholder = "")}
-              onBlur={(e) => (e.target.placeholder = "HORA DA MEDICAÇÃO")}
-              style={{
-                flexDirection: "center",
-                justifyContent: "center",
-                alignSelf: "center",
-                width: 40,
-                padding: 15,
-                height: 20,
-                minHeight: 20,
-                maxHeight: 20,
-              }}
-            ></textarea>
+            <div id='lista de horas' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }}>
+              {arrayhora.map(valor => (
+                <div id={'botão de hora ' + valor} className='button'
+                  style={{ width: 50, minWidth: 50, maxWidth: 50, height: 50, minHeight: 50, maxHeight: 50 }}
+                  onClick={() => {
+                    localStorage.setItem('hora', valor);
+                    selector('lista de horas', 'botão de hora ' + valor, 300);
+                  }}
+                >
+                  {valor}
+                </div>
+              ))}
+            </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
             <div id="QUANTIDADE"
@@ -199,7 +200,7 @@ function Medicacoes() {
                   flexDirection: "center",
                   justifyContent: "center",
                   alignSelf: "center",
-                  width: 40,
+                  width: 50,
                   padding: 15,
                   height: 20,
                   minHeight: 20,
@@ -227,7 +228,7 @@ function Medicacoes() {
                   flexDirection: "center",
                   justifyContent: "center",
                   alignSelf: "center",
-                  width: 40,
+                  width: 100,
                   padding: 15,
                   height: 20,
                   minHeight: 20,

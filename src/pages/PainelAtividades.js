@@ -336,6 +336,7 @@ function PainelAtividades() {
           style={{
             display: "flex",
             justifyContent: "flex-start",
+            flexDirection: window.innerWidth < mobilewidth ? "column" : "row",
             width: window.innerWidth < mobilewidth ? '85vw' : '95vw',
             marginTop: 5, marginRight: 5,
           }}

@@ -4,7 +4,6 @@ import axios from "axios";
 import Context from "./Context";
 import moment from "moment";
 // imagens.
-import power from "../images/power.svg";
 import back from "../images/back.svg";
 import body from "../images/body.svg";
 import refresh from "../images/refresh.svg";
@@ -75,26 +74,21 @@ function Consultas() {
     precaucoes,
     setriscos,
     riscos,
-    setculturas,
     culturas,
     setdietas,
     dietas,
     setevolucoes,
     setarrayevolucoes,
-    setinfusoes,
     infusoes,
     setpropostas,
     propostas,
     setsinaisvitais,
     sinaisvitais,
-    setvm,
     vm,
-    setinterconsultas,
     interconsultas,
     card, setcard,
     prescricao, setprescricao,
-    setlaboratorio,
-
+    
     mobilewidth,
 
     setunidade,
@@ -273,7 +267,7 @@ function Consultas() {
           >
             <img
               alt=""
-              src={power}
+              src={back}
               style={{
                 height: 30,
                 width: 30,
@@ -852,17 +846,6 @@ function Consultas() {
     // Dados relacionados ao atendimento.
     // antibióticos.
     loadItensPrescricao(atendimento);
-    // culturas.
-    setbusyculturas(1);
-    axios
-      .get(html + "list_culturas/" + atendimento)
-      .then((response) => {
-        setculturas(response.data.rows);
-        setbusyculturas(0);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
     // dietas.
     setbusydieta(1);
     axios
@@ -880,17 +863,6 @@ function Consultas() {
       .then((response) => {
         setevolucoes(response.data.rows);
         setarrayevolucoes(response.data.rows);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    // infusões.
-    setbusyinfusoes(1);
-    axios
-      .get(html + "list_infusoes/" + atendimento)
-      .then((response) => {
-        setinfusoes(response.data.rows);
-        setbusyinfusoes(0);
       })
       .catch(function (error) {
         console.log(error);
@@ -944,22 +916,6 @@ function Consultas() {
       .catch(function (error) {
         console.log(error);
       });
-    // vm.
-    setbusyvm(1);
-    axios.get(html + "list_vm/" + atendimento).then((response) => {
-      setbusyvm(0);
-      setvm(response.data.rows);
-    })
-    // interconsultas.
-    setbusyinterconsultas(1);
-    axios.get(html + "list_interconsultas/" + atendimento).then((response) => {
-      setinterconsultas(response.data.rows);
-      setbusyinterconsultas(0);
-    })
-    // laboratorio.
-    axios.get(html + 'atendimento_laboratorio/' + atendimento).then((response) => {
-      setlaboratorio(response.data.rows);
-    })
   };
 
   // estado para alternância entre lista de pacientes e conteúdo do passômetro para versão mobile.
@@ -970,12 +926,8 @@ function Consultas() {
   const [busypropostas, setbusypropostas] = useState(0);
   const [busyriscos, setbusyriscos] = useState(0);
   const [busysinaisvitais, setbusysinaisvitais] = useState(0);
-  const [busyvm, setbusyvm] = useState(0);
-  const [busyinfusoes, setbusyinfusoes] = useState(0);
   const [busydieta, setbusydieta] = useState(0);
-  const [busyculturas, setbusyculturas] = useState(0);
-  const [busyinterconsultas, setbusyinterconsultas] = useState(0);
-
+ 
   const loading = () => {
     return (
       <div
@@ -1769,6 +1721,8 @@ function Consultas() {
           padding: 0, paddingRight: 5,
           width: window.innerWidth < 426 ? 'calc(100vw - 20px)' : 400,
           borderRadius: window.innerWidth < 426 ? 0 : 5,
+          backgroundColor: 'white',
+          borderColor: 'white',
         }}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{
@@ -1907,11 +1861,9 @@ function Consultas() {
         }}
       >
         <div id="scroll atendimentos com pacientes"
-          className="scroll"
           style={{
             display: "flex",
             justifyContent: "flex-start",
-            height: "calc(100vh - 200px)",
             width: window.innerWidth < mobilewidth ? '90vw' : '60vw',
             margin: 5,
           }}
@@ -2128,7 +2080,8 @@ function Consultas() {
         <div className="janela"
           style={{
             display: 'flex', flexDirection: 'column',
-
+            backgroundColor: 'white',
+            borderRadius: 0,
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -2324,33 +2277,17 @@ function Consultas() {
               0, 0
             )}
             {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias, 0)}
-            {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null, 0)}
             {cartao(null, "ADMISSÃO", "card-documento-admissao", null, 1)}
             {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null, 1)}
+            {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null, 0)}
             {cartao(null, "RECEITA MÉDICA", "card-documento-receita", null, 1)}
-            {cartao(null, "ATESTADO", "card-documento-atestado", null, 1)}
-            {cartao(null, "SUMÁRIO DE ALTA", "card-documento-alta", null, 1)}
-            {cartao(null, "AIH", "card-doc-estruturado-aih", null, 1)}
             {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas, 0)}
             {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null, 0)}
             {cartao(riscos, "RISCOS", "card-riscos", busyriscos, 0)}
             {cartao(null, "ALERTAS", "card-alertas", null, 0)}
             {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais, 0)}
             {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null, 0)}
-            {cartao(null, "VENTILAÇÃO MECÂNICA", "card-vm", busyvm, 0)}
-            {cartao(null, "INFUSÕES", "card-infusoes", busyinfusoes, 0)}
             {cartao(null, "DIETA", "card-dietas", busydieta, 0)}
-            {cartao(
-              culturas.filter((item) => item.data_resultado == null),
-              "CULTURAS",
-              "card-culturas",
-              busyculturas
-            )}
-            {cartao(prescricao.filter(item => item.categoria == '1. ANTIMICROBIANOS'), "ANTIBIÓTICOS", null, null, 0)}
-            {cartao(interconsultas, "INTERCONSULTAS", "card-interconsultas", busyinterconsultas, 0)}
-            {cartao(null, 'PRESCRIÇÃO', "card-prescricao", null, 1)}
-            {cartao(null, 'EXAMES DE IMAGEM', 'card-exames', null, 1)}
-            {cartao(null, 'LABORATÓRIO E RX', 'card-laboratorio', null, 1)}
           </div>
           <div id="cards (cartões) visão mobile"
             className={arraycartoes.length == cartoes.length ? "grid2" : "grid1"}
@@ -2368,30 +2305,15 @@ function Consultas() {
             {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias, 0)}
             {cartao(null, "ADMISSÃO", "card-documento-admissao", null, 1)}
             {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null, 1)}
+            {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null, 0)}
             {cartao(null, "RECEITA MÉDICA", "card-documento-receita", null, 1)}
-            {cartao(null, "ATESTADO", "card-documento-atestado", null, 1)}
-            {cartao(null, "SUMÁRIO DE ALTA", "card-documento-alta", null, 1)}
-            {cartao(null, "AIH", "card-doc-estruturado-aih", null, 1)}
             {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas, 0)}
             {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null, 0)}
             {cartao(riscos, "RISCOS", "card-riscos", busyriscos, 0)}
             {cartao(null, "ALERTAS", "card-alertas", null, 0)}
             {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais, 0)}
             {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null, 0)}
-            {cartao(null, "VENTILAÇÃO MECÂNICA", "card-vm", busyvm, 0)}
-            {cartao(null, "INFUSÕES", "card-infusoes", busyinfusoes, 0)}
             {cartao(null, "DIETA", "card-dietas", busydieta, 0)}
-            {cartao(
-              culturas.filter((item) => item.data_resultado == null),
-              "CULTURAS",
-              "card-culturas",
-              busyculturas
-            )}
-            {cartao(prescricao.filter(item => item.categoria == '1. ANTIMICROBIANOS'), "ANTIBIÓTICOS", null, null, 0)}
-            {cartao(interconsultas, "INTERCONSULTAS", "card-interconsultas", busyinterconsultas, 0)}
-            {cartao(null, 'PRESCRIÇÃO', "card-prescricao", null, 1)}
-            {cartao(null, 'EXAMES DE IMAGEM', 'card-exames', null, 1)}
-            {cartao(null, 'LABORATÓRIO E RX', 'card-laboratorio', null, 1)}
           </div>
         </div>
         <div id="conteúdo cheio (componentes)"
