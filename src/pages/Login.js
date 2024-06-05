@@ -1006,13 +1006,13 @@ function Login() {
         id="conteúdo do login"
       >
         <div
-          className="button-red"
+          className="button-yellow"
           style={{
             display: viewlistaunidades == 0 ? "none" : "flex",
             position: "sticky",
             top: 10,
             right: 10,
-            alignSelf: 'flex-end'
+            alignSelf: 'center'
           }}
           title="FAZER LOGOFF."
           onClick={() => {
@@ -1048,6 +1048,9 @@ function Login() {
             style={{
               margin: 0,
               height: window.innerWidth < mobilewidth ? '30vw' : '20vh',
+              backgroundColor: 'white',
+              borderRadius: 5,
+              padding: 10,
             }}
           ></img>
         </div>
@@ -1140,12 +1143,8 @@ function Login() {
           <div
             className="text2"
             style={{
-              display:
-                window.innerWidth < mobilewidth && viewalterarsenha == 1
-                  ? "none"
-                  : "flex",
-              fontSize: 8,
-
+              display: 'none',
+              fontSize: 10,
             }}
           >
             PULSAR

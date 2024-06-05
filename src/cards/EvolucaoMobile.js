@@ -105,7 +105,7 @@ function EvolucaoMobile() {
                 display: 'flex',
                 alignSelf: 'center',
               }}
-              onClick={() => {setviewinsertevolucao(0); setcard('')}}>
+              onClick={() => { setviewinsertevolucao(0); setcard('') }}>
               <img
                 alt=""
                 src={back}
@@ -198,7 +198,7 @@ function EvolucaoMobile() {
           display: 'flex', flexDirection: 'row', justifyContent: 'center',
           flexWrap: 'wrap', width: '100%'
         }}>
-        {documentos.map(item => (
+        {documentos.filter(item => item.tipo_documento == 'EVOLUÇÃO HOME CARE' || item.tipo_documento == 'EVOLUÇÃO').map(item => (
           <div className='button' key={'evolução ' + item.id}
             style={{
               width: '90vw', maxWidth: '90vw',
@@ -217,15 +217,11 @@ function EvolucaoMobile() {
               {moment(item.data).format('DD/MM/YY - HH:mm')}
             </div>
             <div style={{
-              display: 'flex', flexDirection: 'row', justifyContent: 'center',
+              display: 'flex', flexDirection: 'row', justifyContent: 'space-between',
+              width: '100%',
               alignItems: 'center',
             }}>
-              <div style={{ width: '100%' }}>
-                {item.profissional}
-              </div>
-              <div style={{ width: '100%' }}>
-                {item.conselho}
-              </div>
+              <div style={{ marginLeft: 5 }}>{item.profissional + ' - ' + item.conselho}</div>
               <div className='button-yellow'
                 style={{
                   display: usuario.id == item.id_profissional ? 'flex' : 'none',
@@ -254,6 +250,8 @@ function EvolucaoMobile() {
                 width: '90%',
                 height: '50vh',
                 marginTop: 10,
+                textAlign: 'left',
+                alignItems: 'flex-start'
               }}>
               {item.texto}
             </div>

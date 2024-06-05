@@ -6,14 +6,16 @@ import Context from '../pages/Context';
 // imagens.
 import salvar from '../images/salvar.svg';
 import deletar from "../images/deletar.svg";
+import back from '../images/back.svg';
 
 function EscalasAssistenciaisComponent() {
 
   // context.
   const {
     html,
-    card,
+    card, setcard,
     paciente,
+    mobilewidth
   } = useContext(Context);
 
   const [listaescalas, setlistaescalas] = useState([]);
@@ -108,19 +110,35 @@ function EscalasAssistenciaisComponent() {
   const arrayescalas = ['MNA', 'DEPRESSÃO', 'MORSE']
   function EscalaOpcoes() {
     return (
-      <div className="grid3"
-        style={{
-          flexDirection: 'row', flexWrap: 'wrap',
-          padding: 5, backgroundColor: 'white', borderRadius: 5
-        }}>
-        {arrayescalas.map((item) => (
-          <div className={escala == item ? "button-selected" : "button"}
-            style={{ flexGrow: 'inherit' }}
-            onClick={() => setescala(item)}
-          >
-            {item}
-          </div>
-        ))}
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+        <div id="botão de retorno"
+          className="button-yellow"
+          style={{
+            display: 'flex',
+            alignSelf: 'center',
+          }}
+          onClick={() => setcard('')}>
+          <img
+            alt=""
+            src={back}
+            style={{ width: 30, height: 30 }}
+          ></img>
+        </div>
+        <div className="grid3"
+          style={{
+            flexDirection: 'row', flexWrap: 'wrap',
+            padding: 5, backgroundColor: 'white', borderRadius: 5,
+            width: '100%'
+          }}>
+          {arrayescalas.map((item) => (
+            <div className={escala == item ? "button-selected" : "button"}
+              style={{ flexGrow: 'inherit' }}
+              onClick={() => setescala(item)}
+            >
+              {item}
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
@@ -131,15 +149,13 @@ function EscalasAssistenciaisComponent() {
         {arrayescalas.map(item => (
           <div style={{ display: item == escala ? 'flex' : 'none', flexDirection: 'column', justifyContent: 'center' }}>
             <div className="text2" style={{ fontSize: 20, margin: 10 }}>{item}</div>
-            <div className="scroll" style={{
-              display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap',
-              minHeight: 220, height: 220, width: '100%',
-            }}>
+            <div className={window.innerWidth < mobilewidth ? "grid2" : "grid3"}>
               {listaescalas.filter(valor => valor.escala == item).map(valor => (
                 <div className="button"
                   style={{
                     position: 'relative',
-                    minWidth: 100, minHeight: 100, maxWidth: 100, maxHeight: 100,
+                    flexGrow: 'inherit',
+                    minHeight: 100, maxHeight: 100,
                     display: 'flex', flexDirection: 'column', justifyContent: 'center',
                   }}>
                   <div>{valor.escala}</div>

@@ -113,14 +113,12 @@ function PainelAtividades() {
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
-    console.log(arraydate);
   }
   // percorrendo datas do mês anterior.
   const previousMonth = () => {
     startdate.subtract(1, 'month');
     var x = moment(startdate);
     var y = moment(startdate).add(42, 'days');
-    console.log(y);
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
@@ -132,11 +130,9 @@ function PainelAtividades() {
     var year = moment(startdate).format('YYYY');
     var x = moment('01/' + month + '/' + year, 'DD/MM/YYYY');
     var y = moment('01/' + month + '/' + year, 'DD/MM/YYYY').add(42, 'days');
-    console.log(y);
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
-    console.log(arraydate);
   }
 
   // usecallback...
@@ -150,7 +146,7 @@ function PainelAtividades() {
           flexDirection: 'column',
           justifyContent: 'flex-start',
           alignSelf: 'center',
-          padding: 7.5, marginRight: 5,
+          padding: 7.5,
           borderRadius: 5,
           backgroundColor: 'white',
           marginTop: 5,
@@ -261,7 +257,6 @@ function PainelAtividades() {
           display: selectedatividade == null ? 'flex' : 'none',
           flexDirection: 'row',
           justifyContent: 'flex-start',
-          marginRight: 5,
           padding: 2.5,
           alignSelf: 'center',
           marginTop: 5,
@@ -332,13 +327,11 @@ function PainelAtividades() {
         </div>
 
         <div id="scroll atendimentos com pacientes"
-
+          className={window.innerWidth < mobilewidth ? 'grid1' : 'grid3'}
           style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            flexDirection: window.innerWidth < mobilewidth ? "column" : "row",
             width: window.innerWidth < mobilewidth ? '85vw' : '95vw',
-            marginTop: 5, marginRight: 5,
+            marginTop: 5,
+            alignSelf: 'center',
           }}
         >
           {atendimentos
@@ -359,9 +352,9 @@ function PainelAtividades() {
                     className="button-grey"
                     style={{
                       flex: 1,
-                      marginRight: 0,
                       borderTopRightRadius: 0,
                       borderBottomRightRadius: 0,
+                      marginRight: 0,
                     }}>
                     {moment(item.data_inicio).format('HH:mm') + ' ÀS ' + moment(item.data_termino).format('HH:mm')}
                   </div>
@@ -389,7 +382,7 @@ function PainelAtividades() {
                           marginLeft: window.innerWidth < mobilewidth ? '' : 10,
                         }}
                       >
-                        <div style={{ marginRight: 5 }}>
+                        <div>
                           {pacientes.filter(
                             (valor) => valor.id_paciente == item.id_paciente
                           )
@@ -436,11 +429,20 @@ function PainelAtividades() {
       <div
         className="chassi"
         id="conteúdo do prontuário"
-        style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}
+        style={{
+          display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
+        }}
       >
-        <DatePicker></DatePicker>
-        <CardsAtividades></CardsAtividades>
-        <ListaDeConsultas></ListaDeConsultas>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          marginRight: window.innerWidth < mobilewidth ? 0 : 5
+        }}>
+          <DatePicker></DatePicker>
+          <CardsAtividades></CardsAtividades>
+          <ListaDeConsultas></ListaDeConsultas>
+        </div>
       </div>
     </div>
   );

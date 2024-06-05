@@ -10,6 +10,7 @@ import emojisad from "../images/emojisad.svg";
 
 // router.
 import { useHistory } from "react-router-dom";
+import selector from "../functions/selector";
 
 function Cliente() {
   // context.
@@ -40,11 +41,9 @@ function Cliente() {
   }, [pagina]);
 
   const loadPacientes = () => {
-    console.log(localStorage.getItem('documento'));
     axios.get(html + "list_pacientes").then((response) => {
       var x = response.data.rows;
       setpacientes(x.filter(item => item.numero_documento == localStorage.getItem('documento')));
-      console.log(x.filter(item => item.numero_documento == localStorage.getItem('documento')));
       loadAtendimentos(x.filter(item => item.numero_documento == localStorage.getItem('documento')).map(item => item.id_paciente).pop());
     });
   }
@@ -55,15 +54,12 @@ function Cliente() {
       .then((response) => {
         let x = response.data.rows;
         setatendimentos(x.filter(item => item.id_paciente == id_paciente));
-        console.log(x.filter(item => item.id_paciente == id_paciente));
         // id do último atendimento.
         let lastidatendimento = x.filter(item => item.id_paciente == id_paciente && item.situacao == 1).sort((a, b) => moment(a.data_inicio) < moment(b.data_inicio) ? -1 : 1).slice(-1);
-        console.log(lastidatendimento.map(item => item.id_atendimento).pop());
         loadSinaisVitais(lastidatendimento.map(item => item.id_atendimento).pop());
       })
       .catch(function (error) {
         if (error.response == undefined) {
-          console.log(error.response);
           setTimeout(() => {
             setpagina(0);
             history.push("/");
@@ -247,14 +243,12 @@ function Cliente() {
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
-    console.log(arraydate);
   }
   // percorrendo datas do mês anterior.
   const previousMonth = () => {
     startdate.subtract(1, 'month');
     var x = moment(startdate);
     var y = moment(startdate).add(42, 'days');
-    console.log(y);
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
@@ -266,14 +260,12 @@ function Cliente() {
     var year = moment(startdate).format('YYYY');
     var x = moment('01/' + month + '/' + year, 'DD/MM/YYYY');
     var y = moment('01/' + month + '/' + year, 'DD/MM/YYYY').add(42, 'days');
-    console.log(y);
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
-    console.log(arraydate);
   }
 
-  function DatePicker() {
+  const DatePicker = useCallback(() => {
     return (
       <div
         onClick={(e) => e.stopPropagation()}
@@ -355,10 +347,12 @@ function Cliente() {
             {arraylist.map((item) => (
               <button
                 key={'dia ' + item}
+                id={'dia datepicker cliente' + item}
                 className={selectdate == item ? "button-selected" : "button"}
                 onClick={(e) => {
                   setselectdate(item);
                   e.stopPropagation();
+                  selector('LISTA DE DATAS', 'dia datepicker cliente' + item, 200);
                 }}
                 style={{
                   height: 50,
@@ -377,8 +371,9 @@ function Cliente() {
           </div>
         </div>
       </div>
-    )
-  }
+    );
+    // eslint-disable-next-line
+  }, [arraylist, startdate]);
 
   const AtividadesDoDia = useCallback(() => {
     return (
@@ -411,9 +406,15 @@ function Cliente() {
                     marginRight: 0,
                     borderTopRightRadius: 0,
                     borderBottomRightRadius: 0,
-                    fontSize: 10
+                    fontSize: 10,
+                    display: 'flex', flexDirection: 'column', justifyContent: 'center',
                   }}>
-                  {moment(item.data_inicio).format('HH:mm') + ' ÀS ' + moment(item.data_termino).format('HH:mm')}
+                  <div>
+                    {moment(item.data_inicio).format('DD/MM/YY')}
+                  </div>
+                  <div style={{marginTop: 5}}>
+                    {moment(item.data_inicio).format('HH:mm') + ' ÀS ' + moment(item.data_termino).format('HH:mm')}
+                  </div>
                 </div>
                 <div className="button green"
                   style={{
@@ -434,10 +435,8 @@ function Cliente() {
 
 
   const loadSinaisVitais = (idatendimento) => {
-    console.log(idatendimento);
     axios.get(html + 'list_sinais_vitais/' + idatendimento).then((response) => {
       setsinaisvitais(response.data.rows);
-      console.log(response.data.rows);
     })
   }
   function montaSinalVital(nome, item, unidade, min, max) {

@@ -43,7 +43,7 @@ function Feedback() {
     })
   }
 
-  // card de boas vindas.
+  // card de monitorização do cliente em home care.
   function Status() {
     return (
       <div style={{
@@ -63,7 +63,7 @@ function Feedback() {
           }}
         >
           <img alt="" src={lastfeedback.face == 'sad' ? emojisad : lastfeedback.face == 'neutral' ? emojineutral : emojihappy}
-            style={{ width: 60, height: 60 }}></img>
+            style={{ width: 150, height: 150 }}></img>
         </div>
       </div>
     )
@@ -141,10 +141,10 @@ function Feedback() {
       className='card-aberto'
       style={{ display: card == 'card-feedback' ? 'flex' : 'none' }}
     >
+      <Back></Back>
       <Status></Status>
       <div className="text2" style={{ marginBottom: 10, fontSize: 14 }}>HISTÓRICO DE FEEDBACKS</div>
       <ListaFeedback></ListaFeedback>
-      <Back></Back>
     </div>
   );
 }

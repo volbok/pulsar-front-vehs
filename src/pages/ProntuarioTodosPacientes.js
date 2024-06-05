@@ -127,7 +127,6 @@ function Prontuario() {
       .then((response) => {
         setpacientes(response.data.rows);
         loadAtendimentos();
-        console.log("LISTA DE PACIENTES CARREGADA.");
       })
       .catch(function (error) {
         if (error.response == undefined) {
@@ -215,7 +214,6 @@ function Prontuario() {
     axios.get(html + 'list_itens_prescricoes/' + atendimento).then((response) => {
       let x = response.data.rows;
       setprescricao(x);
-      console.log(x.filter(item => item.categoria == '1. ANTIMICROBIANOS'))
     });
   }
 
@@ -253,7 +251,7 @@ function Prontuario() {
           }}
         >
           <div
-            className="button-red"
+            className="button-yellow"
             onClick={() => {
               setpagina(0);
               history.push("/");
@@ -575,7 +573,6 @@ function Prontuario() {
           </div>
         </div>
         <div id="scroll atendimento vazio"
-          // className="scroll"
           style={{
             display: arrayatendimentos.length < 1 ? "flex" : "none",
             justifyContent: "flex-start",
@@ -586,7 +583,7 @@ function Prontuario() {
             SEM PACIENTES CADASTRADOS PARA ESTA UNIDADE
           </div>
         </div>
-      </div >
+      </div>
     );
     // eslint-disable-next-line
   }, [arrayatendimentos, allinterconsultas, allprecaucoes, setarrayitensprescricao]);
@@ -652,6 +649,21 @@ function Prontuario() {
             alignContent: 'center',
             alignItems: 'center',
           }}>
+            <div id="botão para sair da tela de agendamento de atividades e consultas"
+              className="button-yellow"
+              style={{
+                maxHeight: 50, maxWidth: 50, alignSelf: 'center',
+                marginRight: 0,
+              }}
+              onClick={() => {
+                setviewagendamento(0);
+              }}>
+              <img
+                alt=""
+                src={back}
+                style={{ width: 30, height: 30 }}
+              ></img>
+            </div>
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
               <div id="botão seletor da atividade"
                 className="button"
@@ -680,20 +692,6 @@ function Prontuario() {
             <ListaDeConsultas></ListaDeConsultas>
             <ViewOpcoesHorarios></ViewOpcoesHorarios>
             <AtividadesSelector></AtividadesSelector>
-            <div id="botão para sair da tela de agendamento de atividades e consultas"
-              className="button-yellow"
-              style={{
-                maxHeight: 50, maxWidth: 50, alignSelf: 'center',
-              }}
-              onClick={() => {
-                setviewagendamento(0);
-              }}>
-              <img
-                alt=""
-                src={back}
-                style={{ width: 30, height: 30 }}
-              ></img>
-            </div>
           </div>
         </div>
       </div>
@@ -702,9 +700,7 @@ function Prontuario() {
 
   // excluir um agendamento de consulta.
   const deleteAtendimento = (id) => {
-    console.log(parseInt(id));
     axios.get(html + "delete_atendimento/" + id).then(() => {
-      console.log('DELETANDO AGENDAMENTO DE CONSULTA');
       loadAtendimentos();
     });
   };
@@ -724,13 +720,10 @@ function Prontuario() {
       classificacao: null,
       id_profissional: usuario.id,
     };
-    console.log(obj);
     axios
       .post(html + "insert_consulta", obj)
       .then(() => {
-        console.log('AGENDAMENTO DE CONSULTA INSERIDO COM SUCESSO')
         loadAtendimentos();
-        // geraWhatsapp(inicio);
       });
   };
 
@@ -760,7 +753,7 @@ function Prontuario() {
                 <div
                   style={{
                     display: 'flex',
-                    position: "relative",
+                    // position: "relative",
                     margin: 2.5, padding: 0,
                   }}
                 >
@@ -867,7 +860,6 @@ function Prontuario() {
     for (var i = 0; i < 24; i++) {
       array.push(inicio.add(30, 'minutes').format('DD/MM/YYYY - HH:mm'));
     }
-    console.log(array);
     setarrayhorarios(array);
   }
   const [viewopcoeshorarios, setviewopcoeshorarios] = useState(0);
@@ -914,8 +906,8 @@ function Prontuario() {
             {arrayhorarios.map(item => (
               <div className='button'
                 style={{
-                  opacity: arrayatendimentos.filter(valor => moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.situacao == selectedatividade && valor.id_paciente == paciente).length > 0 ? 0.3 : 1,
-                  pointerEvents: arrayatendimentos.filter(valor => moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.situacao == selectedatividade && valor.id_paciente == paciente).length > 0 ? 'none' : 'auto',
+                  opacity: arrayatendimentos.filter(valor => (moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.situacao == selectedatividade) || (moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.id_paciente == paciente)).length > 0 ? 0.3 : 1,
+                  pointerEvents: arrayatendimentos.filter(valor => (moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.situacao == selectedatividade) || (moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.id_paciente == paciente)).length > 0 ? 'none' : 'auto',
                   height: 100, flexGrow: 'inherit',
                 }}
                 onClick={() => { insertAtendimento(item); setviewopcoeshorarios(0) }}
@@ -963,14 +955,12 @@ function Prontuario() {
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
-    console.log(arraydate);
   }
   // percorrendo datas do mês anterior.
   const previousMonth = () => {
     startdate.subtract(1, 'month');
     var x = moment(startdate);
     var y = moment(startdate).add(42, 'days');
-    console.log(y);
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
@@ -982,11 +972,9 @@ function Prontuario() {
     var year = moment(startdate).format('YYYY');
     var x = moment('01/' + month + '/' + year, 'DD/MM/YYYY');
     var y = moment('01/' + month + '/' + year, 'DD/MM/YYYY').add(42, 'days');
-    console.log(y);
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
-    console.log(arraydate);
   }
 
   const DatePicker = useCallback(() => {
@@ -1466,9 +1454,9 @@ function Prontuario() {
 
   // função para renderização dos cards fechados.
   let yellow = "#F9E79F";
-  const cartao = (sinal, titulo, opcao, busy, oculto) => {
+  const cartao = (sinal, titulo, opcao, busy) => {
     return (
-      <div style={{ display: window.innerWidth < mobilewidth && oculto == 1 ? 'none' : 'flex' }}>
+      <div style={{ display: 'flex' }}>
         <div
           className="card-fechado cor3"
           style={{
@@ -2118,8 +2106,6 @@ function Prontuario() {
     clearTimeout(timeout);
     document.getElementById("inputCartao").focus();
     searchcartoes = document.getElementById("inputCartao").value.toUpperCase();
-    console.log(searchcartoes);
-
     timeout = setTimeout(() => {
       if (searchcartoes == "") {
         setfiltercartoes("");
@@ -2128,18 +2114,14 @@ function Prontuario() {
         setTimeout(() => {
           document.getElementById("inputCartao").focus();
         }, 100);
-        console.log(cartoes);
-        console.log(arraycartoes);
       } else {
         setfiltercartoes(
           document.getElementById("inputCartao").value.toUpperCase()
         );
         setarraycartoes(cartoes.filter((item) => item.includes(searchcartoes)));
-        console.log(arraycartoes);
         document.getElementById("inputCartao").value = searchcartoes;
         setTimeout(() => {
           document.getElementById("inputCartao").focus();
-          console.log(arraycartoes.pop());
         }, 100);
       }
     }, 1000);
@@ -2316,22 +2298,22 @@ function Prontuario() {
               atendimentos
                 .filter((item) => item.id_atendimento == atendimento)
                 .map((item) => moment().diff(item.data_inicio, "days")),
-              null,
-              0, 0
+              null, null
             )}
-            {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias, 0)}
-            {cartao(null, "ADMISSÃO", "card-documento-admissao", null, 1)}
-            {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null, 1)}
-            {cartao(null, "RECEITA MÉDICA", "card-documento-receita", null, 1)}
-            {cartao(null, "SUMÁRIO DE ALTA", "card-documento-alta", null, 1)}
-            {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas, 0)}
-            {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null, 0)}
-            {cartao(riscos, "RISCOS", "card-riscos", busyriscos, 0)}
-            {cartao(null, "ALERTAS", "card-alertas", null, 0)}
-            {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais, 0)}
-            {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null, 0)}
-            {cartao(null, "DIETA", "card-dietas", busydieta, 0)}
-            {cartao(null, 'MONITORAMENTO HOME OFFICE', "card-feedback", null, 1)}
+            {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias)}
+            {cartao(null, "ADMISSÃO", "card-documento-admissao", null)}
+            {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null)}
+            {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null)}
+            {cartao(null, "RECEITA MÉDICA", "card-documento-receita", null)}
+            {cartao(null, "SUMÁRIO DE ALTA", "card-documento-alta", null)}
+            {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas)}
+            {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null)}
+            {cartao(riscos, "RISCOS", "card-riscos", busyriscos)}
+            {cartao(null, "ALERTAS", "card-alertas", null)}
+            {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais)}
+            {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null)}
+            {cartao(null, "DIETA", "card-dietas", busydieta)}
+            {cartao(null, 'MONITORAMENTO HOME CARE', "card-feedback", null)}
             {cartao(null, 'ESCALAS ASSISTENCIAIS', 'card-escalas_assistenciais', null)}
             {cartao(null, 'MEDICAÇÕES', 'card-receita', null)}
           </div>
@@ -2345,25 +2327,20 @@ function Prontuario() {
               atendimentos
                 .filter((item) => item.id_atendimento == atendimento)
                 .map((item) => moment().diff(item.data_inicio, "days")),
-              null,
-              0, 0
+              null, null
             )}
-            {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias, 0)}
-            {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null, 0)}
-            {cartao(null, "ADMISSÃO", "card-documento-admissao", null, 1)}
-            {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null, 1)}
-            {cartao(null, "RECEITA MÉDICA", "card-documento-receita", null, 1)}
-            {cartao(null, "SUMÁRIO DE ALTA", "card-documento-alta", null, 1)}
-            {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas, 0)}
-            {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null, 0)}
-            {cartao(riscos, "RISCOS", "card-riscos", busyriscos, 0)}
-            {cartao(null, "ALERTAS", "card-alertas", null, 0)}
-            {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais, 0)}
-            {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null, 0)}
-            {cartao(null, "DIETA", "card-dietas", busydieta, 0)}
-            {cartao(null, 'PRESCRIÇÃO', "card-prescricao", null, 1)}
-            {cartao(null, 'EXAMES DE IMAGEM', 'card-exames', null, 1)}
-            {cartao(null, 'MONITORAMENTO HOME OFFICE', "card-feedback", null, 1)}
+            {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias)}
+            {cartao(null, "ADMISSÃO", "card-documento-admissao", null)}
+            {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null)}
+            {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null)}
+            {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas)}
+            {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null)}
+            {cartao(riscos, "RISCOS", "card-riscos", busyriscos)}
+            {cartao(null, "ALERTAS", "card-alertas", null)}
+            {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais)}
+            {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null)}
+            {cartao(null, "DIETA", "card-dietas", busydieta)}
+            {cartao(null, 'MONITORAMENTO HOME CARE', "card-feedback", null)}
             {cartao(null, 'ESCALAS ASSISTENCIAIS', 'card-escalas_assistenciais', null)}
             {cartao(null, 'MEDICAÇÕES', 'card-receita', null)}
           </div>

@@ -88,7 +88,7 @@ function Consultas() {
     interconsultas,
     card, setcard,
     prescricao, setprescricao,
-    
+
     mobilewidth,
 
     setunidade,
@@ -124,7 +124,6 @@ function Consultas() {
       .then((response) => {
         setpacientes(response.data.rows);
         loadAtendimentos();
-        console.log("LISTA DE PACIENTES CARREGADA.");
       })
       .catch(function (error) {
         if (error.response == undefined) {
@@ -223,7 +222,6 @@ function Consultas() {
     axios.get(html + 'list_itens_prescricoes/' + atendimento).then((response) => {
       let x = response.data.rows;
       setprescricao(x);
-      console.log(x.filter(item => item.categoria == '1. ANTIMICROBIANOS'))
     });
   }
 
@@ -233,7 +231,6 @@ function Consultas() {
   const [selectedatividade, setselectedatividade] = useState('CONSULTA MÉDICA');
   useEffect(() => {
     if (pagina == -2) {
-      console.log(usuario);
       setpaciente([]);
       setatendimento(null);
       loadPacientes();
@@ -356,8 +353,6 @@ function Consultas() {
   }
 
   const updateConsulta = ([item, status]) => {
-    console.log(item);
-    console.log(status);
     var obj = {
       data_inicio: item.data_inicio,
       data_termino: moment(),
@@ -374,16 +369,13 @@ function Consultas() {
     axios
       .post(html + "update_atendimento/" + item.id_atendimento, obj)
       .then(() => {
-        console.log('CONSULTA FINALIZADA COM SUCESSO');
         loadAtendimentos();
       });
   };
 
   // excluir um agendamento de consulta.
   const deleteAtendimento = (id) => {
-    console.log(parseInt(id));
     axios.get(html + "delete_atendimento/" + id).then(() => {
-      console.log('DELETANDO AGENDAMENTO DE CONSULTA');
       loadAtendimentos();
     });
   };
@@ -403,11 +395,9 @@ function Consultas() {
       classificacao: null,
       id_profissional: usuario.id,
     };
-    console.log(obj);
     axios
       .post(html + "insert_consulta", obj)
       .then(() => {
-        console.log('AGENDAMENTO DE CONSULTA INSERIDO COM SUCESSO')
         loadAtendimentos();
         geraWhatsapp(inicio);
       });
@@ -426,13 +416,11 @@ function Consultas() {
       'para o dia ' + inicio + ', na CLÍNICA POMERODE.'
 
     const rawphone = pacientes.filter(valor => valor.id_paciente == objpaciente.id_paciente).map(item => item.telefone).pop();
-    console.log(rawphone);
     let cleanphone = rawphone.replace("(", "");
     cleanphone = cleanphone.replace(")", "");
     cleanphone = cleanphone.replace("-", "");
     cleanphone = cleanphone.replace(" ", "");
     cleanphone = "55" + cleanphone;
-    console.log(cleanphone);
 
     fetch(gzappy_url_envia_mensagem, {
       method: 'POST',
@@ -457,7 +445,7 @@ function Consultas() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          height: '100%',
+          height: window.innerHeight < 450 ? '70%' : '80%',
         }}
       >
         <div id="scroll atendimentos com pacientes"
@@ -465,7 +453,6 @@ function Consultas() {
           style={{
             display: arrayatendimentos.length > 0 ? "flex" : "none",
             justifyContent: "flex-start",
-            height: window.innerWidth < mobilewidth ? '72vh' : '70vh',
             width: 'calc(100% - 20px)',
           }}
         >
@@ -673,11 +660,9 @@ function Consultas() {
           }
         </div>
         <div id="scroll atendimento vazio"
-          className="scroll"
           style={{
             display: arrayatendimentos.length < 1 ? "flex" : "none",
             justifyContent: "flex-start",
-            height: window.innerWidth < mobilewidth ? '72vh' : '70vh',
             width: 'calc(100% - 20px)',
           }}
         >
@@ -685,7 +670,7 @@ function Consultas() {
             SEM PACIENTES CADASTRADOS PARA ESTA UNIDADE
           </div>
         </div>
-      </div >
+      </div>
     );
     // eslint-disable-next-line
   }, [arrayatendimentos, allinterconsultas, allprecaucoes, setarrayitensprescricao, selectedatividade]);
@@ -927,7 +912,7 @@ function Consultas() {
   const [busyriscos, setbusyriscos] = useState(0);
   const [busysinaisvitais, setbusysinaisvitais] = useState(0);
   const [busydieta, setbusydieta] = useState(0);
- 
+
   const loading = () => {
     return (
       <div
@@ -941,9 +926,9 @@ function Consultas() {
 
   // função para renderização dos cards fechados.
   let yellow = "#F9E79F";
-  const cartao = (sinal, titulo, opcao, busy, oculto) => {
+  const cartao = (sinal, titulo, opcao, busy) => {
     return (
-      <div style={{ display: window.innerWidth < mobilewidth && oculto == 1 ? 'none' : 'flex' }}>
+      <div style={{ display: 'flex' }}>
         <div
           className="card-fechado cor3"
           style={{
@@ -1593,7 +1578,6 @@ function Consultas() {
     clearTimeout(timeout);
     document.getElementById("inputCartao").focus();
     searchcartoes = document.getElementById("inputCartao").value.toUpperCase();
-    console.log(searchcartoes);
 
     timeout = setTimeout(() => {
       if (searchcartoes == "") {
@@ -1603,18 +1587,14 @@ function Consultas() {
         setTimeout(() => {
           document.getElementById("inputCartao").focus();
         }, 100);
-        console.log(cartoes);
-        console.log(arraycartoes);
       } else {
         setfiltercartoes(
           document.getElementById("inputCartao").value.toUpperCase()
         );
         setarraycartoes(cartoes.filter((item) => item.includes(searchcartoes)));
-        console.log(arraycartoes);
         document.getElementById("inputCartao").value = searchcartoes;
         setTimeout(() => {
           document.getElementById("inputCartao").focus();
-          console.log(arraycartoes.pop());
         }, 100);
       }
     }, 1000);
@@ -1681,14 +1661,12 @@ function Consultas() {
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
-    console.log(arraydate);
   }
   // percorrendo datas do mês anterior.
   const previousMonth = () => {
     startdate.subtract(1, 'month');
     var x = moment(startdate);
     var y = moment(startdate).add(42, 'days');
-    console.log(y);
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
@@ -1700,29 +1678,27 @@ function Consultas() {
     var year = moment(startdate).format('YYYY');
     var x = moment('01/' + month + '/' + year, 'DD/MM/YYYY');
     var y = moment('01/' + month + '/' + year, 'DD/MM/YYYY').add(42, 'days');
-    console.log(y);
     firstSunday(x, y);
     setArrayDate(x, y);
     setarraylist(arraydate);
-    console.log(arraydate);
   }
   const [selectdate, setselectdate] = useState(null);
-  function DatePicker() {
+  const DatePicker = useCallback(() => {
     return (
       <div
         onClick={(e) => e.stopPropagation()}
-        className={"janela scroll"}
+        className={"janela"}
         style={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-start',
           alignSelf: 'center',
           margin: 5,
-          padding: 0, paddingRight: 5,
-          width: window.innerWidth < 426 ? 'calc(100vw - 20px)' : 400,
+          padding: window.innerWidth < mobilewidth ? 0 : 5,
+          paddingBottom: window.innerWidth < mobilewidth ? 5 : 10,
+          width: window.innerWidth < mobilewidth ? '100vw' : 400,
           borderRadius: window.innerWidth < 426 ? 0 : 5,
-          backgroundColor: 'white',
-          borderColor: 'white',
+          backgroundColor: 'white'
         }}>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{
@@ -1807,9 +1783,12 @@ function Consultas() {
             {arraylist.map((item) => (
               <button
                 key={'dia ' + item}
+                id={'dia ' + item}
                 className={selectdate == item ? "button-selected" : "button"}
                 onClick={(e) => {
                   setselectdate(item);
+                  localStorage.setItem('selectdate', item);
+                  selector('LISTA DE DATAS', 'dia ' + item, 300);
                   mountHorarios(item);
                   e.stopPropagation()
                 }}
@@ -1850,7 +1829,9 @@ function Consultas() {
         </div>
       </div>
     )
-  }
+    // eslint-disable-next-line
+  }, [arraylist, startdate, selectdate]);
+
   const ListaDeConsultas = useCallback(() => {
     return (
       <div
@@ -1861,11 +1842,11 @@ function Consultas() {
         }}
       >
         <div id="scroll atendimentos com pacientes"
+          className={window.innerWidth < mobilewidth ? "" : "grid2"}
           style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            width: window.innerWidth < mobilewidth ? '90vw' : '60vw',
-            margin: 5,
+            marginTop: 5,
+            alignSelf: 'center',
+            width: '90vw'
           }}
         >
           {arrayatendimentos
@@ -1980,7 +1961,6 @@ function Consultas() {
     for (var i = 0; i < 24; i++) {
       array.push(inicio.add(30, 'minutes').format('DD/MM/YYYY - HH:mm'));
     }
-    console.log(array);
     setarrayhorarios(array);
   }
   const [viewopcoeshorarios, setviewopcoeshorarios] = useState(0);
@@ -1996,34 +1976,40 @@ function Consultas() {
         <div className="janela scroll"
           style={{
             display: 'flex', flexDirection: 'column', justifyItems: 'flex-start',
-            justifyContent: 'center',
-            width: 730, height: '85vh',
+            justifyContent: 'flex-start',
+            width: '90vw',
+            height: '85vh',
             position: 'relative',
           }}
           onClick={(e) => e.stopPropagation()}>
-          <div id="botão para sair da tela de seleção dos horários"
-            className="button-yellow" style={{
-              maxHeight: 50, maxWidth: 50,
-              position: 'sticky', top: 10, right: 10, alignSelf: 'flex-end'
-            }}
-            onClick={() => {
-              setviewopcoeshorarios(0);
-            }}>
-            <img
-              alt=""
-              src={back}
-              style={{ width: 30, height: 30 }}
-            ></img>
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div id="botão para sair da tela de seleção dos horários"
+              className="button-yellow" style={{
+                maxHeight: 50, maxWidth: 50,
+                position: 'sticky', top: 10, right: 10, alignSelf: 'flex-end'
+              }}
+              onClick={() => {
+                setviewopcoeshorarios(0);
+              }}>
+              <img
+                alt=""
+                src={back}
+                style={{ width: 30, height: 30 }}
+              ></img>
+            </div>
+            <div className='text1' style={{ fontSize: 18, marginBottom: 0 }}>HORÁRIOS DISPONÍVEIS</div>
           </div>
-          <div className='text1' style={{ fontSize: 18, marginBottom: 0 }}>HORÁRIOS DISPONÍVEIS</div>
-          <div className='text1' style={{ marginTop: 0 }}>{'DATA: ' + selectdate}</div>
-          <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+          <div className='text1' style={{ marginTop: 0 }}>{'DATA: ' + localStorage.getItem('selectdate')}</div>
+          <div
+            className={window.innerWidth < mobilewidth ? "grid2" : "grid3"}
+            style={{ width: '100%' }}
+          >
             {arrayhorarios.map(item => (
               <div className='button'
                 style={{
-                  opacity: arrayatendimentos.filter(valor => moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.situacao == selectedatividade && valor.id_paciente == paciente).length > 0 ? 0.3 : 1,
-                  pointerEvents: arrayatendimentos.filter(valor => moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.situacao == selectedatividade && valor.id_paciente == paciente).length > 0 ? 'none' : 'auto',
-                  width: 100, height: 100,
+                  opacity: arrayatendimentos.filter(valor => (moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.situacao == selectedatividade) || (moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.id_paciente == paciente)).length > 0 ? 0.3 : 1,
+                  pointerEvents: arrayatendimentos.filter(valor => (moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.situacao == selectedatividade) || (moment(valor.data_inicio).format('DD/MM/YYYY - HH:mm') == item && valor.id_paciente == paciente)).length > 0 ? 'none' : 'auto',
+                  height: 100, flexGrow: 'inherit',
                 }}
                 onClick={() => { insertAtendimento(item); setviewopcoeshorarios(0) }}
               >
@@ -2036,52 +2022,56 @@ function Consultas() {
     )
   }
 
-  // seletor de atividades para agendamento.
   const [viewopcoesatividades, setviewopcoesatividades] = useState(0);
-  function AtividadesSelector() {
-    return (
-      <div className="fundo"
-        onClick={() => setviewopcoesatividades(0)}
-        style={{
-          display: viewopcoesatividades == 1 ? 'flex' : 'none',
-          justifyContent: window.innerWidth < mobilewidth ? 'center' : 'center',
-          flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
-          width: window.innerWidth < mobilewidth ? '100vw' : '',
-          height: window.innerWidth < mobilewidth ? '100vh' : '',
-        }}>
-        <div className="janela" style={{ display: 'flex', flexDirection: 'column' }}>
-          {
-            //eslint-disable-next-line
-            arrayatividades.map((item) => (
-              <div className="button"
-                style={{ width: 200 }}
-                onClick={() => { setselectedatividade(item); setatendimento(null) }}
-              >
-                {item}
-              </div>
-            ))}
-        </div>
-      </div>
-    )
-  }
-
   // janela para que o médico possa agendar suas consultas.
   function MinhasConsultas() {
-    return (
-      <div className="fundo"
-        onClick={() => setviewagendamento(0)}
-        style={{
-          display: objpaciente != null && viewagendamento == 1 ? 'flex' : 'none',
-          justifyContent: window.innerWidth < mobilewidth ? 'flex-start' : 'center',
-          flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
-          width: window.innerWidth < mobilewidth ? '100vw' : '',
-          overflowY: window.innerWidth < mobilewidth ? 'scroll' : 'hidden',
-        }}>
-        <div className="janela"
+    // seletor de atividades para agendamento.
+    function AtividadesSelector() {
+      return (
+        <div className="fundo"
+          onClick={() => setviewopcoesatividades(0)}
           style={{
-            display: 'flex', flexDirection: 'column',
+            display: viewopcoesatividades == 1 ? 'flex' : 'none',
+            justifyContent: window.innerWidth < mobilewidth ? 'center' : 'center',
+            flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
+            width: window.innerWidth < mobilewidth ? '100vw' : '',
+            height: '100vh',
+          }}>
+          <div className="janela" style={{ display: 'flex', flexDirection: 'column' }}>
+            {
+              //eslint-disable-next-line
+              arrayatividades.map((item) => (
+                <div className="button"
+                  style={{ width: 200 }}
+                  onClick={() => setselectedatividade(item)}
+                >
+                  {item}
+                </div>
+              ))}
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <div style={{
+        position: 'absolute',
+        display: objpaciente != null && viewagendamento == 1 ? 'flex' : 'none',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        width: '100vw',
+        height: '100vh',
+      }}>
+        <div className="janela scroll"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: 'calc(100vw - 10px)',
+            height: 'calc(100vh - 10px)',
+            justifyContent: 'flex-start',
             backgroundColor: 'white',
-            borderRadius: 0,
+            borderColor: 'white',
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -2092,35 +2082,43 @@ function Consultas() {
             alignContent: 'center',
             alignItems: 'center',
           }}>
-            <div id="botão seletor da atividade"
-              className="button"
-              onClick={() => setviewopcoesatividades(1)}
-              style={{ width: 200 }}
-            >
-              {selectedatividade}
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+              <div id="botão para sair da tela de agendamento de atividades e consultas"
+                className="button-yellow"
+                style={{
+                  maxHeight: 50, maxWidth: 50, alignSelf: 'center', marginRight: 0,
+                }}
+                onClick={() => {
+                  setviewagendamento(0);
+                }}>
+                <img
+                  alt=""
+                  src={back}
+                  style={{ width: 30, height: 30 }}
+                ></img>
+              </div>
+              <div id="botão seletor da atividade"
+                className="button"
+                onClick={() => setviewopcoesatividades(1)}
+                style={{
+                  width: 200,
+                  marginTop: window.innerWidth < mobilewidth ? 90 : ''
+                }}
+              >
+                {selectedatividade}
+              </div>
             </div>
             <div className="text1"
               style={{
                 fontSize: window.innerWidth < mobilewidth ? '' : '16',
               }}>
-              {objpaciente != null ? 'AGENDAR ' + selectedatividade + ' PARA ' + objpaciente.nome_paciente + '.' : ''}</div>
-            <div
-              id="botão de retorno"
-              className="button-yellow"
-              style={{
-                display: "flex",
-                opacity: 1,
-                alignSelf: "center",
-              }}
-              onClick={() => setviewagendamento(0)}
-            >
-              <img alt="" src={back} style={{ width: 30, height: 30 }}></img>
+              {objpaciente != null ? 'AGENDAR ' + selectedatividade + ' PARA ' + objpaciente.nome_paciente + '.' : ''}
             </div>
           </div>
           <div style={{
             display: 'flex',
-            flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
-            alignContent: 'center',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
           }}>
             <DatePicker></DatePicker>
             <ListaDeConsultas></ListaDeConsultas>
@@ -2218,13 +2216,16 @@ function Consultas() {
     >
       <div
         className="chassi"
-        id="conteúdo do prontuário"
-        style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}
+        id="conteúdo do prontuário para todos os pacientes"
+        style={{
+          display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly',
+          position: 'relative',
+        }}
       >
         <div id="usuário, botões, busca de paciente e lista de pacientes"
           style={{
             display: window.innerWidth < mobilewidth && viewlista == 0 ? "none" : "flex",
-            flexDirection: 'column', justifyContent: 'space-between',
+            flexDirection: 'column', justifyContent: 'center',
             position: 'sticky', top: 5,
             width: window.innerWidth < mobilewidth ? '90vw' : '30vw',
             height: '95vh',
@@ -2273,21 +2274,24 @@ function Consultas() {
               atendimentos
                 .filter((item) => item.id_atendimento == atendimento)
                 .map((item) => moment().diff(item.data_inicio, "days")),
-              null,
-              0, 0
+              null, null
             )}
-            {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias, 0)}
-            {cartao(null, "ADMISSÃO", "card-documento-admissao", null, 1)}
-            {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null, 1)}
-            {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null, 0)}
-            {cartao(null, "RECEITA MÉDICA", "card-documento-receita", null, 1)}
-            {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas, 0)}
-            {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null, 0)}
-            {cartao(riscos, "RISCOS", "card-riscos", busyriscos, 0)}
-            {cartao(null, "ALERTAS", "card-alertas", null, 0)}
-            {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais, 0)}
-            {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null, 0)}
-            {cartao(null, "DIETA", "card-dietas", busydieta, 0)}
+            {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias)}
+            {cartao(null, "ADMISSÃO", "card-documento-admissao", null)}
+            {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null)}
+            {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null)}
+            {cartao(null, "RECEITA MÉDICA", "card-documento-receita", null)}
+            {cartao(null, "SUMÁRIO DE ALTA", "card-documento-alta", null)}
+            {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas)}
+            {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null)}
+            {cartao(riscos, "RISCOS", "card-riscos", busyriscos)}
+            {cartao(null, "ALERTAS", "card-alertas", null)}
+            {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais)}
+            {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null)}
+            {cartao(null, "DIETA", "card-dietas", busydieta)}
+            {cartao(null, 'MONITORAMENTO HOME CARE', "card-feedback", null)}
+            {cartao(null, 'ESCALAS ASSISTENCIAIS', 'card-escalas_assistenciais', null)}
+            {cartao(null, 'MEDICAÇÕES', 'card-receita', null)}
           </div>
           <div id="cards (cartões) visão mobile"
             className={arraycartoes.length == cartoes.length ? "grid2" : "grid1"}
@@ -2299,21 +2303,22 @@ function Consultas() {
               atendimentos
                 .filter((item) => item.id_atendimento == atendimento)
                 .map((item) => moment().diff(item.data_inicio, "days")),
-              null,
-              0, 0
+              null, null
             )}
-            {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias, 0)}
-            {cartao(null, "ADMISSÃO", "card-documento-admissao", null, 1)}
-            {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null, 1)}
-            {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null, 0)}
-            {cartao(null, "RECEITA MÉDICA", "card-documento-receita", null, 1)}
-            {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas, 0)}
-            {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null, 0)}
-            {cartao(riscos, "RISCOS", "card-riscos", busyriscos, 0)}
-            {cartao(null, "ALERTAS", "card-alertas", null, 0)}
-            {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais, 0)}
-            {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null, 0)}
-            {cartao(null, "DIETA", "card-dietas", busydieta, 0)}
+            {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias)}
+            {cartao(null, "ADMISSÃO", "card-documento-admissao", null)}
+            {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null)}
+            {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null)}
+            {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas)}
+            {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null)}
+            {cartao(riscos, "RISCOS", "card-riscos", busyriscos)}
+            {cartao(null, "ALERTAS", "card-alertas", null)}
+            {cartao(null, "SINAIS VITAIS", "card-sinaisvitais", busysinaisvitais)}
+            {cartao(null, 'INVASÕES E LESÕES', "card-boneco", null)}
+            {cartao(null, "DIETA", "card-dietas", busydieta)}
+            {cartao(null, 'MONITORAMENTO HOME CARE', "card-feedback", null)}
+            {cartao(null, 'ESCALAS ASSISTENCIAIS', 'card-escalas_assistenciais', null)}
+            {cartao(null, 'MEDICAÇÕES', 'card-receita', null)}
           </div>
         </div>
         <div id="conteúdo cheio (componentes)"
@@ -2366,9 +2371,8 @@ function Consultas() {
           ></img>
         </div>
         <TelaInterconsultas></TelaInterconsultas>
-        <MinhasConsultas></MinhasConsultas>
-        <AtividadesSelector></AtividadesSelector>
       </div>
+      <MinhasConsultas></MinhasConsultas>
     </div>
   );
 }

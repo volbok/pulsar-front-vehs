@@ -2,14 +2,13 @@
 import React, { useContext, useEffect } from 'react';
 import Context from '../pages/Context';
 // imagens.
-import back from '../images/back.svg';
 import EscalasAssistenciaisComponent from '../components/EscalasAssistenciaisComponent';
 
 function EscalasAssistenciais() {
 
   // context.
   const {
-    card, setcard,
+    card,
     paciente,
   } = useContext(Context);
 
@@ -19,26 +18,6 @@ function EscalasAssistenciais() {
     }
     // eslint-disable-next-line
   }, [card, paciente]);
-
-  function Botoes() {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
-        <div id="botão de retorno"
-          className="button-yellow"
-          style={{
-            display: 'flex',
-            alignSelf: 'center',
-          }}
-          onClick={() => setcard('')}>
-          <img
-            alt=""
-            src={back}
-            style={{ width: 30, height: 30 }}
-          ></img>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div id="scroll-escalas_assistenciais"
@@ -55,7 +34,6 @@ function EscalasAssistenciais() {
           flex: 1
         }}>
         <EscalasAssistenciaisComponent></EscalasAssistenciaisComponent>
-        <Botoes></Botoes>
       </div>
     </div >
   )
