@@ -90,7 +90,7 @@ function EvolucaoMobile() {
             onFocus={(e) => (e.target.placeholder = '')}
             onBlur={(e) => (e.target.placeholder = 'EVOLUÇÃO...')}
             style={{
-              width: window.innerWidth < mobilewidth ? '50vw' : '60vw',
+              width: window.innerWidth < mobilewidth ? '50vw' : '80vw',
               height: window.innerWidth < mobilewidth ? '' : '50vh',
               margin: 5,
             }}
@@ -247,7 +247,7 @@ function EvolucaoMobile() {
               className='textarea'
               style={{
                 display: 'none', backgroundColor: 'white', borderRadius: 5,
-                width: '90%',
+                width: 'calc(100% - 30px)',
                 height: '50vh',
                 marginTop: 10,
                 textAlign: 'left',

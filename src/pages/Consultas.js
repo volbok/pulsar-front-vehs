@@ -2022,37 +2022,37 @@ function Consultas() {
     )
   }
 
+  // seletor de atividades para agendamento.
   const [viewopcoesatividades, setviewopcoesatividades] = useState(0);
+  function AtividadesSelector() {
+    return (
+      <div className="fundo"
+        onClick={() => setviewopcoesatividades(0)}
+        style={{
+          display: viewopcoesatividades == 1 ? 'flex' : 'none',
+          justifyContent: window.innerWidth < mobilewidth ? 'center' : 'center',
+          flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
+          width: window.innerWidth < mobilewidth ? '100vw' : '',
+          height: '100vh',
+        }}>
+        <div className="janela" style={{ display: 'flex', flexDirection: 'column' }}>
+          {
+            //eslint-disable-next-line
+            arrayatividades.map((item) => (
+              <div className="button"
+                style={{ width: 200 }}
+                onClick={() => setselectedatividade(item)}
+              >
+                {item}
+              </div>
+            ))}
+        </div>
+      </div>
+    )
+  }
+
   // janela para que o médico possa agendar suas consultas.
   function MinhasConsultas() {
-    // seletor de atividades para agendamento.
-    function AtividadesSelector() {
-      return (
-        <div className="fundo"
-          onClick={() => setviewopcoesatividades(0)}
-          style={{
-            display: viewopcoesatividades == 1 ? 'flex' : 'none',
-            justifyContent: window.innerWidth < mobilewidth ? 'center' : 'center',
-            flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row',
-            width: window.innerWidth < mobilewidth ? '100vw' : '',
-            height: '100vh',
-          }}>
-          <div className="janela" style={{ display: 'flex', flexDirection: 'column' }}>
-            {
-              //eslint-disable-next-line
-              arrayatividades.map((item) => (
-                <div className="button"
-                  style={{ width: 200 }}
-                  onClick={() => setselectedatividade(item)}
-                >
-                  {item}
-                </div>
-              ))}
-          </div>
-        </div>
-      )
-    }
-
     return (
       <div style={{
         position: 'absolute',
@@ -2123,7 +2123,6 @@ function Consultas() {
             <DatePicker></DatePicker>
             <ListaDeConsultas></ListaDeConsultas>
             <ViewOpcoesHorarios></ViewOpcoesHorarios>
-            <AtividadesSelector></AtividadesSelector>
           </div>
         </div>
       </div>
@@ -2373,6 +2372,7 @@ function Consultas() {
         <TelaInterconsultas></TelaInterconsultas>
       </div>
       <MinhasConsultas></MinhasConsultas>
+      <AtividadesSelector></AtividadesSelector>
     </div>
   );
 }

@@ -679,7 +679,6 @@ function Login() {
             onClick={() => {
               setpagina(-1);
               history.push("/prontuario_todos_pacientes");
-              console.log(usuario);
             }}
           >
             PRONTUÁRIO

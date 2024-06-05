@@ -110,7 +110,7 @@ function EscalasAssistenciaisComponent() {
   const arrayescalas = ['MNA', 'DEPRESSÃO', 'MORSE']
   function EscalaOpcoes() {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <div id="botão de retorno"
           className="button-yellow"
           style={{
@@ -187,7 +187,7 @@ function EscalasAssistenciaisComponent() {
     )
   }
 
-  // ESCALA MINI NUTRICIONAL ASSESSMENT (MNA)
+  // MINI ESCALA NUTRICIONAL ASSESSMENT (MNA)
   let MNA_pergunta1 = [
     {
       escala: 'MNA',
@@ -501,9 +501,6 @@ function EscalasAssistenciaisComponent() {
         {escalaselector('MNA', 'EM COMPARAÇÃO COM OUTRAS PESSOAS DA MESMA IDADE, COMO CONSIDERA O PACIENTE A SUA PRÓPRIA SAÚDE?', MNA_pergunta16)}
         {escalaselector('MNA', 'PERÍMETRO BRAQUIAL (PB) EM CENTÍMETROS', MNA_pergunta17)}
         {escalaselector('MNA', 'PERÍMETRO DA PERNA (PP) EM CENTÍMETROS', MNA_pergunta18)}
-
-
-
         <div
           className="button"
           onClick={() => escalasoma('MNA')}
@@ -523,6 +520,117 @@ function EscalasAssistenciaisComponent() {
     )
   }
 
+  // ESCALA MORSE.
+  let MORSE_pergunta1 = [
+    {
+      escala: 'MORSE',
+      resposta: 'NÃO',
+      valor: 0
+    },
+    {
+      escala: 'MORSE',
+      resposta: 'SIM',
+      valor: 25
+    },
+  ]
+  let MORSE_pergunta2 = [
+    {
+      escala: 'MORSE',
+      resposta: 'NÃO',
+      valor: 0
+    },
+    {
+      escala: 'MORSE',
+      resposta: 'SIM',
+      valor: 15
+    },
+  ]
+  let MORSE_pergunta3 = [
+    {
+      escala: 'MORSE',
+      resposta: 'ACAMADO/AUXILIADO POR PROFISSIONAL DA SAÚDE',
+      valor: 0
+    },
+    {
+      escala: 'MORSE',
+      resposta: 'MULETAS/BENGALA/ANDADOR',
+      valor: 15
+    },
+    {
+      escala: 'MORSE',
+      resposta: 'MOBILIÁRIO/PAREDE',
+      valor: 30
+    },
+  ]
+  let MORSE_pergunta4 = [
+    {
+      escala: 'MORSE',
+      resposta: 'NÃO',
+      valor: 0
+    },
+    {
+      escala: 'MORSE',
+      resposta: 'SIM',
+      valor: 20
+    },
+  ]
+  let MORSE_pergunta5 = [
+    {
+      escala: 'MORSE',
+      resposta: 'NORMAL/ACAMADO/CADEIRA DE RODAS',
+      valor: 0
+    },
+    {
+      escala: 'MORSE',
+      resposta: 'FRACA',
+      valor: 10
+    },
+    {
+      escala: 'MORSE',
+      resposta: 'COMPROMETIDA/CAMBALEANTE',
+      valor: 20
+    },
+  ]
+  let MORSE_pergunta6 = [
+    {
+      escala: 'MORSE',
+      resposta: 'ORIENTADO/CAPAZ QUANTO A SUA CAPACIDADE DE LIMITAÇÃO',
+      valor: 0
+    },
+    {
+      escala: 'MORSE',
+      resposta: 'SUPERESTIMA CAPACIDADE/ESQUECE LIMITAÇÕES',
+      valor: 15
+    },
+  ]
+  function EscalaMORSE() {
+    return (
+      <div style={{ display: escala == 'MORSE' ? 'flex' : 'none', flexDirection: 'column', alignContent: 'center', alignSelf: 'center' }}>
+        <div className="text2" style={{ fontSize: 14, marginTop: 20 }}>{'ESCALA MORSE (RISCO DE QUEDA)'}</div>
+        {escalaselector('MORSE', 'HISTÓRICO DE QUEDAS', MORSE_pergunta1)}
+        {escalaselector('MORSE', 'DIAGNÓSTICO SECUNDÁRIO', MORSE_pergunta2)}
+        {escalaselector('MORSE', 'AUXÍLIO NA DEAMBULAÇÃO', MORSE_pergunta3)}
+        {escalaselector('MORSE', 'TERAPIA ENDOVENOSA', MORSE_pergunta4)}
+        {escalaselector('MORSE', 'MARCHA', MORSE_pergunta5)}
+        {escalaselector('MORSE', 'ESTADO MENTAL', MORSE_pergunta6)}
+        <div
+          className="button"
+          onClick={() => escalasoma('MNA')}
+          style={{ alignSelf: 'center' }}
+        >
+          <img
+            alt=""
+            src={salvar}
+            style={{
+              margin: 10,
+              height: 25,
+              width: 25,
+            }}
+          ></img>
+        </div>
+      </div>
+    )
+  }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
       <EscalaOpcoes></EscalaOpcoes>
@@ -537,6 +645,7 @@ function EscalasAssistenciaisComponent() {
         PREENCHER ESCALA
       </div>
       <EscalaMNA></EscalaMNA>
+      <EscalaMORSE></EscalaMORSE>
     </div >
   )
 }
