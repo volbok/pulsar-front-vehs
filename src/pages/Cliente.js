@@ -382,9 +382,9 @@ function Cliente() {
           display: 'flex',
           flexDirection: "column",
           alignSelf: "center",
+          marginTop: 10,
         }}
       >
-
         {atendimentos
           // uma lista para cada tipo de atividade...
           .filter(item => isNaN(item.situacao) && moment(item.data_inicio).format('DD/MM/YYYY') == selectdate)
@@ -412,11 +412,11 @@ function Cliente() {
                   <div>
                     {moment(item.data_inicio).format('DD/MM/YY')}
                   </div>
-                  <div style={{marginTop: 5}}>
+                  <div style={{ marginTop: 5 }}>
                     {moment(item.data_inicio).format('HH:mm') + ' ÀS ' + moment(item.data_termino).format('HH:mm')}
                   </div>
                 </div>
-                <div className="button green"
+                <div className={item.situacao.search('CONCLUÍDO') != -1 ? "button green" : "button-red"}
                   style={{
                     borderRadius: 0, marginLeft: 0, borderTopRightRadius: 5, borderBottomRightRadius: 5,
                     fontSize: 10, flex: 3
