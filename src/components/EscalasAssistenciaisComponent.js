@@ -615,7 +615,7 @@ function EscalasAssistenciaisComponent() {
         {escalaselector('MORSE', 'ESTADO MENTAL', MORSE_pergunta6)}
         <div
           className="button"
-          onClick={() => escalasoma('MNA')}
+          onClick={() => escalasoma('MORSE')}
           style={{ alignSelf: 'center' }}
         >
           <img

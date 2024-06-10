@@ -41,6 +41,7 @@ import Exames from "../cards/Exames";
 import Prescricao from "./Prescricao";
 import EvolucaoMobile from "../cards/EvolucaoMobile";
 import selector from "../functions/selector";
+import Feedback from "./Feedback";
 
 function Consultas() {
   // context.
@@ -2082,7 +2083,10 @@ function Consultas() {
             alignContent: 'center',
             alignItems: 'center',
           }}>
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+            <div style={{
+              display: 'flex', flexDirection: 'row', justifyContent: 'center',
+              marginTop: window.innerWidth < mobilewidth ? 90 : '',
+            }}>
               <div id="botão para sair da tela de agendamento de atividades e consultas"
                 className="button-yellow"
                 style={{
@@ -2102,7 +2106,6 @@ function Consultas() {
                 onClick={() => setviewopcoesatividades(1)}
                 style={{
                   width: 200,
-                  marginTop: window.innerWidth < mobilewidth ? 90 : ''
                 }}
               >
                 {selectedatividade}
@@ -2305,8 +2308,6 @@ function Consultas() {
               null, null
             )}
             {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias)}
-            {cartao(null, "ADMISSÃO", "card-documento-admissao", null)}
-            {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null)}
             {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null)}
             {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas)}
             {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null)}
@@ -2347,6 +2348,7 @@ function Consultas() {
           <Exames></Exames>
           <Prescricao></Prescricao>
           <EvolucaoMobile></EvolucaoMobile>
+          <Feedback></Feedback>
         </div>
         <div id="conteúdo vazio"
           style={{

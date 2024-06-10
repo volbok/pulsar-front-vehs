@@ -182,7 +182,7 @@ body {
 .fundo {
   background-color: var(--pallete6);
   border-width: 0px;
-  border-radius: 0;
+  border-radius: 0px;
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -1866,9 +1866,9 @@ ESTILOS VARIÁVEIS CONFORME A RESPONSIVIDADE.
   }
 
   .fundo {
-    background-color: var(--pallete6);
+    background-color: var(--pallete2);;
     border-width: 0px;
-    border-radius: 5px;
+    border-radius: 0px;
     position: fixed;
     display: flex;
     flex-direction: column;

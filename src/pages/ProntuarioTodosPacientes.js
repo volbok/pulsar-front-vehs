@@ -2330,8 +2330,6 @@ function Prontuario() {
               null, null
             )}
             {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias)}
-            {cartao(null, "ADMISSÃO", "card-documento-admissao", null)}
-            {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null)}
             {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null)}
             {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas)}
             {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null)}
