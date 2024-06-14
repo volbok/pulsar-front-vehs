@@ -49,6 +49,10 @@
   display: flex !important
 }
 
+.landscape {
+  size: landscape;
+}
+
 .printable {
   display: flex;
   flex-direction: column;

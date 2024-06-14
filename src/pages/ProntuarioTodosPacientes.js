@@ -44,6 +44,7 @@ import EvolucaoMobile from "../cards/EvolucaoMobile";
 import Feedback from "./Feedback";
 import EscalasAssistenciais from "../cards/EscalasAssistenciais";
 import Medicacoes from "../cards/Medicacoes";
+import MedicacoesCheck from "../cards/MedicacoesCheck";
 
 function Prontuario() {
   // context.
@@ -2316,6 +2317,7 @@ function Prontuario() {
             {cartao(null, 'MONITORAMENTO HOME CARE', "card-feedback", null)}
             {cartao(null, 'ESCALAS ASSISTENCIAIS', 'card-escalas_assistenciais', null)}
             {cartao(null, 'MEDICAÇÕES', 'card-receita', null)}
+            {cartao(null, 'PRESCRIÇÃO', 'card-prescricao-easy', null)}
           </div>
           <div id="cards (cartões) visão mobile"
             className={arraycartoes.length == cartoes.length ? "grid2" : "grid1"}
@@ -2341,6 +2343,7 @@ function Prontuario() {
             {cartao(null, 'MONITORAMENTO HOME CARE', "card-feedback", null)}
             {cartao(null, 'ESCALAS ASSISTENCIAIS', 'card-escalas_assistenciais', null)}
             {cartao(null, 'MEDICAÇÕES', 'card-receita', null)}
+            {cartao(null, 'PRESCRIÇÃO', 'card-prescricao-easy', null)}
           </div>
         </div>
         <div id="conteúdo cheio (componentes)"
@@ -2372,6 +2375,7 @@ function Prontuario() {
           <Feedback></Feedback>
           <EscalasAssistenciais></EscalasAssistenciais>
           <Medicacoes></Medicacoes>
+          <MedicacoesCheck></MedicacoesCheck>
         </div>
         <div id="conteúdo vazio"
           style={{

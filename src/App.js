@@ -53,10 +53,10 @@ function App() {
   const [cliente, setcliente] = useState({
     id_cliente: 1,
     razao_social: "VIVER ESSENCIAL HOTEL SÊNIOR",
-    cnes: "1234287",
-    cnpj: "CNPJ: 1001/001",
-    texto1: 'ENDEREÇO: RUA ITAPAGIPE, 226, CONCÓRDIA - BH/MG',
-    texto2: 'TELEFONE: (31) 1234-4321'
+    cnes: "",
+    cnpj: "CNPJ: 45.983.261/0001-07",
+    texto1: 'ENDEREÇO: AVENIDA SANTA ROSA, 211, SÃO LUIZ - BH/MG',
+    texto2: 'TELEFONE: (31) 97176-1001'
   });
 
   const [unidades, setunidades] = useState([]);

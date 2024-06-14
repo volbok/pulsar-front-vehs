@@ -3,7 +3,7 @@
 import React, { useContext } from 'react';
 import Context from '../pages/Context';
 import moment from "moment";
-import logo from '../images/logo.svg';
+import logo from "../images/logo_vehs.png";
 
 function Header() {
 
@@ -28,19 +28,24 @@ function Header() {
     }}>
       <div style={{
         display: 'flex', flexDirection: 'row', justifyContent: 'space-between',
+        alignItems: 'flex-start',
         width: '100%',
       }}>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
           <img
             alt=""
             src={logo}
             style={{
               margin: 0,
-              height: 100,
-              width: 100,
+              width: 100, height: 60,
+              marginRight: 20,
             }}
           ></img>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', height: 100, fontSize: 10, marginRight: 10 }}>
+          <div style={{
+            display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+            alignSelf: 'center',
+            fontSize: 10, marginRight: 10
+          }}>
             <div className='text1'>{cliente.razao_social}</div>
             <div className='text1'>{cliente.cnpj}</div>
             <div className='text1'>{cliente.texto1}</div>

@@ -40,14 +40,14 @@ function Medicacoes() {
   const mounthora = (hora) => {
     return (
       <div style={{
-        display: medicacoes.filter(item => item.hora == hora).length > 0 ? 'flex' : 'none',
+        display: medicacoes.filter(item => item.hora == hora.replace('H', '')).length > 0 ? 'flex' : 'none',
         margin: 20,
         flexDirection: 'column', backgroundColor: 'white', borderRadius: 5, padding: 10
       }}>
         <div className='text1' style={{ fontSize: 20 }}>{'HORÁRIO: ' + hora}</div>
         <div className={window.innerWidth < mobilewidth ? 'grid1' : 'grid3'}
           style={{ alignSelf: 'center', width: '100%' }}>
-          {medicacoes.filter(item => item.hora == hora).map((item) => (
+          {medicacoes.filter(item => item.hora == hora.replace('H', '')).map((item) => (
             <div className='button' style={{
               display: 'flex', flexDirection: 'column', justifyContent: 'center',
               position: 'relative',
@@ -57,7 +57,7 @@ function Medicacoes() {
               <div>{item.medicamento}</div>
               <div>{item.quantidade + ' ' + item.tipo}</div>
               <div>{item.observacoes}</div>
-              <div>{item.hora}</div>
+              <div>{item.hora + 'H'}</div>
               <div id="btn deletar medicamento"
                 title="EXCLUIR MEDICAÇÃO"
                 className="button orange"
@@ -88,7 +88,7 @@ function Medicacoes() {
     )
   }
 
-  const arrayhora = ['1h', '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h', '23h', '0h']
+  const arrayhora = ['1H', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '10H', '11H', '12H', '13H', '14H', '15H', '16H', '17H', '18H', '19H', '20H', '21H', '22H', '23H', '0H']
   function Receita() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -170,7 +170,7 @@ function Medicacoes() {
                 <div id={'botão de hora ' + valor} className='button'
                   style={{ width: 50, minWidth: 50, maxWidth: 50, height: 50, minHeight: 50, maxHeight: 50 }}
                   onClick={() => {
-                    localStorage.setItem('hora', valor);
+                    localStorage.setItem('hora', valor.replace('H', ''));
                     selector('lista de horas', 'botão de hora ' + valor, 300);
                   }}
                 >
