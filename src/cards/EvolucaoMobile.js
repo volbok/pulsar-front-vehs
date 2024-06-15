@@ -212,8 +212,8 @@ function EvolucaoMobile() {
               }
             }}
           >
-            <div className='button red'
-              style={{ width: '95%', height: 30, maxHeight: 30, minHeight: 30 }}>
+            <div className='button green'
+              style={{ width: 'calc(100% - 20px)', height: 40, maxHeight: 40, minHeight: 30 }}>
               {moment(item.data).format('DD/MM/YY - HH:mm')}
             </div>
             <div style={{

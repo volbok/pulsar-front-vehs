@@ -78,8 +78,7 @@ function Documentos() {
       settipodocumento('ALTA HOSPITALAR');
       preparaDocumentos();
     }
-    console.log(tipodocumento);
-
+    
     // eslint-disable-next-line
   }, [card, paciente, atendimentos, atendimento]);
 
@@ -111,7 +110,6 @@ function Documentos() {
               document.getElementById("inputCid10").focus();
             }, 100);
           } else {
-            console.log(searchcid10);
             setfiltercid10(searchcid10);
             setTimeout(() => {
               console.log(filtercid10);
@@ -350,7 +348,6 @@ function Documentos() {
 
   // inserindo um documento.
   const montaTexto = () => {
-    console.log(tipodocumento);
     if (tipodocumento == 'ADMISSÃO') {
       let texto =
         'LISTA DE PROBLEMAS: \n\n' +
@@ -394,7 +391,6 @@ function Documentos() {
           arraylesoes;
       }
       if (vm.length > 0 && vm.slice(-1).map(item => item.modo) != 'OFF') {
-        console.log(vm)
         tag_vm = "\nVENTILAÇÃO MECÂNICA:\nMODO: " +
           vm.slice(-1).map(item => item.modo) + ' PRESSÃO: ' + vm.slice(-1).map(item => item.pressao) + ' VOLUME: ' + vm.slice(-1).map(item => item.volume) + ' PEEP: ' + vm.slice(-1).map(item => item.peep) + ' FIO2: ' + vm.slice(-1).map(item => item.fio2);
       }
@@ -484,8 +480,6 @@ function Documentos() {
       conselho: usuario.conselho + ': ' + usuario.n_conselho,
       id_profissional: usuario.id,
     }
-    console.log(obj);
-    console.log(usuario);
     axios.post(html + 'insert_documento', obj).then(() => {
       loadDocumentos();
       setselecteddocumento([]);
@@ -505,7 +499,6 @@ function Documentos() {
       tipo_documento: item.tipo_documento,
       profissional: usuario.nome_usuario + '\n' + usuario.conselho + '\n' + usuario.n_conselho
     }
-    console.log(obj);
     axios.post(html + 'insert_documento', obj).then(() => {
       loadDocumentos();
       setselecteddocumento([]);
@@ -705,7 +698,6 @@ function Documentos() {
               let texto = document.getElementById("inputFieldDocumento").value;
               localStorage.setItem("id", selecteddocumento.id);
               localStorage.setItem("texto", texto);
-              console.log('ID:' + localStorage.getItem("id"));
               updateDocumento(selecteddocumento, document.getElementById("inputFieldDocumento").value.toUpperCase(), 0);
             }
             e.stopPropagation();
@@ -932,7 +924,6 @@ function Documentos() {
 
   // IMPRESSÃO DO DOCUMENTO.
   function printDiv() {
-    console.log('PREPARANDO DOCUMENTO PARA IMPRESSÃO');
     let printdocument = document.getElementById("IMPRESSÃO - DOCUMENTO").innerHTML;
     var a = window.open();
     a.document.write('<html>');

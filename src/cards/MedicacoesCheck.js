@@ -22,7 +22,7 @@ function MedicacoesCheck() {
   useEffect(() => {
     if (card == 'card-prescricao-easy') {
       loadMedicacoes();
-      setselecteddocumento('CHECKLIST DE MEDICAÇÕES')
+      setselecteddocumento('CHECKLIST DE MEDICAÇÕES');
     }
     // eslint-disable-next-line
   }, [card, paciente]);
@@ -41,7 +41,7 @@ function MedicacoesCheck() {
     return (
       <div className='scroll'
         style={{
-          display: 'flex', flexDirection: 'column',
+          display: 'none', flexDirection: 'column',
           overflowX: 'scroll', overflowY: 'scroll',
           width: '60vw', height: '75vh'
         }}>
@@ -116,22 +116,32 @@ function MedicacoesCheck() {
   }
 
   // IMPRESSÃO DO DOCUMENTO.
-  function printDiv() {
+  function printDiv(periodo) {
     console.log('PREPARANDO DOCUMENTO PARA IMPRESSÃO');
-    let printdocument = document.getElementById("IMPRESSÃO - CHECKLIST DE MEDICAÇÕES").innerHTML;
-    var a = window.open();
-    a.document.write('<html>');
-    a.document.write(printdocument);
-    a.document.write('</html>');
-    a.print();
-    // a.close();
+    if (periodo == 1) {
+      let printdocument = document.getElementById("IMPRESSÃO - CHECKLIST DE MEDICAÇÕES 1").innerHTML;
+      var a = window.open();
+      a.document.write('<html>');
+      a.document.write(printdocument);
+      a.document.write('</html>');
+      a.print();
+      a.close();
+    } else {
+      let printdocument = document.getElementById("IMPRESSÃO - CHECKLIST DE MEDICAÇÕES 2").innerHTML;
+      a = window.open();
+      a.document.write('<html>');
+      a.document.write(printdocument);
+      a.document.write('</html>');
+      a.print();
+      a.close();
+    }
   }
-  function PrintDocumento() {
+  function PrintDocumento1() {
     return (
-      <div id="IMPRESSÃO - CHECKLIST DE MEDICAÇÕES"
-        className="print landscape"
+      <div id="IMPRESSÃO - CHECKLIST DE MEDICAÇÕES 1"
+        className="print"
       >
-        <table style={{ width: '100%' }}>
+        <table style={{ width: '100%', breakInside: 'auto' }}>
           <thead style={{ width: '100%' }}>
             <tr style={{ width: '100%' }}>
               <td style={{ width: '100%' }}>
@@ -224,6 +234,47 @@ function MedicacoesCheck() {
                       ))}
                     </div>
                   </div>
+                  <div style={{
+                    display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: 50,
+                    breakInside: 'avoid',
+                  }}>
+                    <div style={{ marginTop: 20 }}>________________________________________________________________</div>
+                    <div style={{ marginTop: 10 }}>ASSINATURA DO ENFERMEIRO RESPONSÁVEL</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    )
+  };
+  function PrintDocumento2() {
+    return (
+      <div id="IMPRESSÃO - CHECKLIST DE MEDICAÇÕES 2"
+        className="print"
+      >
+        <table style={{ width: '100%', breakInside: 'auto' }}>
+          <thead style={{ width: '100%' }}>
+            <tr style={{ width: '100%' }}>
+              <td style={{ width: '100%' }}>
+                <Header></Header>
+              </td>
+            </tr>
+          </thead>
+          <tbody style={{ width: '100%' }}>
+            <tr style={{ width: '100%' }}>
+              <td style={{ width: '100%' }}>
+                <div id="checklist"
+                  style={{
+                    display: 'flex', flexDirection: 'column',
+                    alignSelf: 'center',
+                    width: '100%', height: '100%',
+                    fontFamily: 'Helvetica',
+                    breakInside: 'auto',
+                    whiteSpace: 'pre-wrap',
+                  }}>
+                  <div>{selectedmes.toUpperCase()}</div>
                   <div id="ÚLTIMOS 15 DIAS"
                     style={{
                       display: 'flex', flexDirection: 'column',
@@ -332,14 +383,33 @@ function MedicacoesCheck() {
           className="button-green"
           style={{
             display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
             alignSelf: 'center',
           }}
-          onClick={() => printDiv()}>
+          onClick={() => printDiv(1)}>
           <img
             alt=""
             src={print}
             style={{ width: 30, height: 30 }}
           ></img>
+          <div>PARTE 1</div>
+        </div>
+        <div id="botão de impressão"
+          className="button-green"
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignSelf: 'center',
+          }}
+          onClick={() => printDiv(2)}>
+          <img
+            alt=""
+            src={print}
+            style={{ width: 30, height: 30 }}
+          ></img>
+          <div>PARTE 2</div>
         </div>
       </div>
     );
@@ -395,9 +465,11 @@ function MedicacoesCheck() {
           flex: 1
         }}>
         <MesSelector></MesSelector>
+        <div className='text2'>PARA IMPRIMIR AS PLANILHAS DE CHECAGEM DAS MEDICAÇÕES, UTILIZE OS BOTÕES ABAIXO</div>
         <TabelaDeMedicacoes></TabelaDeMedicacoes>
         <Botoes></Botoes>
-        <PrintDocumento></PrintDocumento>
+        <PrintDocumento1></PrintDocumento1>
+        <PrintDocumento2></PrintDocumento2>
       </div>
     </div >
   )

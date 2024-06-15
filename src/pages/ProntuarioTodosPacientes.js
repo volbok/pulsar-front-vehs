@@ -45,6 +45,8 @@ import Feedback from "./Feedback";
 import EscalasAssistenciais from "../cards/EscalasAssistenciais";
 import Medicacoes from "../cards/Medicacoes";
 import MedicacoesCheck from "../cards/MedicacoesCheck";
+import Diagnosticos from "../cards/Diagnosticos";
+import Camera from "../cards/Camera";
 
 function Prontuario() {
   // context.
@@ -62,6 +64,8 @@ function Prontuario() {
     setpacientes,
     pacientes,
     setpaciente,
+    objpaciente,
+    setobjpaciente,
     paciente,
     atendimentos,
     setatendimentos,
@@ -221,7 +225,6 @@ function Prontuario() {
   var timeout = null;
   const [selectdate, setselectdate] = useState(null);
   const [viewagendamento, setviewagendamento] = useState(0);
-  const [objpaciente, setobjpaciente] = useState(null);
   useEffect(() => {
     if (pagina == -1) {
       setpaciente([]);
@@ -2295,6 +2298,7 @@ function Prontuario() {
               width: '100%', alignSelf: 'center', justifyContent: 'center',
               flexDirection: 'row', flexWrap: 'wrap',
             }}>
+            {cartao(null, "TIRAR FOTO", "card-camera", null)}
             {cartao(null, "DIAS DE INTERNAÇÃO: " +
               atendimentos
                 .filter((item) => item.id_atendimento == atendimento)
@@ -2302,6 +2306,7 @@ function Prontuario() {
               null, null
             )}
             {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias)}
+            {cartao(null, "DIAGNÓSTICOS", "card-diagnosticos", null)}
             {cartao(null, "ADMISSÃO", "card-documento-admissao", null)}
             {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null)}
             {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null)}
@@ -2332,6 +2337,7 @@ function Prontuario() {
               null, null
             )}
             {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias)}
+            {cartao(null, "DIAGNÓSTICOS", "card-diagnosticos", null)}
             {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null)}
             {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas)}
             {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null)}
@@ -2356,7 +2362,9 @@ function Prontuario() {
             width: window.innerWidth < mobilewidth ? '90vw' : '65vw',
           }}
         >
+          <Camera></Camera>
           <Alergias></Alergias>
+          <Diagnosticos></Diagnosticos>
           <Documentos></Documentos>
           <DocumentoEstruturado></DocumentoEstruturado>
           <Boneco></Boneco>

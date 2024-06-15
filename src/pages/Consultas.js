@@ -42,6 +42,7 @@ import Prescricao from "./Prescricao";
 import EvolucaoMobile from "../cards/EvolucaoMobile";
 import selector from "../functions/selector";
 import Feedback from "./Feedback";
+import Diagnosticos from "../cards/Diagnosticos";
 
 function Consultas() {
   // context.
@@ -61,6 +62,8 @@ function Consultas() {
     pacientes,
     paciente,
     setpaciente,
+    objpaciente,
+    setobjpaciente,
     atendimentos,
     setatendimentos,
     setatendimento,
@@ -227,7 +230,6 @@ function Consultas() {
   }
 
   var timeout = null;
-  const [objpaciente, setobjpaciente] = useState(null);
   const [viewagendamento, setviewagendamento] = useState(0);
   const [selectedatividade, setselectedatividade] = useState('CONSULTA MÉDICA');
   useEffect(() => {
@@ -2279,6 +2281,7 @@ function Consultas() {
               null, null
             )}
             {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias)}
+            {cartao(null, "DIAGNÓSTICOS", "card-diagnosticos", null)}
             {cartao(null, "ADMISSÃO", "card-documento-admissao", null)}
             {cartao(null, "EVOLUÇÃO", "card-documento-evolucao", null)}
             {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null)}
@@ -2308,6 +2311,7 @@ function Consultas() {
               null, null
             )}
             {cartao(alergias, "ALERGIAS", "card-alergias", busyalergias)}
+            {cartao(null, "DIAGNÓSTICOS", "card-diagnosticos", null)}
             {cartao(null, 'EVOLUÇÃO HOME CARE', 'card-evolucao-mobile', null)}
             {cartao(propostas.filter((item) => item.status == 0), "PROPOSTAS", "card-propostas", busypropostas)}
             {cartao(precaucoes, "PRECAUÇÕES", "card-precaucoes", null)}
@@ -2332,6 +2336,7 @@ function Consultas() {
           }}
         >
           <Alergias></Alergias>
+          <Diagnosticos></Diagnosticos>
           <Documentos></Documentos>
           <DocumentoEstruturado></DocumentoEstruturado>
           <Boneco></Boneco>

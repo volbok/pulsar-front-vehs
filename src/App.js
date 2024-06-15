@@ -95,11 +95,13 @@ function App() {
 
   const [pacientes, setpacientes] = useState([]);
   const [paciente, setpaciente] = useState([]);
+  const [objpaciente, setobjpaciente] = useState([]);
   const [atendimentos, setatendimentos] = useState([]);
 
   const [atendimento, setatendimento] = useState(null); // usado para identificar o id_atendimento.
 
   const [alergias, setalergias] = useState([]);
+  const [diagnosticos, setdiagnosticos] = useState([]);
   const [lesoes, setlesoes] = useState([]);
   const [precaucoes, setprecaucoes] = useState([]);
   const [riscos, setriscos] = useState([]);
@@ -252,6 +254,8 @@ function App() {
         setpacientes,
         paciente,
         setpaciente,
+        objpaciente,
+        setobjpaciente,
         atendimentos,
         setatendimentos,
         atendimento,
@@ -259,6 +263,8 @@ function App() {
 
         alergias,
         setalergias,
+        diagnosticos,
+        setdiagnosticos,
         lesoes,
         setlesoes,
         precaucoes,
