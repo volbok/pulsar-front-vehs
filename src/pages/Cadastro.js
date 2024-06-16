@@ -56,6 +56,7 @@ function Cadastro() {
   window.addEventListener("load", refreshApp);
 
   const [atendimento, setatendimento] = useState([]);
+  const [arrayleitos, setarrayleitos] = useState([]);
   useEffect(() => {
     if (pagina == 2) {
       setpaciente([]);
@@ -312,9 +313,22 @@ function Cadastro() {
       id_profissional: item.id_profissional
     };
     axios.post(html + "update_atendimento/" + item.id_atendimento, obj).then(() => {
-      loadAtendimentos();
       loadLeitos();
-    })
+      axios
+        .get(html + "allatendimentos/" + hospital)
+        .then((response) => {
+          let x = [];
+          setatendimentos(response.data.rows);
+          x = response.data.rows;
+          setatendimento(
+            x.filter(
+              (valor) =>
+                valor.id_cliente == hospital &&
+                valor.data_termino == null &&
+                valor.id_paciente == paciente.id_paciente
+            ));
+        });
+    });
   }
 
   // encerrando um atendimento.
@@ -335,36 +349,38 @@ function Cadastro() {
       axios
         .post(html + "update_atendimento/" + item.id_atendimento, obj)
         .then(() => {
-          // rcuperando a id do leito a ter seu status alterado para livre.
-          let id_leito = arrayleitos.filter((valor) => valor.leito == item.leito && valor.id_unidade == unidade).map(item => item.id_leito);
-          // liberando o leito.
-          var obj = {
-            id_unidade: unidade,
-            leito: item.leito,
-            status: 'LIVRE',
-          };
-          axios.post(html + "update_leito/" + id_leito, obj);
-          setvieweditpaciente(0);
-          loadLeitos();
-          loadAtendimentos();
-          toast(
-            settoast,
-            "ATENDIMENTO ENCERRADO COM SUCESSO NA BASE PULSAR",
-            "rgb(82, 190, 128, 1)",
-            3000
-          );
-        })
-        .catch(function () {
-          toast(
-            settoast,
-            "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-            "black",
-            5000
-          );
-          setTimeout(() => {
-            setpagina(0);
-            history.push("/");
-          }, 5000);
+          axios
+            .get(html + "list_all_leitos")
+            .then((response) => {
+              setarrayleitos(response.data.rows);
+              var x = response.data.rows;
+              console.log(arrayleitos);
+              console.log(x);
+              console.log(x.filter(valor => valor.leito == item.leito).map(valor => valor.id_leito).pop());
+              updateStatusLeito(x.filter(valor => valor.leito == item.leito).map(valor => valor.id_leito).pop(), item.id_unidade, item.leito, 'LIVRE');
+              loadLeitos();
+              axios
+                .get(html + "allatendimentos/" + hospital)
+                .then((response) => {
+                  let x = [];
+                  setatendimentos(response.data.rows);
+                  x = response.data.rows;
+                  setatendimento(
+                    x.filter(
+                      (valor) =>
+                        valor.id_cliente == hospital &&
+                        valor.data_termino == null &&
+                        valor.id_paciente == paciente.id_paciente
+                    ));
+                });
+              setvieweditpaciente(0);
+              toast(
+                settoast,
+                "ATENDIMENTO ENCERRADO COM SUCESSO NA BASE PULSAR",
+                "rgb(82, 190, 128, 1)",
+                3000
+              );
+            });
         });
       return null;
     });
@@ -1492,8 +1508,8 @@ function Cadastro() {
         </div>
       </div>
     );
-    // eslint-disable-next-line
-  }, [paciente, hospital, unidades, unidade, atendimento, atendimentos, vieweditpaciente]);
+    // eslint-disable-next-line  
+  }, [paciente, hospital, unidades, unidade, atendimento, atendimentos, vieweditpaciente, arrayleitos]);
 
   // atualizando um novo paciente.
   const updatePaciente = () => {
@@ -1542,18 +1558,6 @@ function Cadastro() {
           3000
         );
       })
-      .catch(function () {
-        toast(
-          settoast,
-          "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-          "black",
-          5000
-        );
-        setTimeout(() => {
-          setpagina(0);
-          history.push("/");
-        }, 5000);
-      });
   };
 
   const [viewseletorunidades, setviewseletorunidades] = useState(0);
@@ -1611,7 +1615,6 @@ function Cadastro() {
     );
   }
 
-  const [arrayleitos, setarrayleitos] = useState([]);
   const loadLeitos = () => {
     axios
       .get(html + "list_all_leitos")
@@ -1619,6 +1622,18 @@ function Cadastro() {
         setarrayleitos(response.data.rows);
       })
   };
+
+  const updateStatusLeito = (id, unidade, leito, status) => {
+    var obj = {
+      id_unidade: unidade,
+      leito: leito,
+      status: status,
+    };
+    axios.post(html + "update_leito/" + id, obj).then(() => {
+      loadAtendimentos();
+      loadLeitos();
+    })
+  }
 
   function SeletorDeLeitos() {
     const [viewstatusleito, setviewstatusleito] = useState(0);
@@ -1652,18 +1667,6 @@ function Cadastro() {
           </div>
         </div>
       );
-    }
-
-    const updateStatusLeito = (id, unidade, leito, status) => {
-      var obj = {
-        id_unidade: unidade,
-        leito: leito,
-        status: status,
-      };
-      axios.post(html + "update_leito/" + id, obj).then(() => {
-        loadAtendimentos();
-        loadLeitos();
-      })
     }
 
     return (
@@ -1701,7 +1704,6 @@ function Cadastro() {
                     atendimento = atendimentos.filter(valor => valor.id_paciente == paciente.id_paciente).pop();
                     localStorage.setItem('id_leito_antigo', arrayleitos.filter(valor => valor.leito == atendimento.leito).map(valor => valor.id_leito).pop());
                     localStorage.setItem('id_unidade_antiga', arrayleitos.filter(valor => valor.leito == atendimento.leito).map(valor => valor.id_unidade).pop());
-
                     updateStatusLeito(localStorage.getItem('id_leito_antigo'), localStorage.getItem('id_unidade_antiga'), atendimento.leito, 'LIVRE');
                     updateAtendimento(atendimentos.filter(valor => valor.id_paciente == paciente.id_paciente).pop(), item.leito);
                     updateStatusLeito(item.id_leito, unidade, item.leito, 'OCUPADO');
