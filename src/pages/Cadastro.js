@@ -201,6 +201,7 @@ function Cadastro() {
       endereco_complemento: document
         .getElementById("inputEditEnderecoComplemento")
         .value.toUpperCase(),
+      foto: 1,
     };
     axios
       .post(html + "insert_paciente", obj)
@@ -268,26 +269,25 @@ function Cadastro() {
   };
 
   // registrando um novo atendimento.
-  const insertAtendimento = (id, nome, leito) => {
+  const insertAtendimento = (leito) => {
     var obj = {
       data_inicio: moment(),
       data_termino: null,
-      historia_atual: null,
-      id_paciente: id,
+      problemas: null,
+      id_paciente: paciente.id_paciente,
       id_unidade: unidade,
-      nome_paciente: nome,
+      nome_paciente: paciente.nome_paciente,
       leito: leito,
       situacao: 1, // 1 = atendimento ativo; 0 = atendimento encerrado.
       id_cliente: hospital,
       classificacao: null,
+      id_profissional: null,
     };
     axios
       .post(html + "insert_atendimento", obj)
       .then(() => {
         loadAtendimentos();
-        loadLeitos(unidade);
-        setvieweditpaciente(0);
-        setviewseletorunidades(0);
+        loadLeitos();
         toast(
           settoast,
           "ATENDIMENTO INICIADO COM SUCESSO",
@@ -295,74 +295,27 @@ function Cadastro() {
           3000
         );
       })
-      .catch(function () {
-        toast(
-          settoast,
-          "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-          "black",
-          5000
-        );
-        setTimeout(() => {
-          setpagina(0);
-          history.push("/");
-        }, 5000);
-      });
   };
 
-  // atualizando um atendimento (mudando de leito).
-  const updateAtendimento = (leito, atendimento) => {
-    let leito_atual = null
-    let id_leito_atual = null;
-    let unidade_atual = null;
-    axios.get(html + "allatendimentos/" + hospital).then((response) => {
-      let x = response.data.rows;
-      unidade_atual = x.filter(item => item.id_atendimento == atendimento.map(valor => valor.id_atendimento)).map(item => item.id_unidade).pop();
-      leito_atual = x.filter(item => item.id_atendimento == atendimento.map(valor => valor.id_atendimento)).map(item => item.leito).pop();
-      console.log('LEITO ATUAL DO ATENDIMENTO, A SER LIBERADO: ' + leito_atual);
-      // recuperando a id do leito atual, a ter seu status alterado para livre.
-      axios.get(html + "list_all_leitos").then((response) => {
-        let y = response.data.rows;
-        id_leito_atual = y.filter(valor => valor.leito == leito_atual && valor.id_unidade == unidade_atual).map(item => item.id_leito).pop();
-        console.log('ID LEITO ATUAL A SER LIBERADO: ' + id_leito_atual);
-        // liberando o leito.
-        var obj = {
-          id_unidade: unidade_atual,
-          leito: leito_atual,
-          status: 'LIVRE',
-        };
-        console.log(obj);
-        axios.post(html + "update_leito/" + id_leito_atual, obj).then(() => {
-          // atualizando o atendimento no novo leito.
-          atendimento.map((item) => {
-            var obj = {
-              data_inicio: item.data_inicio,
-              data_termino: null,
-              problemas: item.problemas,
-              id_paciente: item.id_paciente,
-              id_unidade: unidade,
-              nome_paciente: item.nome_paciente,
-              leito: leito,
-              situacao: 1,
-              id_cliente: hospital,
-              classificacao: item.classificacao,
-            };
-            axios
-              .post(html + "update_atendimento/" + item.id_atendimento, obj)
-              .then(() => {
-                axios
-                  .get(html + "allatendimentos/" + hospital)
-                  .then((response) => {
-                    setatendimentos(response.data.rows);
-                    loadLeitos(unidade);
-                    setvieweditpaciente(0);
-                  })
-              })
-            return null;
-          });
-        });
-      });
-    });
-  };
+  const updateAtendimento = (item, leito) => {
+    var obj = {
+      data_inicio: item.data_inicio,
+      data_termino: null,
+      problemas: item.problemas,
+      id_paciente: item.id_paciente,
+      id_unidade: unidade,
+      nome_paciente: item.nome_paciente,
+      leito: leito,
+      situacao: 1,
+      id_cliente: hospital,
+      classificacao: item.classificacao,
+      id_profissional: item.id_profissional
+    };
+    axios.post(html + "update_atendimento/" + item.id_atendimento, obj).then(() => {
+      loadAtendimentos();
+      loadLeitos();
+    })
+  }
 
   // encerrando um atendimento.
   const closeAtendimento = (atendimento) => {
@@ -383,7 +336,7 @@ function Cadastro() {
         .post(html + "update_atendimento/" + item.id_atendimento, obj)
         .then(() => {
           // rcuperando a id do leito a ter seu status alterado para livre.
-          let id_leito = statusleitos.filter((valor) => valor.leito == item.leito && valor.id_unidade == unidade).map(item => item.id_leito);
+          let id_leito = arrayleitos.filter((valor) => valor.leito == item.leito && valor.id_unidade == unidade).map(item => item.id_leito);
           // liberando o leito.
           var obj = {
             id_unidade: unidade,
@@ -392,7 +345,7 @@ function Cadastro() {
           };
           axios.post(html + "update_leito/" + id_leito, obj);
           setvieweditpaciente(0);
-          loadLeitos(unidade);
+          loadLeitos();
           loadAtendimentos();
           toast(
             settoast,
@@ -609,7 +562,6 @@ function Cadastro() {
       if ((xhr.readyState == 0 || xhr.readyState == 4) && xhr.status == 200) {
         let endereco = JSON.parse(xhr.responseText);
         if (endereco.logradouro != undefined) {
-          console.log("ENDEREÇO: " + endereco.logradouro);
           document.getElementById("inputEditEndereco").value =
             endereco.logradouro +
             ", BAIRRO: " +
@@ -1422,7 +1374,7 @@ function Cadastro() {
               >
                 <div className="text1" style={{ margin: 15, width: '100%' }}>
                   {
-                    "PACIENTE NÃO ESTÁ EM ATENDIMENTO NOS HOSPITAIS CADASTRADOS EM NOSSA BASE."
+                    "HÓSPEDE AINDA NÃO ALOCADO EM UM APARTAMENTO."
                   }
                 </div>
                 <div className="button" onClick={() => { setviewseletorunidades(1) }}>
@@ -1633,41 +1585,10 @@ function Cadastro() {
                   height: 150
                 }}
                 onClick={() => {
-                  console.log(item.id_unidade);
-                  if (item.nome_unidade != 'TRIAGEM') {
-                    setselectedunidade(item.id_unidade);
-                    setunidade(item.id_unidade);
-                    geraLeitos(item.total_leitos);
-                    loadAtendimentos();
-                    loadLeitos(item.id_unidade);
-                  } else {
-                    if (atendimentos.filter(valor => valor.id_paciente == paciente.id_paciente && valor.situacao == 1).length > 0) {
-                      toast(settoast, 'PACIENTE JÁ ESTÁ EM ATENDIMENTO', 'red', 2000);
-                    } else {
-                      setselectedunidade(item.id_unidade);
-                      setunidade(item.id_unidade);
-                      var obj = {
-                        data_inicio: moment(),
-                        data_termino: null,
-                        historia_atual: null,
-                        id_paciente: paciente.id_paciente,
-                        id_unidade: item.id_unidade,
-                        nome_paciente: paciente.nome_paciente,
-                        leito: null,
-                        situacao: 1, // 1 = atendimento ativo; 0 = atendimento encerrado.
-                        id_cliente: hospital,
-                        classificacao: null,
-                      };
-                      axios
-                        .post(html + "insert_atendimento", obj)
-                        .then(() => {
-                          loadAtendimentos();
-                          loadLeitos(item.id_unidade);
-                          setviewseletorunidades(0);
-                          setvieweditpaciente(0);
-                        });
-                    }
-                  }
+                  setselectedunidade(item.id_unidade);
+                  setunidade(item.id_unidade);
+                  loadAtendimentos();
+                  loadLeitos();
                 }}
               >
                 <div>{item.nome_unidade}</div>
@@ -1690,95 +1611,16 @@ function Cadastro() {
     );
   }
 
-  const [statusleitos, setstatusleitos] = useState([]);
-  const loadLeitos = (unidade) => {
-    axios
-      .get(html + "list_leitos/" + unidade)
-      .then((response) => {
-        setstatusleitos(response.data.rows);
-      })
-      .catch(function (error) {
-        toast(
-          settoast,
-          "ERRO AO CARREGAR LEITOS, REINICIANDO APLICAÇÃO. " + error,
-          "black",
-          5000
-        );
-        setTimeout(() => {
-          setpagina(0);
-          history.push("/");
-        }, 5000);
-      });
-  };
-
   const [arrayleitos, setarrayleitos] = useState([]);
-  const geraLeitos = (leitos) => {
-    let arrayleitos = [];
-    let count = 0;
-    while (count < leitos) {
-      count = count + 1;
-      arrayleitos.push(count);
-      console.log(count);
-    }
-    setarrayleitos(arrayleitos);
+  const loadLeitos = () => {
+    axios
+      .get(html + "list_all_leitos")
+      .then((response) => {
+        setarrayleitos(response.data.rows);
+      })
   };
 
   function SeletorDeLeitos() {
-    const insertLeito = (status) => {
-      var obj = {
-        id_unidade: unidade,
-        leito: localStorage.getItem("leito"),
-        status: status,
-      };
-      axios
-        .post(html + "inserir_leito", obj)
-        .then(() => {
-          loadLeitos(unidade);
-        })
-        .catch(function () {
-          toast(
-            settoast,
-            "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-            "black",
-            5000
-          );
-          setTimeout(() => {
-            setpagina(0);
-            history.push("/");
-          }, 5000);
-        });
-    };
-
-    const updateLeito = (status) => {
-      console.log(localStorage.getItem("leito"));
-      var id = JSON.parse(localStorage.getItem("leito")).pop().id_leito;
-      var leito = JSON.parse(localStorage.getItem("leito")).pop().leito;
-      console.log(id + " - " + leito);
-      var obj = {
-        id_unidade: unidade,
-        leito: leito,
-        status: status,
-      };
-      console.log(obj);
-      axios
-        .post(html + "update_leito/" + id, obj)
-        .then(() => {
-          loadLeitos(unidade);
-        })
-        .catch(function () {
-          toast(
-            settoast,
-            "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-            "black",
-            5000
-          );
-          setTimeout(() => {
-            setpagina(0);
-            history.push("/");
-          }, 5000);
-        });
-    };
-
     const [viewstatusleito, setviewstatusleito] = useState(0);
     function ViewStatusLeito() {
       let arraystatusleitos = [
@@ -1801,13 +1643,7 @@ function Cadastro() {
                 className="button"
                 style={{ width: 150 }}
                 onClick={() => {
-                  if (localStorage.getItem("leito").length < 4) {
-                    console.log("INSERINDO STATUS PARA O LEITO...");
-                    insertLeito(item);
-                  } else {
-                    console.log("ATUALIZANDO STATUS PARA O LEITO...");
-                    updateLeito(item);
-                  }
+                  updateStatusLeito(localStorage.getItem("id_leito clicado"), unidade, localStorage.getItem("leito clicado"), item);
                 }}
               >
                 {item}
@@ -1818,10 +1654,22 @@ function Cadastro() {
       );
     }
 
+    const updateStatusLeito = (id, unidade, leito, status) => {
+      var obj = {
+        id_unidade: unidade,
+        leito: leito,
+        status: status,
+      };
+      axios.post(html + "update_leito/" + id, obj).then(() => {
+        loadAtendimentos();
+        loadLeitos();
+      })
+    }
+
     return (
       <div id="scroll de leitos"
         style={{
-          display: statusleitos.length > 0 ? "flex" : "none",
+          display: arrayleitos.length > 0 ? "flex" : "none",
           flexDirection: "column",
           justifyContent: "center",
           alignSelf: "center",
@@ -1830,7 +1678,7 @@ function Cadastro() {
       >
         <div className="text1">LEITOS</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center' }}>
-          {arrayleitos.map((item) => (
+          {arrayleitos.filter(item => item.id_unidade == unidade).sort((a, b) => a.leito > b.leito ? 1 : -1).map((item) => (
             <div
               className="button"
               style={{
@@ -1841,209 +1689,31 @@ function Cadastro() {
                 height: 100,
                 minWidth: 100,
                 display: "flex",
-                opacity:
-                  atendimentos.filter(
-                    (valor) =>
-                      valor.id_cliente == hospital &&
-                      valor.id_unidade == selectedunidade &&
-                      valor.data_termino == null &&
-                      valor.leito == item
-                  ).length > 0
-                    ? 1
-                    : 1,
-              }}
-              onMouseOver={() => {
-                if (
-                  statusleitos.filter((valor) => valor.leito == item).length > 0
-                ) {
-                  localStorage.setItem(
-                    "leito",
-                    JSON.stringify(
-                      statusleitos.filter((valor) => valor.leito == item)
-                    )
-                  );
-                  console.log(JSON.parse(localStorage.getItem("leito")));
-                } else {
-                  localStorage.setItem("leito", item);
-                  console.log(JSON.parse(localStorage.getItem("leito")));
-                }
               }}
               onClick={() => {
-                if (
-                  // o atendimento ativo para o leito selecionado é do paciente selecionado.
-                  atendimentos.filter(
-                    (valor) =>
-                      valor.id_cliente == hospital &&
-                      valor.id_unidade == selectedunidade &&
-                      valor.id_paciente == paciente.id_paciente &&
-                      valor.data_termino == null &&
-                      valor.leito == item
-                  ).length > 0
-                ) {
-                  console.log("NADA A FAZER. O PACIENTE JÁ ESTÁ NESTE LEITO");
-                } else if (
-                  // existe um atendimento alocado no leito selecionado, para outro paciente.
-                  atendimentos.filter(
-                    (valor) =>
-                      valor.id_cliente == hospital &&
-                      valor.id_unidade == selectedunidade &&
-                      valor.id_paciente != paciente.id_paciente &&
-                      valor.data_termino == null &&
-                      valor.leito == item
-                  ).length > 0
-                ) {
-                  console.log(
-                    "NÃO É POSSÍVEL ALOCAR O PACIENTE NESTE LEITO, QUE JÁ ESTÁ OCUPADO POR OUTRO PACIENTE."
-                  );
-                  toast(settoast, "LEITO JÁ OCUPADO POR OUTRO PACIENTE.", 'red', 3000);
-                } else if (
-                  // não existe um atendimento alocado no leito selecionado.
-                  atendimentos.filter(
-                    (valor) =>
-                      valor.id_cliente == hospital &&
-                      valor.id_unidade == selectedunidade &&
-                      valor.data_termino == null &&
-                      valor.leito == item
-                  ).length == 0 &&
-                  // o paciente tem um atendimento ativo em outro leito.
-                  atendimentos.filter(
-                    (valor) =>
-                      valor.id_paciente == paciente.id_paciente &&
-                      valor.data_termino == null
-                  ).length > 0
-                ) {
-                  updateAtendimento(item, atendimento);
-                  // inserindo ou atualizando status do leito selecionado para ocupado.
-                  if (localStorage.getItem("leito").length < 4) {
-                    var obj = {
-                      id_unidade: unidade,
-                      leito: localStorage.getItem("leito"),
-                      status: "OCUPADO",
-                    };
-                    axios
-                      .post(html + "inserir_leito", obj)
-                      .then(() => {
-                        loadLeitos(unidade);
-                      })
-                      .catch(function () {
-                        toast(
-                          settoast,
-                          "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-                          "black",
-                          5000
-                        );
-                        setTimeout(() => {
-                          setpagina(0);
-                          history.push("/");
-                        }, 5000);
-                      });
-                  } else {
-                    var id = JSON.parse(localStorage.getItem("leito")).pop()
-                      .id_leito;
-                    var leito = JSON.parse(localStorage.getItem("leito")).pop()
-                      .leito;
-                    obj = {
-                      id_unidade: unidade,
-                      leito: leito,
-                      status: "OCUPADO",
-                    };
-                    console.log(obj);
-                    axios
-                      .post(html + "update_leito/" + id, obj)
-                      .then(() => {
-                        loadLeitos(unidade);
-                      })
-                      .catch(function () {
-                        toast(
-                          settoast,
-                          "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-                          "black",
-                          5000
-                        );
-                        setTimeout(() => {
-                          setpagina(0);
-                          history.push("/");
-                        }, 5000);
-                      });
+                loadAtendimentos();
+                localStorage.setItem("id_leito selecionado", item.id_leito);
+                localStorage.setItem("leito selecionado", item.leito);
+                if (item.status == 'LIVRE') {
+                  let atendimento = {};
+                  // paciente já tem atendimento ativo.
+                  if (atendimentos.filter(valor => valor.id_paciente == paciente.id_paciente).length > 0) {
+                    atendimento = atendimentos.filter(valor => valor.id_paciente == paciente.id_paciente).pop();
+                    localStorage.setItem('id_leito_antigo', arrayleitos.filter(valor => valor.leito == atendimento.leito).map(valor => valor.id_leito).pop());
+                    localStorage.setItem('id_unidade_antiga', arrayleitos.filter(valor => valor.leito == atendimento.leito).map(valor => valor.id_unidade).pop());
+
+                    updateStatusLeito(localStorage.getItem('id_leito_antigo'), localStorage.getItem('id_unidade_antiga'), atendimento.leito, 'LIVRE');
+                    updateAtendimento(atendimentos.filter(valor => valor.id_paciente == paciente.id_paciente).pop(), item.leito);
+                    updateStatusLeito(item.id_leito, unidade, item.leito, 'OCUPADO');
+                    // paciente não tem atendimento ativo.
+                  } else if (atendimentos.filter(valor => valor.id_paciente == paciente.id_paciente).length == 0) {
+                    insertAtendimento(item.leito);
+                    updateStatusLeito(item.id_leito, unidade, item.leito, 'OCUPADO');
                   }
-                } else if (
-                  // não existe um atendimento alocado no leito selecionado.
-                  atendimentos.filter(
-                    (valor) =>
-                      valor.id_cliente == hospital &&
-                      valor.id_unidade == unidade &&
-                      valor.data_termino == null &&
-                      valor.leito == item
-                  ).length == 0 &&
-                  // o paciente não tem um atendimento ativo.
-                  atendimentos.filter(
-                    (valor) =>
-                      valor.id_paciente == paciente.id_paciente &&
-                      valor.data_termino == null
-                  ).length == 0
-                ) {
-                  insertAtendimento(
-                    paciente.id_paciente,
-                    paciente.nome_paciente,
-                    item
-                  );
-                  if (localStorage.getItem("leito").length < 4) {
-                    obj = {
-                      id_unidade: unidade,
-                      leito: localStorage.getItem("leito"),
-                      status: "OCUPADO",
-                    };
-                    axios
-                      .post(html + "inserir_leito", obj)
-                      .then(() => {
-                        loadLeitos(unidade);
-                      })
-                      .catch(function () {
-                        toast(
-                          settoast,
-                          "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-                          "black",
-                          5000
-                        );
-                        setTimeout(() => {
-                          setpagina(0);
-                          history.push("/");
-                        }, 5000);
-                      });
-                  } else {
-                    id = JSON.parse(localStorage.getItem("leito")).pop()
-                      .id_leito;
-                    leito = JSON.parse(localStorage.getItem("leito")).pop()
-                      .leito;
-                    obj = {
-                      id_unidade: unidade,
-                      leito: leito,
-                      status: "OCUPADO",
-                    };
-                    console.log(obj);
-                    axios
-                      .post(html + "update_leito/" + id, obj)
-                      .then(() => {
-                        loadLeitos(unidade);
-                      })
-                      .catch(function () {
-                        toast(
-                          settoast,
-                          "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-                          "black",
-                          5000
-                        );
-                        setTimeout(() => {
-                          setpagina(0);
-                          history.push("/");
-                        }, 5000);
-                      });
-                  }
-                } else {
                 }
               }}
             >
-              <div style={{ position: 'absolute', top: 2.5, left: 5, fontSize: 20, margin: 10 }}>{item}</div>
+              <div style={{ position: 'absolute', top: 2.5, left: 5, fontSize: 20, margin: 10 }}>{item.leito}</div>
               <div
                 style={{
                   display:
@@ -2052,7 +1722,7 @@ function Cadastro() {
                         valor.id_cliente == hospital &&
                         valor.id_unidade == unidade &&
                         valor.data_termino == null &&
-                        valor.leito == item,
+                        valor.leito == item.leito,
                     ).length > 0
                       ? "flex"
                       : "none",
@@ -2070,7 +1740,7 @@ function Cadastro() {
                       valor.id_cliente == hospital &&
                       valor.id_unidade == unidade &&
                       valor.data_termino == null &&
-                      valor.leito == item
+                      valor.leito == item.leito
                   )
                   .map((valor) => valor.nome_paciente.substring(0, 20) + "...")}
               </div>
@@ -2086,53 +1756,49 @@ function Cadastro() {
                   top: 5,
                   right: 5,
                   fontSize: 12,
-                  backgroundColor: statusleitos
-                    .filter((valor) => valor.leito == item)
-                    .map((valor) =>
-                      valor.status == "LIVRE"
-                        ? "rgb(82, 190, 128, 1)"
-                        : valor.status == "OCUPADO"
-                          ? "#E59866"
-                          : valor.status == "MANUTENÇÃO"
-                            ? "#CCD1D1 "
-                            : valor.status == "DESATIVADO"
-                              ? "#EC7063"
-                              : valor.status == "LIMPEZA"
-                                ? "#85C1E9 "
-                                : "rgb(0, 0, 0, 0.5)"
-                    ),
+                  backgroundColor:
+                    item.status == "LIVRE"
+                      ? "rgb(82, 190, 128, 1)"
+                      : item.status == "OCUPADO"
+                        ? "#E59866"
+                        : item.status == "MANUTENÇÃO"
+                          ? "#CCD1D1 "
+                          : item.status == "DESATIVADO"
+                            ? "#EC7063"
+                            : item.status == "LIMPEZA"
+                              ? "#85C1E9 "
+                              : "rgb(0, 0, 0, 0.5)"
                 }}
                 onClick={(e) => {
-                  console.log(statusleitos.filter((valor) => valor.leito == item && valor.id_unidade == unidade).map((valor) => valor.status).pop());
-                  if (statusleitos.filter((valor) => valor.leito == item && valor.id_unidade == unidade).map((valor) => valor.status).pop() == 'OCUPADO') {
+                  if (item.status == 'OCUPADO') {
                     toast(settoast, 'NÃO É POSSÍVEL ALTERAR O STATUS DE UM LEITO OCUPADO', 'rgb(231, 76, 60, 1', 3000);
                   } else {
+                    localStorage.setItem("id_leito clicado", item.id_leito);
+                    localStorage.setItem("leito clicado", item.leito);
                     setviewstatusleito(1);
                   }
                   e.stopPropagation();
                 }}
               >
-                {statusleitos
-                  .filter((valor) => valor.leito == item)
-                  .map((valor) =>
-                    valor.status == "LIVRE"
-                      ? "L"
-                      : valor.status == "OCUPADO"
-                        ? "O"
-                        : valor.status == "MANUTENÇÃO"
-                          ? "M"
-                          : valor.status == "LIMPEZA"
-                            ? "H"
-                            : valor.status == "DESATIVADO"
-                              ? "D"
-                              : ""
-                  )}
+                {
+                  item.status == "LIVRE"
+                    ? "L"
+                    : item.status == "OCUPADO"
+                      ? "O"
+                      : item.status == "MANUTENÇÃO"
+                        ? "M"
+                        : item.status == "LIMPEZA"
+                          ? "H"
+                          : item.status == "DESATIVADO"
+                            ? "D"
+                            : ""
+                }
               </div>
             </div>
           ))}
         </div>
         <ViewStatusLeito></ViewStatusLeito>
-      </div>
+      </div >
     );
   }
 

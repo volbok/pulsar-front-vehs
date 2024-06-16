@@ -13,8 +13,8 @@ import prec_padrao from "../images/prec_padrao.svg";
 import prec_contato from "../images/prec_contato.svg";
 import prec_respiratorio from "../images/prec_respiratorio.svg";
 import lupa from '../images/lupa.svg';
-import lupa_cinza from '../images/lupa_cinza.svg';
 import clock from "../images/clock.svg";
+import dots_teal from "../images/dots_teal.svg";
 // funções.
 import toast from "../functions/toast";
 import modal from "../functions/modal";
@@ -25,30 +25,28 @@ import Logo from "../components/Logo";
 // cards.
 import Alergias from "../cards/Alergias";
 import Documentos from "../cards/Documentos";
-import DocumentoEstruturado from "../cards/DocumentoEstruturado";
 import Boneco from "../cards/Boneco";
 import Infusoes from "../cards/Infusoes";
 import Propostas from "../cards/Propostas";
 import SinaisVitais from "../cards/SinaisVitais";
-import Culturas from "../cards/Culturas";
-import VentilacaoMecanica from "../cards/VentilacaoMecanica";
 import Dieta from "../cards/Dieta";
 import Precaucoes from "../cards/Precaucoes";
 import Riscos from "../cards/Riscos";
 import Alertas from "../cards/Alertas";
-import Interconsultas from "../cards/Interconsultas";
-import Exames from "../cards/Exames";
 import Prescricao from "./Prescricao";
 import EvolucaoMobile from "../cards/EvolucaoMobile";
 import selector from "../functions/selector";
 import Feedback from "./Feedback";
 import Diagnosticos from "../cards/Diagnosticos";
+import Camera from "../cards/Camera";
+import EscalasAssistenciais from "../cards/EscalasAssistenciais";
+import Medicacoes from "../cards/Medicacoes";
+import MedicacoesCheck from "../cards/MedicacoesCheck";
 
 function Consultas() {
   // context.
   const {
     html,
-    unidades,
     usuario,
     setusuario,
 
@@ -78,20 +76,16 @@ function Consultas() {
     precaucoes,
     setriscos,
     riscos,
-    culturas,
     setdietas,
     dietas,
     setevolucoes,
     setarrayevolucoes,
-    infusoes,
     setpropostas,
     propostas,
     setsinaisvitais,
     sinaisvitais,
-    vm,
-    interconsultas,
     card, setcard,
-    prescricao, setprescricao,
+    setprescricao,
 
     mobilewidth,
 
@@ -176,7 +170,6 @@ function Consultas() {
         let x = response.data.rows;
         setatendimentos(x.filter(item => item.situacao != 1 && item.situacao != 4));
         setarrayatendimentos(x.filter(item => item.situacao != 1 && item.situacao != 4)); // situação 3 = consulta ou atividade ativa. situação 4 == consulta ou atividade encerrada.
-        loadAllInterconsultas();
         loadAllPrecaucoes();
       })
       .catch(function (error) {
@@ -206,14 +199,6 @@ function Consultas() {
       });
   };
 
-  // registros para exibição em destaque na lista de pacientes).
-  const [allinterconsultas, setallinterconsultas] = useState([]);
-  const loadAllInterconsultas = () => {
-    axios.get(html + "all_interconsultas").then((response) => {
-      setallinterconsultas(response.data.rows);
-    });
-  };
-
   const [allprecaucoes, setallprecaucoes] = useState([]);
   const loadAllPrecaucoes = () => {
     axios.get(html + "paciente_all_precaucoes").then((response) => {
@@ -232,6 +217,7 @@ function Consultas() {
   var timeout = null;
   const [viewagendamento, setviewagendamento] = useState(0);
   const [selectedatividade, setselectedatividade] = useState('CONSULTA MÉDICA');
+  const [fotinho, setfotinho] = useState(null);
   useEffect(() => {
     if (pagina == -2) {
       setpaciente([]);
@@ -524,6 +510,7 @@ function Consultas() {
                         setatendimento(item.id_atendimento);
                         setpaciente(parseInt(item.id_paciente));
                         setobjpaciente(item);
+                        setfotinho(pacientes.filter(valor => valor.id_paciente == item.id_paciente).map(valor => valor.foto));
                         getAllData(item.id_paciente, item.id_atendimento);
                         setidprescricao(0);
                         if (pagina == -2) {
@@ -676,7 +663,7 @@ function Consultas() {
       </div>
     );
     // eslint-disable-next-line
-  }, [arrayatendimentos, allinterconsultas, allprecaucoes, setarrayitensprescricao, selectedatividade]);
+  }, [arrayatendimentos, allprecaucoes, setarrayitensprescricao, selectedatividade]);
 
   // identificação do paciente na versão mobile, na view dos cards.
   function CabecalhoPacienteMobile() {
@@ -1047,245 +1034,6 @@ function Consultas() {
                 {dietas.map((item) => item.infusao + " ml/h")}
               </div>
             </div>
-            <div id="RESUMO VM"
-              style={{
-                display: opcao == "card-vm" && vm.length > 0 ? "flex" : "none",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignSelf: "center",
-              }}
-            >
-              <div
-                id="na vm"
-                style={{
-                  display:
-                    vm
-                      .sort((a, b) =>
-                        moment(a.data_vm) < moment(b.data_vm) ? -1 : 1
-                      )
-                      .slice(-1)
-                      .map((item) => item.modo) == "OFF"
-                      ? "none"
-                      : "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <div className="textcard" style={{ margin: 0, padding: 0 }}>
-                  {vm
-                    .sort((a, b) =>
-                      moment(a.data_vm) < moment(b.data_vm) ? -1 : 1
-                    )
-                    .slice(-1)
-                    .map((item) => item.modo)}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      margin: 5,
-                    }}
-                  >
-                    <div
-                      className="textcard"
-                      style={{ margin: 0, padding: 0, opacity: 0.5 }}
-                    >
-                      {"PI"}
-                    </div>
-                    <div className="textcard" style={{ margin: 0, padding: 0 }}>
-                      {vm
-                        .sort((a, b) =>
-                          moment(a.data_vm) < moment(b.data_vm) ? -1 : 1
-                        )
-                        .slice(-1)
-                        .map((item) => item.pressao)}
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: window.innerWidth < mobilewidth ? "none" : "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      margin: 5,
-                    }}
-                  >
-                    <div
-                      className="textcard"
-                      style={{ margin: 0, padding: 0, opacity: 0.5 }}
-                    >
-                      {"VC"}
-                    </div>
-                    <div className="textcard" style={{ margin: 0, padding: 0 }}>
-                      {vm
-                        .sort((a, b) =>
-                          moment(a.data_vm) < moment(b.data_vm) ? -1 : 1
-                        )
-                        .slice(-1)
-                        .map((item) => item.volume)}
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      margin: 5,
-                    }}
-                  >
-                    <div
-                      className="textcard"
-                      style={{ margin: 0, padding: 0, opacity: 0.5 }}
-                    >
-                      {"PEEP"}
-                    </div>
-                    <div className="textcard" style={{ margin: 0, padding: 0 }}>
-                      {vm
-                        .sort((a, b) =>
-                          moment(a.data_vm) < moment(b.data_vm) ? -1 : 1
-                        )
-                        .slice(-1)
-                        .map((item) => item.peep)}
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      margin: 5,
-                    }}
-                  >
-                    <div
-                      className="textcard"
-                      style={{ margin: 0, padding: 0, opacity: 0.5 }}
-                    >
-                      {"FI"}
-                    </div>
-                    <div className="textcard" style={{ margin: 0, padding: 0 }}>
-                      {vm
-                        .sort((a, b) =>
-                          moment(a.data_vm) < moment(b.data_vm) ? -1 : 1
-                        )
-                        .slice(-1)
-                        .map((item) => item.fio2)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                id="fora da vm"
-                className="textcard"
-                style={{
-                  display:
-                    vm
-                      .sort((a, b) =>
-                        moment(a.data_vm) < moment(b.data_vm) ? -1 : 1
-                      )
-                      .slice(-1)
-                      .map((item) => item.modo) != "OFF"
-                      ? "none"
-                      : "flex",
-                }}
-              >
-                {"PACIENTE FORA DA VM"}
-              </div>
-            </div>
-            <div id="RESUMO ANTIBIÓTICOS"
-              style={{
-                display: titulo == "ANTIBIÓTICOS" ? 'flex' : 'none',
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                {prescricao
-                  .filter((item) => item.categoria == '1. ANTIMICROBIANOS')
-                  .slice(-2)
-                  .sort((a, b) => moment(a.data) < moment(b.data) ? 1 : -1)
-                  .map((item) => (
-                    <div
-                      key={"atb resumo " + item.id}
-                      className="textcard"
-                      style={{ margin: 0, padding: 0 }}
-                    >
-                      <div>
-                        {item.nome_item}
-                      </div>
-                      <div>
-                        {moment(item.data).format('DD/MM/YY')}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
-            <div id="RESUMO CULTURAS"
-              style={{
-                display: opcao == "card-culturas" ? "flex" : "none",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div className="textcard" style={{ margin: 0, padding: 0 }}>
-                {"PENDENTES: " +
-                  culturas.filter((item) => item.data_resultado == null).length}
-              </div>
-            </div>
-            <div id="RESUMO INFUSÕES"
-              style={{
-                display: opcao == "card-infusoes" ? "flex" : "none",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                {infusoes
-                  .filter((item) => item.data_termino == null)
-                  .slice(-2)
-                  .map((item) => (
-                    <div
-                      key={"infusão " + item.id_infusao}
-                      className="textcard"
-                      style={{ margin: 0, padding: 0 }}
-                    >
-                      {item.droga + " - " + item.velocidade + "ml/h"}
-                    </div>
-                  ))}
-                <div
-                  style={{
-                    display:
-                      infusoes.filter((item) => item.data_termino == null)
-                        .length > 2
-                        ? "flex"
-                        : "none",
-                    alignSelf: "center",
-                  }}
-                >
-                  ...
-                </div>
-              </div>
-            </div>
             <div id="RESUMO PROPOSTAS"
               style={{
                 display: opcao == "card-propostas" ? "flex" : "none",
@@ -1459,38 +1207,6 @@ function Consultas() {
                 ))}
               </div>
             </div>
-            <div id="RESUMO INTERCONSULTAS"
-              style={{
-                display: opcao == "card-interconsultas" ? "flex" : "none",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                {interconsultas.map((item) => (
-                  <div
-                    key={"interconsultas " + item.id_interconsulta}
-                    className="textcard"
-                    style={{ margin: 0, padding: 0 }}
-                  >
-                    {item.especialidade}
-                  </div>
-                ))}
-                <div
-                  className="textcard"
-                  style={{
-                    display: interconsultas.length > 3 ? "flex" : "none",
-                    alignSelf: "center",
-                  }}
-                >
-                  ...
-                </div>
-              </div>
-            </div>
             <div id="RESUMO BONECO"
               style={{
                 display: opcao == "card-boneco" ? "flex" : "none",
@@ -1542,7 +1258,6 @@ function Consultas() {
     "DIETA",
     "CULTURAS",
     "ANTIBIÓTICOS",
-    "INTERCONSULTAS",
     "LABORATÓRIO E RX",
     "EXAMES DE IMAGEM",
     "PRESCRIÇÃO",
@@ -1566,7 +1281,6 @@ function Consultas() {
     "DIETA",
     "CULTURAS",
     "ANTIBIÓTICOS",
-    "INTERCONSULTAS",
     "LABORATÓRIO E RX",
     "EXAMES DE IMAGEM",
     "PRESCRIÇÃO",
@@ -2134,85 +1848,6 @@ function Consultas() {
     )
   }
 
-  const [viewinterconsultas, setviewinterconsultas] = useState(0);
-  function TelaInterconsultas() {
-    return (
-      <div className="fundo"
-        onClick={() => setviewinterconsultas(0)}
-        style={{
-          display: viewinterconsultas == 1 ? 'flex' : 'none',
-          flexDirection: 'column', justifyContent: 'center'
-        }}>
-        <div
-          className="janela scroll"
-          style={{
-            display: allinterconsultas.filter(item => item.especialidade == usuario.tipo_usuario).length > 0 ? 'flex' : 'none',
-            height: '60vh',
-          }}>
-          {allinterconsultas.filter(item => item.especialidade == usuario.tipo_usuario).map(item => (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row', justifyContent: 'center', width: 'calc(100% - 5px)'
-              }}>
-              {atendimentos.filter(valor => valor.id_atendimento == item.id_atendimento && valor.situacao == 1).map(valor => (
-                <div
-                  id={'interconsulta' + item.id_atendimento}
-                  style={{
-                    display: 'flex', flexDirection: 'row', justifyItems: 'center',
-                    width: '40vw'
-                  }}
-                  onClick={() => {
-                    setviewlista(0);
-                    setatendimento(valor.id_atendimento);
-                    setpaciente(valor.id_paciente);
-                    getAllData(valor.id_paciente, valor.id_atendimento);
-                    setidprescricao(0);
-                    if (pagina == -2) {
-                      selector("scroll atendimentos com pacientes", "atendimento " + item.id_atendimento, 100);
-                    }
-                  }}
-                >
-                  <div className='button-grey'
-                    style={{
-                      width: 100,
-                      marginLeft: 2.5, marginRight: 0,
-                      paddingLeft: 10, paddingRight: 10,
-                      borderTopRightRadius: 0, borderBottomRightRadius: 0,
-                    }}>
-                    {unidades.filter(item => item.id_unidade == valor.id_unidade).map(item => item.nome_unidade + ' - LEITO ' + valor.leito)}
-                  </div>
-                  <div className='button-yellow'
-                    onClick={() => setcard('card-interconsultas')}
-                    style={{ width: '100%', marginLeft: 0, marginRight: 2.5, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                    {valor.nome_paciente}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-        <div className="janela scroll"
-          style={{
-            display: allinterconsultas.filter(item => item.especialidade == usuario.tipo_usuario).length == 0 ? 'flex' : 'none',
-            height: '60vh',
-          }}>
-          <img
-            alt=""
-            src={lupa_cinza}
-            style={{
-              margin: 10,
-              height: 150,
-              width: 150,
-              opacity: 0.1,
-              alignSelf: 'center'
-            }}
-          ></img>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div
       className="main"
@@ -2236,23 +1871,6 @@ function Consultas() {
             alignSelf: 'center',
           }}
         >
-          <div id='botão de interconsultas'
-            style={{
-              display: allinterconsultas.filter(item => item.especialidade == usuario.tipo_usuario).length == 0 || window.innerWidth < mobilewidth ? 'none' : 'flex',
-              position: 'absolute', top: 80, right: 80,
-              borderRadius: 50,
-              width: 50, height: 50,
-              backgroundColor: '#EC7063',
-              borderColor: '#66b2b2',
-              borderWidth: 5,
-              borderStyle: 'solid',
-              justifyContent: 'center',
-            }}
-            onClick={() => setviewinterconsultas(1)}
-            title={'INTERCONSULTAS PARA ' + usuario.tipo_usuario + '.'}
-          >
-            <div className="text2" style={{ margin: 0, padding: 0, marginBottom: 2.5 }}>{allinterconsultas.filter(item => item.especialidade == usuario.tipo_usuario).length}</div>
-          </div>
           <Usuario></Usuario>
           <ListaDeAtendimentos></ListaDeAtendimentos>
         </div>
@@ -2274,6 +1892,40 @@ function Consultas() {
               width: '100%', alignSelf: 'center', justifyContent: 'center',
               flexDirection: 'row', flexWrap: 'wrap',
             }}>
+            <div onClick={() => setcard("card-camera")}
+              className="card-fechado cor3"
+              style={{
+                margin: 5,
+                height: window.innerWidth < mobilewidth ? '35vw' : '15vw',
+                minHeight: window.innerWidth < mobilewidth ? '32vw' : '15vw',
+                minWidth: window.innerWidth < mobilewidth ? '32vw' : '15vw',
+                maxWidth: window.innerWidth < mobilewidth ? '' : '15vw',
+                alignSelf: 'center',
+              }}
+            >
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                width: '100%',
+                height: '100%',
+                margin: 0, padding: 0,
+                alignSelf: 'center',
+                // backgroundColor: 'red'
+              }}>
+                <img
+                  alt=""
+                  src={fotinho != 1 ? fotinho : dots_teal}
+                  style={{
+                    margin: 10,
+                    height: '100%',
+                    width: '100%',
+                    alignSelf: 'center',
+                    borderRadius: 5,
+                  }}
+                ></img>
+              </div>
+            </div>
             {cartao(null, "DIAS DE INTERNAÇÃO: " +
               atendimentos
                 .filter((item) => item.id_atendimento == atendimento)
@@ -2297,6 +1949,7 @@ function Consultas() {
             {cartao(null, 'MONITORAMENTO HOME CARE', "card-feedback", null)}
             {cartao(null, 'ESCALAS ASSISTENCIAIS', 'card-escalas_assistenciais', null)}
             {cartao(null, 'MEDICAÇÕES', 'card-receita', null)}
+            {cartao(null, 'PRESCRIÇÃO', 'card-prescricao-easy', null)}
           </div>
           <div id="cards (cartões) visão mobile"
             className={arraycartoes.length == cartoes.length ? "grid2" : "grid1"}
@@ -2304,6 +1957,40 @@ function Consultas() {
               display: window.innerWidth < mobilewidth ? 'grid' : 'none',
               width: '100%',
             }}>
+            <div onClick={() => setcard("card-camera")}
+              className="card-fechado cor3"
+              style={{
+                margin: 5,
+                height: window.innerWidth < mobilewidth ? '35vw' : '15vw',
+                minHeight: window.innerWidth < mobilewidth ? '32vw' : '15vw',
+                minWidth: window.innerWidth < mobilewidth ? '32vw' : '15vw',
+                maxWidth: window.innerWidth < mobilewidth ? '' : '15vw',
+                alignSelf: 'center',
+              }}
+            >
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                width: '100%',
+                height: '100%',
+                margin: 0, padding: 0,
+                alignSelf: 'center',
+                // backgroundColor: 'red'
+              }}>
+                <img
+                  alt=""
+                  src={fotinho != 1 ? fotinho : lupa}
+                  style={{
+                    margin: 10,
+                    height: '100%',
+                    width: '100%',
+                    alignSelf: 'center',
+                    borderRadius: 5,
+                  }}
+                ></img>
+              </div>
+            </div>
             {cartao(null, "DIAS DE INTERNAÇÃO: " +
               atendimentos
                 .filter((item) => item.id_atendimento == atendimento)
@@ -2323,6 +2010,7 @@ function Consultas() {
             {cartao(null, 'MONITORAMENTO HOME CARE', "card-feedback", null)}
             {cartao(null, 'ESCALAS ASSISTENCIAIS', 'card-escalas_assistenciais', null)}
             {cartao(null, 'MEDICAÇÕES', 'card-receita', null)}
+            {cartao(null, 'PRESCRIÇÃO', 'card-prescricao-easy', null)}
           </div>
         </div>
         <div id="conteúdo cheio (componentes)"
@@ -2335,25 +2023,24 @@ function Consultas() {
             width: window.innerWidth < mobilewidth ? '90vw' : '65vw',
           }}
         >
+          <Camera></Camera>
           <Alergias></Alergias>
           <Diagnosticos></Diagnosticos>
           <Documentos></Documentos>
-          <DocumentoEstruturado></DocumentoEstruturado>
           <Boneco></Boneco>
           <Propostas></Propostas>
           <SinaisVitais></SinaisVitais>
           <Infusoes></Infusoes>
-          <Culturas></Culturas>
-          <VentilacaoMecanica></VentilacaoMecanica>
           <Dieta></Dieta>
           <Precaucoes></Precaucoes>
           <Riscos></Riscos>
           <Alertas></Alertas>
-          <Interconsultas></Interconsultas>
-          <Exames></Exames>
           <Prescricao></Prescricao>
           <EvolucaoMobile></EvolucaoMobile>
           <Feedback></Feedback>
+          <EscalasAssistenciais></EscalasAssistenciais>
+          <Medicacoes></Medicacoes>
+          <MedicacoesCheck></MedicacoesCheck>
         </div>
         <div id="conteúdo vazio"
           style={{
@@ -2364,7 +2051,7 @@ function Consultas() {
             width: '65vw',
           }}
         >
-          <img
+          <img className="lupa"
             alt=""
             src={lupa}
             style={{
@@ -2376,7 +2063,6 @@ function Consultas() {
             }}
           ></img>
         </div>
-        <TelaInterconsultas></TelaInterconsultas>
       </div>
       <MinhasConsultas></MinhasConsultas>
       <AtividadesSelector></AtividadesSelector>

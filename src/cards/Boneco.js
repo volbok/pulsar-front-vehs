@@ -12,7 +12,6 @@ import back from '../images/back.svg';
 import body from '../images/body.svg';
 import dorso from '../images/dorso.svg';
 import calendario from '../images/calendario.svg';
-import deletar from '../images/deletar.svg';
 
 function Boneco() {
 
@@ -338,9 +337,9 @@ function Boneco() {
             onClick={(e) => e.stopPropagation()}
             style={{
               position: 'relative',
-              width: window.innerWidth < mobilewidth ? '90vw' : '',
-              height: '80vh',
-              borderRadius: window.innerWidth < mobilewidth ? 0 : 5,
+              width: window.innerWidth < mobilewidth ? '80vw' : '',
+              height: '85vh',
+              borderRadius: 5,
               padding: 10,
             }}>
             <div className="text1">{'LESÃO ' + local}</div>
@@ -467,7 +466,7 @@ function Boneco() {
               >
                 <img
                   alt=""
-                  src={deletar}
+                  src={back}
                   style={{
                     margin: 10,
                     height: 30,
@@ -818,7 +817,7 @@ function Boneco() {
             alignItems: 'flex-start',
             marginTop: 5,
           }}>
-          {invasoes.map(item => (
+          {invasoes.filter(item => item.data_retirada == null).map(item => (
             <div className="palette2" style={{
               display: 'flex', flexDirection: 'row',
             }}>
@@ -839,7 +838,7 @@ function Boneco() {
             </div>
           ))}
         </div>
-        <div className='text1 janela scroll'
+        <div className='scroll'
           style={{
             display: randombody == 2 ? 'flex' : 'none',
             width: window.innerWidth < mobilewidth ? '80vw' : 300,
@@ -847,9 +846,10 @@ function Boneco() {
             textAlign: 'left',
             flexDirection: 'column',
             justifyContent: 'flex-start',
-            alignItems: 'flex-start'
+            alignItems: 'flex-start',
+            marginTop: 5,
           }}>
-          {lesoes.map(item => (
+          {lesoes.filter(item => item.data_fechamento == null).map(item => (
             <div className="palette2" style={{
               display: 'flex', flexDirection: 'row',
             }}>

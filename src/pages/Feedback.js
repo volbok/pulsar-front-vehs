@@ -23,7 +23,6 @@ function Feedback() {
     if (card == 'card-feedback') {
       let x = pacientes.filter(item => item.id_paciente == paciente);
       setselectedpaciente(x);
-      console.log(x);
       loadFeedback();
     }
     // eslint-disable-next-line

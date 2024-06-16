@@ -6,17 +6,10 @@ import Context from "./pages/Context";
 // páginas.
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
-import Prontuario from "./pages/Prontuario";
 import ProntuarioTodosPacientes from "./pages/ProntuarioTodosPacientes";
 import Consultas from "./pages/Consultas";
 import Usuarios from "./pages/Usuarios";
-import Triagem from "./pages/Triagem";
-import Painel from "./pages/Painel";
-import Laboratorio from "./pages/Laboratorio";
 import Agendamento from "./pages/Agendamento";
-import Farmacia from "./pages/Farmacia";
-import Almoxarifado from "./pages/Almoxarifado";
-import Resultados from "./pages/Resultados";
 import PainelAtividades from "./pages/PainelAtividades";
 import Cliente from "./pages/Cliente";
 import Feedback from "./pages/Feedback";
@@ -327,9 +320,6 @@ function App() {
             <Route exact path="/">
               <Login></Login>
             </Route>
-            <Route path="/prontuario">
-              <Prontuario></Prontuario>
-            </Route>
             <Route path="/prontuario_todos_pacientes">
               <ProntuarioTodosPacientes></ProntuarioTodosPacientes>
             </Route>
@@ -341,24 +331,6 @@ function App() {
             </Route>
             <Route path="/usuarios">
               <Usuarios></Usuarios>
-            </Route>
-            <Route path="/triagem">
-              <Triagem></Triagem>
-            </Route>
-            <Route path="/painel">
-              <Painel></Painel>
-            </Route>
-            <Route path="/laboratorio">
-              <Laboratorio></Laboratorio>
-            </Route>
-            <Route path="/farmacia">
-              <Farmacia></Farmacia>
-            </Route>
-            <Route path="/almoxarifado">
-              <Almoxarifado></Almoxarifado>
-            </Route>
-            <Route path="/resultados">
-              <Resultados></Resultados>
             </Route>
             <Route path="/painel_atividades">
               <PainelAtividades></PainelAtividades>

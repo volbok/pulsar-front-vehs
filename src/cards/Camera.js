@@ -14,65 +14,70 @@ function Camera() {
   const {
     html,
     settoast,
-    objpaciente,
     paciente,
     card, setcard,
+    pacientes,
   } = useContext(Context);
 
   useEffect(() => {
     if (card == 'card-camera') {
+      startvideo();
     }
     // eslint-disable-next-line
   }, [card]);
 
   const updatePaciente = (imagem) => {
-    var obj = {
-      nome_paciente: objpaciente.nome_paciente,
-      nome_mae_paciente: objpaciente.nome_mae_paciente,
-      dn_paciente: objpaciente.dn_paciente,
-      antecedentes_pessoais: objpaciente.antecedentes_pessoais,
-      medicacoes_previas: objpaciente.medicacoes_previas,
-      exames_previos: objpaciente.exames_previos,
-      exames_atuais: objpaciente.tipo_documento,
-      tipo_documento: objpaciente.tipo_documento,
-      numero_documento: objpaciente.numero_documento,
-      cns: objpaciente.cns,
-      endereco: objpaciente.endereco,
-      logradouro: objpaciente.logradouro,
-      bairro: objpaciente.bairro,
-      localidade: objpaciente.localidade,
-      uf: objpaciente.uf,
-      cep: objpaciente.cep,
-      telefone: objpaciente.telefone,
-      email: objpaciente.email,
-      nome_responsavel: objpaciente.nome_responsavel,
-      sexo: objpaciente.sexo,
-      nacionalidade: objpaciente.nacionalidade,
-      cor: objpaciente.cor,
-      etnia: objpaciente.etnia,
-      orgao_emissor: objpaciente.orgao_emissor,
-      endereco_numero: objpaciente.endereco_numero,
-      endereco_complemento: objpaciente.endereco_complemento,
-      foto: imagem,
-    };
-    axios
-      .post(html + "update_paciente/" + paciente, obj)
-      .then(() => {
-        toast(
-          settoast,
-          "PACIENTE ATUALIZADO COM SUCESSO NA BASE PULSAR",
-          "rgb(82, 190, 128, 1)",
-          3000
-        );
-      })
-      .catch(function () {
-        toast(
-          settoast,
-          "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
-          "black",
-          5000
-        );
-      });
+    // eslint-disable-next-line
+    pacientes.filter(valor => valor.id_paciente == paciente).map(item => {
+      var obj = {
+        nome_paciente: item.nome_paciente,
+        nome_mae_paciente: item.nome_mae_paciente,
+        dn_paciente: item.dn_paciente,
+        antecedentes_pessoais: item.antecedentes_pessoais,
+        medicacoes_previas: item.medicacoes_previas,
+        exames_previos: item.exames_previos,
+        exames_atuais: item.tipo_documento,
+        tipo_documento: item.tipo_documento,
+        numero_documento: item.numero_documento,
+        cns: item.cns,
+        endereco: item.endereco,
+        logradouro: item.logradouro,
+        bairro: item.bairro,
+        localidade: item.localidade,
+        uf: item.uf,
+        cep: item.cep,
+        telefone: item.telefone,
+        email: item.email,
+        nome_responsavel: item.nome_responsavel,
+        sexo: item.sexo,
+        nacionalidade: item.nacionalidade,
+        cor: item.cor,
+        etnia: item.etnia,
+        orgao_emissor: item.orgao_emissor,
+        endereco_numero: item.endereco_numero,
+        endereco_complemento: item.endereco_complemento,
+        foto: imagem,
+      };
+      console.log(obj);
+      axios
+        .post(html + "update_paciente/" + paciente, obj)
+        .then(() => {
+          toast(
+            settoast,
+            "PACIENTE ATUALIZADO COM SUCESSO NA BASE PULSAR",
+            "rgb(82, 190, 128, 1)",
+            3000
+          );
+        })
+        .catch(function () {
+          toast(
+            settoast,
+            "ERRO DE CONEXÃO, REINICIANDO APLICAÇÃO.",
+            "black",
+            5000
+          );
+        });
+    });
   };
 
   // registro de alergia por voz.
@@ -103,8 +108,10 @@ function Camera() {
 
   let video = null;
   let canvas = null;
+
+  let startvideo = null;
   function Capture() {
-    const startvideo = () => {
+    startvideo = () => {
       video = document.getElementById('video');
       canvas = document.getElementById('canvas');
       navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
@@ -114,7 +121,7 @@ function Camera() {
     }
 
     const getimage = () => {
-      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      canvas.getContext('2d').drawImage(video, 150, 100, 300, 300, 0, 0, 300, 300);
       let image = canvas.toDataURL('image/jpeg');
       console.log(image);
       updatePaciente(image);
@@ -127,18 +134,33 @@ function Camera() {
           flexDirection: 'column',
           justifyContent: 'center',
           alignSelf: 'center',
-          width: '100%'
         }}>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-          <video id="video" autoplay loop muted style={{ width: 300, height: 400, backgroundColor: 'red' }}></video>
-          <img id="foto" alt="" style={{ width: 300, height: 400, backgroundColor: 'blue' }}></img>
+        <div style={{
+          display: 'flex', flexDirection: 'row',
+          justifyContent: 'center', alignSelf: 'center',
+          position: 'relative',
+        }}>
+          <div id="painel esquerdo"
+            style={{
+              display: 'none',
+              position: 'absolute',
+              top: 0, bottom: 0, left: 0,
+              width: 150,
+              backgroundColor: 'black', zIndex: 1,
+            }}>
+          </div>
+          <video id="video" autoplay='true' muted='true' width='300' height='300' style={{ objectFit: 'cover', borderRadius: 5 }}></video>
+          <div id="painel direito"
+            style={{
+              display: 'none',
+              position: 'absolute',
+              top: 0, bottom: 0, right: 0,
+              width: 150,
+              backgroundColor: 'black', zIndex: 1,
+            }}>
+          </div>
         </div>
-        <canvas id="canvas" style={{ width: 300, height: 400, backgroundColor: 'green', alignSelf: 'center' }}></canvas>
-        <div className='button' style={{ width: 200, alignSelf: 'center', marginTop: 10 }}
-          onClick={() => startvideo()}
-        >
-          INICIAR
-        </div>
+        <canvas id="canvas" height='300' width='300' style={{ display: 'none', backgroundColor: 'green', alignSelf: 'center' }}></canvas>
         <div className='button' style={{ width: 200, alignSelf: 'center', marginTop: 10 }}
           onClick={() => getimage()}
         >

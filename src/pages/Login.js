@@ -546,16 +546,26 @@ function Login() {
     return (
       <div className="fundo"
         style={{ display: viewcriarsenha == 1 ? 'flex' : 'none', flexDirection: 'column', justifyContent: 'center' }}>
-        <div className="janela" style={{ height: '80vh' }}>
+        <div className="janela scroll"
+          style={{
+            height: window.innerWidth < mobilewidth ? 'calc(100vh - 20px)' : '70vh',
+            width: window.innerWidth < mobilewidth ? 'calc(100vw - 20px)' : '60vw',
+          }}>
           <div className="text1">{'BEM-VINDO À PLATAFORMA PULSAR, ' + usuario.nome_usuario + '.'}</div>
           <div className="textarea scroll"
             style={{
-              marginBottom: 10, width: '50vw', height: 200, justifyContent: 'flex-start',
+              marginBottom: 10,
+              width: 'calc(100% - 20px)',
+              height: 200,
+              justifyContent: 'flex-start',
               whiteSpace: 'pre-wrap', textAlign: 'center',
             }}>
             {termo}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: window.innerWidth < mobilewidth ? 'column' : 'row'
+          }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <div className="text1">
                 DIGITE A SENHA

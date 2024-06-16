@@ -46,14 +46,15 @@ function Diagnosticos() {
   }
 
   // inserir diagnóstico.
-  const insertDiagnostico = () => {
+  const insertDiagnostico = (cid, descricao) => {
     var obj = {
       id_paciente: paciente,
-      cid: localStorage.getItem("cid"),
-      diagnostico: localStorage.getItem("diagnostico"),
+      cid: cid,
+      diagnostico: descricao.toUpperCase(),
       data: moment(),
       profissional: usuario.nome_usuario,
     }
+    console.log(obj);
     axios.post(html + 'insert_diagnostico', obj).then(() => {
       loadDiagnosticos();
       setviewseletorcid10(0);
@@ -125,7 +126,8 @@ function Diagnosticos() {
           onClick={(e) => e.stopPropagation()}
           style={{
             display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',
-            width: '40vw', height: '70vh'
+            width: window.innerWidth < mobilewidth ? '90vw' : '40vw',
+            height: window.innerWidth < mobilewidth ? '90vh' : '70vh'
           }}>
           <FilterCid10></FilterCid10>
           {arraycid10.map(item => (
@@ -135,7 +137,7 @@ function Diagnosticos() {
                 localStorage.setItem("cid", item.CAT);
                 localStorage.setItem("diagnostico", item.DESCRICAO.toUpperCase());
                 setTimeout(() => {
-                  insertDiagnostico();
+                  insertDiagnostico(item.CAT, item.DESCRICAO);
                   setviewseletorcid10(0);
                 }, 200);
               }}

@@ -139,7 +139,7 @@ function Medicacoes() {
             <div className="text1">NOME E DOSE DA MEDICAÇÃO</div>
             <textarea
               autoComplete="off"
-              placeholder="NOME E DOSE DA NEDICAÇÃO"
+              placeholder="NOME E DOSE DA MEDICAÇÃO"
               className="textarea"
               type="text"
               id="inputNomeMedicacao"
@@ -149,7 +149,7 @@ function Medicacoes() {
                 flexDirection: "center",
                 justifyContent: "center",
                 alignSelf: "center",
-                width: 400,
+                width: window.innerWidth < mobilewidth ? '60vw' : 400,
                 padding: 15,
                 height: 20,
                 minHeight: 20,
@@ -257,11 +257,9 @@ function Medicacoes() {
                 flexDirection: "center",
                 justifyContent: "center",
                 alignSelf: "center",
-                width: 400,
+                width: window.innerWidth < mobilewidth ? '60vw' : 400,
+                height: 200,
                 padding: 15,
-                height: 20,
-                minHeight: 20,
-                maxHeight: 20,
               }}
             ></textarea>
           </div>

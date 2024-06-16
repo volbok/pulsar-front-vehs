@@ -202,7 +202,7 @@ function Cliente() {
   const insertFeedback = () => {
     let obj = {
       nome_paciente: pacientes.map(item => item.nome_paciente).pop(),
-      dn_paciente: pacientes.map(item => item.dn_paciente).pop(),
+      dn_paciente: moment(),
       face: faceselected,
       comentario: document.getElementById("inputFeedbackMessage").value.toUpperCase(),
       id_pcte: pacientes.map(item => item.id_paciente).pop(),

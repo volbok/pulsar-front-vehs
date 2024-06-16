@@ -90,13 +90,13 @@ function EvolucaoMobile() {
             onFocus={(e) => (e.target.placeholder = '')}
             onBlur={(e) => (e.target.placeholder = 'EVOLUÇÃO...')}
             style={{
-              width: window.innerWidth < mobilewidth ? '50vw' : '80vw',
-              height: window.innerWidth < mobilewidth ? '' : '50vh',
+              width: window.innerWidth < mobilewidth ? 'calc(100vw - 100px)' : '80vw',
+              height: window.innerWidth < mobilewidth ? 'calc(100VW - 20px)' : '50vh',
               margin: 5,
             }}
             type="text"
             id="inputEvolucao"
-            maxLength={100}
+            maxLength={10000}
           ></textarea>
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
             <div id="botão de retorno"
