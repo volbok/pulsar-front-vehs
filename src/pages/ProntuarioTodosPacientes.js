@@ -1899,6 +1899,7 @@ function Prontuario() {
             <div onClick={() => setcard("card-camera")}
               className="card-fechado cor3"
               style={{
+                display: "flex",
                 margin: 5,
                 height: window.innerWidth < mobilewidth ? '35vw' : '15vw',
                 minHeight: window.innerWidth < mobilewidth ? '32vw' : '15vw',
@@ -1911,11 +1912,8 @@ function Prontuario() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                width: '100%',
-                height: '100%',
                 margin: 0, padding: 0,
                 alignSelf: 'center',
-                // backgroundColor: 'red'
               }}>
                 <img
                   alt=""
@@ -1961,38 +1959,40 @@ function Prontuario() {
               display: window.innerWidth < mobilewidth ? 'grid' : 'none',
               width: '100%',
             }}>
-            <div onClick={() => setcard("card-camera")}
-              className="card-fechado cor3"
-              style={{
-                margin: 5,
-                height: window.innerWidth < mobilewidth ? '35vw' : '15vw',
-                minHeight: window.innerWidth < mobilewidth ? '32vw' : '15vw',
-                minWidth: window.innerWidth < mobilewidth ? '32vw' : '15vw',
-                maxWidth: window.innerWidth < mobilewidth ? '' : '15vw',
-                alignSelf: 'center',
-              }}
-            >
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                width: '100%',
-                height: '100%',
-                margin: 0, padding: 0,
-                alignSelf: 'center',
-                // backgroundColor: 'red'
-              }}>
-                <img
-                  alt=""
-                  src={fotinho != 1 ? fotinho : lupa}
-                  style={{
-                    margin: 10,
-                    height: '100%',
-                    width: '100%',
-                    alignSelf: 'center',
-                    borderRadius: 5,
-                  }}
-                ></img>
+            <div style={{ display: 'flex' }}>
+              <div onClick={() => setcard("card-camera")}
+                className="card-fechado cor3"
+                style={{
+                  margin: 5,
+                  height: window.innerWidth < mobilewidth ? '35vw' : '15vw',
+                  minHeight: window.innerWidth < mobilewidth ? '32xvw' : '15vw',
+                  minWidth: window.innerWidth < mobilewidth ? '' : '15vw',
+                  maxWidth: window.innerWidth < mobilewidth ? '' : '15vw',
+                  alignSelf: 'center',
+                  flexGrow: 1
+                }}
+              >
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  width: '100%',
+                  height: '100%',
+                  margin: 0, padding: 0,
+                  alignSelf: 'center',
+                }}>
+                  <img
+                    alt=""
+                    src={fotinho != 1 ? fotinho : lupa}
+                    style={{
+                      margin: 10,
+                      height: '100%',
+                      width: '100%',
+                      alignSelf: 'center',
+                      borderRadius: 5,
+                    }}
+                  ></img>
+                </div>
               </div>
             </div>
             {cartao(null, "DIAS DE INTERNAÇÃO: " +

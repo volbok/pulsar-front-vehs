@@ -1893,7 +1893,7 @@ function Consultas() {
               flexDirection: 'row', flexWrap: 'wrap',
             }}>
             <div onClick={() => setcard("card-camera")}
-              className="card-fechado cor3"
+              className="card-fechado"
               style={{
                 margin: 5,
                 height: window.innerWidth < mobilewidth ? '35vw' : '15vw',
@@ -1911,7 +1911,7 @@ function Consultas() {
                 height: '100%',
                 margin: 0, padding: 0,
                 alignSelf: 'center',
-                // backgroundColor: 'red'
+                backgroundColor: 'red'
               }}>
                 <img
                   alt=""
